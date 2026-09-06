@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WattWise · Optimiza tu consumo eléctrico</title>
+  <meta name="description" content="Dashboard de precios PVPC por horas con recomendaciones para ahorrar en tu factura eléctrica.">
+
+  <!-- Tipografía (con fallbacks del sistema) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Favicon: logo SVG -->
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body data-page="index">
+
+  <!-- ===== Cabecera ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand" aria-label="WattWise, inicio">
+        <img class="brand-logo" src="assets/img/logo.svg" alt="" width="40" height="40">
+        <span class="brand-name">Watt<span>Wise</span></span>
+      </a>
+
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-nav">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="index.html" data-nav="index" class="active">Dashboard</a></li>
+          <li><a href="#" data-scroll="appliances">Mis aparatos</a></li>
+          <li><a href="#" data-scroll="alerts">Alertas</a></li>
+          <li id="auth-area"><!-- Login/Logout insertado por auth.js --></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-container">
+
+    <h1 class="section-title" id="page-title">Precio de la electricidad</h1>
+    <p class="section-subtitle" id="page-date"></p>
+
+    <!-- ===== Panel de precios (público) ===== -->
+    <section class="card" id="prices-card" aria-label="Precios por hora">
+      <div class="card-header">
+        <h2 class="card-title"><span class="dot" style="background:var(--accent)"></span>Precio por hora</h2>
+        <div class="tabbar" role="tablist" aria-label="Día de precios">
+          <button id="tab-today" data-tab="today" role="tab" aria-selected="true" class="active">Hoy</button>
+          <button id="tab-tomorrow" data-tab="tomorrow" role="tab" aria-selected="false">Mañana</button>
+        </div>
+      </div>
+      <div class="panel-body"><!-- Resumen + gráfico + leyenda (dashboard.js) --></div>
+    </section>
+
+    <!-- Secciones privadas: recomendaciones + alertas (solo autenticado).
+         El contenido se construye por JS según el estado de login. -->
+    <div class="dashboard-grid with-aside">
+
+      <!-- ===== Mis aparatos ===== -->
+      <section id="appliances-card" data-title="Mis aparatos">
+        <!-- Contenido insertado por JS (lista + formulario) -->
+      </section>
+
+      <!-- ===== Recomendaciones ===== -->
+      <section id="recs-card" data-title="Recomendaciones">
+        <!-- Contenido insertado por JS -->
+      </section>
+
+      <!-- ===== Alertas ===== -->
+      <section id="alerts-card" data-title="Alertas">
+        <!-- Contenido insertado por JS -->
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>WattWise — Datos PVPC de REE. Precios con IVA incluido, hora local de España.</p>
+  </footer>
+
+  <!-- ===== jQuery 3.x (CDN con fallback local documentado) ===== -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+          crossorigin="anonymous"></script>
+  <script>
+    // Fallback local por si el CDN no está disponible.
+    if (!window.jQuery) {
+      document.write('<script src="js/vendor/jquery-3.7.1.min.js"><\/script>');
+    }
+  </script>
+
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

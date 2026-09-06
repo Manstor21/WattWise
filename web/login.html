@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión · WattWise</title>
+  <meta name="description" content="Accede a tu cuenta de WattWise.">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="icon" type="image/svg+xml" href="assets/img/logo.svg">
+</head>
+<body data-page="login">
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand" aria-label="WattWise, inicio">
+        <img class="brand-logo" src="assets/img/logo.svg" alt="" width="40" height="40">
+        <span class="brand-name">Watt<span>Wise</span></span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="main-nav">
+        <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+      </button>
+      <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+        <ul>
+          <li><a href="index.html">Dashboard</a></li>
+          <li id="auth-area"></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="app-container">
+    <div class="auth-wrap">
+      <div class="card auth-card">
+        <img class="auth-logo" src="assets/img/logo.svg" alt="" width="56" height="56">
+        <h1 class="auth-title">Bienvenido de nuevo</h1>
+        <p class="auth-subtitle">Inicia sesión para ver tus recomendaciones.</p>
+
+        <div class="alert-box" id="auth-alert" role="alert"></div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="login-username">Usuario o email</label>
+            <input class="form-control" id="login-username" type="text" autocomplete="username" placeholder="tunombre">
+            <div class="form-error"></div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="login-password">Contraseña</label>
+            <input class="form-control" id="login-password" type="password" autocomplete="current-password" placeholder="••••••••">
+            <div class="form-error"></div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+        </form>
+
+        <p class="auth-switch">¿No tienes cuenta? <a href="register.html">Regístrate</a></p>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+          integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+          crossorigin="anonymous"></script>
+  <script>
+    if (!window.jQuery) { document.write('<script src="js/vendor/jquery-3.7.1.min.js"><\/script>'); }
+  </script>
+  <script src="js/app.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+</body>
+</html>

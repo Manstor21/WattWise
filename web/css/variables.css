@@ -1,0 +1,99 @@
+/* ============================================================
+   variables.css — Custom properties (design tokens)
+   Centraliza toda la paleta, tipografía, radios, sombras y
+   espaciado. Cambiar estos valores re-tema la app entera.
+   ============================================================ */
+
+:root {
+  /* ---- Paleta de fondo (oscura, enfoque "energía") ---- */
+  --bg-base: #0f172a;      /* fondo principal */
+  --bg-surface: #1e293b;   /* tarjetas, cabecera, pie */
+  --bg-elevated: #273449;  /* elementos elevados sobre surface */
+  --bg-input: #1b2536;     /* campos de formulario */
+
+  /* ---- Bordes y divisiones ---- */
+  --border: #334155;
+  --border-soft: #29354a;
+
+  /* ---- Texto ---- */
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --text-on-accent: #0f172a;
+
+  /* ---- Acentos de marca / UI ---- */
+  --accent: #22d3ee;          /* cian neón — energía */
+  --accent-strong: #06b6d4;
+  --accent-soft: rgba(34, 211, 238, 0.14);
+
+  /* ---- Semáforo -- */
+  --green: #34d399;
+  --green-bg: rgba(52, 211, 153, 0.16);
+  --amber: #fbbf24;
+  --amber-bg: rgba(251, 191, 36, 0.16);
+  --red: #f87171;
+  --red-bg: rgba(248, 113, 113, 0.16);
+
+  /* ---- Estados ---- */
+  --danger: #f87171;
+  --danger-strong: #ef4444;
+  --success: #34d399;
+  --success-strong: #10b981;
+  --warning: #fbbf24;
+
+  /* ---- Radios ---- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 999px;
+
+  /* ---- Sombras ---- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 6px 20px rgba(0, 0, 0, 0.35);
+  --shadow-lg: 0 14px 34px rgba(0, 0, 0, 0.45);
+  --glow-green: 0 0 14px rgba(52, 211, 153, 0.35);
+  --glow-amber: 0 0 14px rgba(251, 191, 36, 0.35);
+  --glow-red: 0 0 14px rgba(248, 113, 113, 0.35);
+
+  /* ---- Tipografía ---- */
+  --font-sans: "Inter", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --fs-xs: 0.72rem;
+  --fs-sm: 0.85rem;
+  --fs-base: 0.95rem;
+  --fs-md: 1.05rem;
+  --fs-lg: 1.3rem;
+  --fs-xl: 1.75rem;
+  --fs-2xl: 2.4rem;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semi: 600;
+  --fw-bold: 700;
+
+  /* ---- Espaciado (escala 4px) ---- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ---- Layout ---- */
+  --header-h: 64px;
+  --content-max: 1200px;
+  --gutter: clamp(16px, 4vw, 40px);
+
+  /* ---- Transiciones ---- */
+  --t-fast: 140ms ease;
+  --t-med: 240ms ease;
+  --t-slow: 420ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* ---- Z-index ---- */
+  --z-header: 100;
+  --z-tooltip: 200;
+  --z-toast: 300;
+  --z-modal: 400;
+}

@@ -1,0 +1,32 @@
+<!-- ============================================================
+     partials/header.html — Fragmento de cabecera reutilizable.
+
+     Nota: este proyecto ES 100% estático (Nginx). Los partials son
+     piezas de documentación/referencia que podrían inyectarse con
+     un tooling de build (SSI, grunt/gulp, o un simple include en
+     servidor). Hoy las páginas incluyen la cabecera directamente,
+     pero se mantiene la estructura para futuras refactorizaciones.
+     ============================================================ -->
+
+<header class="site-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand" aria-label="WattWise, inicio">
+      <img class="brand-logo" src="assets/img/logo.svg" alt="" width="40" height="40">
+      <span class="brand-name">Watt<span>Wise</span></span>
+    </a>
+
+    <button class="nav-toggle" id="nav-toggle" aria-label="Abrir menú"
+            aria-expanded="false" aria-controls="main-nav">
+      <span class="bar"></span><span class="bar"></span><span class="bar"></span>
+    </button>
+
+    <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+      <ul>
+        <li><a href="index.html" data-nav="index">Dashboard</a></li>
+        <li><a href="#" data-scroll="appliances">Mis aparatos</a></li>
+        <li><a href="#" data-scroll="alerts">Alertas</a></li>
+        <li id="auth-area"><!-- auth.js inyecta Login/Logout --></li>
+      </ul>
+    </nav>
+  </div>
+</header>

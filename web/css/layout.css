@@ -1,0 +1,303 @@
+/* ============================================================
+   layout.css — Estructura general: cabecera, contenedores, grid
+   y comportamiento responsive (breakpoints 480/768/1024px).
+   ============================================================ */
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  color: var(--text-primary);
+  background: var(--bg-base);
+  background-image:
+    radial-gradient(circle at 15% -10%, rgba(34, 211, 238, 0.08), transparent 40%),
+    radial-gradient(circle at 90% 0%, rgba(52, 211, 153, 0.06), transparent 45%);
+  background-attachment: fixed;
+}
+
+/* ---- Cabecera ---- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  height: var(--header-h);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.header-inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.brand-logo {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+}
+
+.brand-name {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.5px;
+  color: var(--text-primary);
+}
+
+.brand-name span {
+  color: var(--accent);
+}
+
+/* ---- Navegación ---- */
+.main-nav ul {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.main-nav a,
+.main-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-weight: var(--fw-medium);
+  transition: color var(--t-fast), background var(--t-fast);
+  white-space: nowrap;
+}
+
+.main-nav a:hover,
+.main-nav a:focus-visible,
+.main-nav button:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated);
+}
+
+.main-nav a.active {
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.nav-user {
+  color: var(--text-secondary);
+  font-size: var(--fs-sm);
+  padding-right: var(--space-2);
+  border-right: 1px solid var(--border);
+  margin-right: var(--space-2);
+  white-space: nowrap;
+}
+
+/* Báscula de navegación en móvil */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  border-radius: var(--radius-md);
+}
+
+.nav-toggle .bar {
+  height: 2px;
+  width: 100%;
+  background: var(--text-primary);
+  border-radius: 2px;
+}
+
+/* ---- Contenedor principal ---- */
+.app-container {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--gutter) var(--space-8);
+}
+
+/* ---- Secciones / fichas de vista ---- */
+.view-section {
+  display: none;
+}
+.view-section.active {
+  display: block;
+  animation: fadeInUp 0.4s var(--t-slow);
+}
+
+.section-title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-semi);
+  margin: var(--space-5) 0 var(--space-4);
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-5);
+  max-width: 60ch;
+}
+
+/* ---- Grid principal del dashboard ---- */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+/* ---- Tabs (HOY / MAÑANA) ---- */
+.tabbar {
+  display: inline-flex;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  padding: 4px;
+  gap: 4px;
+}
+
+.tabbar button {
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-weight: var(--fw-semi);
+  font-size: var(--fs-sm);
+  transition: all var(--t-fast);
+}
+
+.tabbar button:hover {
+  color: var(--text-primary);
+}
+
+.tabbar button.active {
+  background: var(--accent);
+  color: var(--text-on-accent);
+  box-shadow: 0 2px 10px rgba(34, 211, 238, 0.35);
+}
+
+/* ---- Pie de página ---- */
+.site-footer {
+  border-top: 1px solid var(--border-soft);
+  margin-top: var(--space-7);
+  padding: var(--space-5) var(--gutter);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+/* < 768px (móvil y tablet pequeña) */
+@media (max-width: 768px) {
+  :root {
+    --header-h: 58px;
+  }
+
+  .grid-2col {
+    grid-template-columns: 1fr;
+  }
+
+  .brand-name {
+    display: none;
+  }
+
+  /* Navegación colapsada en móvil */
+  .nav-toggle {
+    display: flex;
+  }
+
+  .main-nav {
+    position: fixed;
+    top: var(--header-h);
+    right: 0;
+    width: min(300px, 82vw);
+    height: calc(100vh - var(--header-h));
+    background: var(--bg-surface);
+    border-left: 1px solid var(--border);
+    box-shadow: var(--shadow-lg);
+    transform: translateX(100%);
+    transition: transform var(--t-med);
+    z-index: var(--z-header);
+    padding-top: var(--space-4);
+    overflow-y: auto;
+  }
+
+  .main-nav.open {
+    transform: translateX(0);
+  }
+
+  .main-nav ul {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--space-1);
+    padding: 0 var(--space-3);
+  }
+
+  .main-nav a,
+  .main-nav button {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .nav-user {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    margin: 0 0 var(--space-3);
+    padding: var(--space-2) var(--space-4) var(--space-3);
+  }
+}
+
+/* < 480px (móvil compacto) */
+@media (max-width: 480px) {
+  :root {
+    --space-6: 24px;
+    --space-7: 36px;
+  }
+
+  .section-title {
+    font-size: var(--fs-lg);
+  }
+
+  .tabbar {
+    width: 100%;
+  }
+
+  .tabbar button {
+    flex: 1;
+    text-align: center;
+  }
+}
+
+/* >= 1024px (desktop) — columna lateral de recomendaciones/alertas */
+@media (min-width: 1024px) {
+  .dashboard-grid.with-aside {
+    grid-template-columns: minmax(0, 1fr) 360px;
+    align-items: start;
+  }
+
+  /* Aparatos ocupan la columna principal (1fr); recomendaciones y
+     alertas se apilan en la columna lateral fija (360px). */
+  .dashboard-grid.with-aside > #appliances-card {
+    grid-column: 1;
+  }
+  .dashboard-grid.with-aside > #recs-card,
+  .dashboard-grid.with-aside > #alerts-card {
+    grid-column: 2;
+  }
+}
