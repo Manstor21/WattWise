@@ -1,0 +1,4 @@
+{
+  "project": "WattWise",
+  "description": "Optimizador personal de consumo eléctrico según precio horario de la luz PVPC en España (API ESIOS de REE). Monorepo de portfolio."
+}

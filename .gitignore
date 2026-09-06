@@ -1,0 +1,75 @@
+# ---------- Java / Maven (backend) ----------
+backend/target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/wrapper/maven-wrapper.jar
+
+# ---------- IDE: IntelliJ / NetBeans ----------
+.idea/
+*.iml
+*.ipr
+*.iws
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+.nb-gradle/
+*.orig
+*.rej
+
+# ---------- Android / Gradle ----------
+android/.gradle/
+android/local.properties
+android/build/
+android/captures/
+android/.externalNativeBuild/
+android/.cxx/
+*.apk
+*.aab
+*.keystore
+*.jks
+*.keystore.*.jks
+
+# ---------- Python / analytics ----------
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.idea/
+.mypy_cache/
+.pytest_cache/
+analytics-python/.env
+
+# ---------- Node / web (ligero) ----------
+web/node_modules/
+node_modules/
+web/dist/
+
+# ---------- Entornos y secretos (NUNCA en repo) ----------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+credentials*.json
+
+# ---------- Datos y logs ----------
+*.db
+*.sqlite
+*.sqlite3
+logs/
+data/
+
+# ---------- Sistema ----------
+.DS_Store
+Thumbs.db
+*.swp
