@@ -1,34 +1,14 @@
-# ⚡ WattWise
+# WattWise
 
-**Personal electricity cost optimizer based on Spain's hourly PVPC pricing**
+**Personal electricity cost optimizer for Spain's hourly PVPC pricing**
 
-![Build](https://img.shields.io/badge/build-passing-brightgreen)
-![Coverage](https://img.shields.io/badge/coverage-70%25+-yellow)
-![License](https://img.shields.io/badge/license-MIT-blue)
-![Java](https://img.shields.io/badge/Java-17-orange)
-![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-green)
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![Android](https://img.shields.io/badge/Android-8.0%2B-brightgreen)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![Java](https://img.shields.io/badge/Java-17-orange)](https://adoptium.net/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.3.5-6db33f)](https://spring.io/projects/spring-boot)
+[![Python](https://img.shields.io/badge/Python-3.11%2B-3776ab)](https://www.python.org/)
+[![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84)](https://developer.android.com)
 
-> **Tell your washing machine when to run.** WattWise ingests Spain's real-time electricity prices from Red Eléctrica (ESIOS API), classifies every 15-minute slot with a traffic-light system, and recommends the cheapest windows for your appliances — so you stop overpaying.
-
----
-
-## The Problem
-
-Since September 2025, Spain's regulated electricity tariff (PVPC) publishes **96 different prices per day** — one every 15 minutes. The difference between the cheapest and most expensive hour can exceed **400%**. A family running a washing machine at the wrong time pays 4× more than one running it at the right time.
-
-Yet no consumer-friendly tool exists to tell you: *"Run the dishwasher between 02:00–04:00, not at 19:00."*
-
-## The Solution
-
-WattWise is a full-stack personal energy optimizer:
-
-- **Ingests** 96 daily prices from [ESIOS — Red Eléctrica](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real)
-- **Classifies** each slot into 🟢 green (cheap) / 🟡 amber (moderate) / 🔴 red (expensive) using a hybrid percentile + deviation + absolute-threshold algorithm
-- **Recommends** optimal windows per appliance (washing machine, dishwasher, EV charger, dryer, pool pump, AC) using Strategy pattern
-- **Notifies** you on Android when the best window starts — even offline
-- **Visualizes** everything on a web dashboard with a color-coded hourly chart
+Since September 2025, Spain's regulated tariff (PVPC) publishes **96 prices per day** — one every 15 minutes. The gap between the cheapest and most expensive slot can exceed 400%. WattWise ingests those prices from [ESIOS (Red Eléctrica)](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real), classifies every slot with a traffic-light system, and tells you the cheapest windows to run your appliances.
 
 ---
 
@@ -42,12 +22,12 @@ flowchart LR
         DESKTOP[Desktop Admin]
     end
 
-    subgraph Backend[Spring Boot]
+    subgraph Backend[Spring Boot 3.3.5]
         API[REST API + JWT]
         JOB[Price Fetcher Job]
     end
 
-    ANALYTICS[Python Analytics Microservice]
+    ANALYTICS[Python Analytics]
     DB[(SQL Server)]
     ESIOS[ESIOS API — REE]
     OBS[Prometheus + Grafana]
@@ -63,20 +43,20 @@ flowchart LR
     API --> OBS
 ```
 
-→ Full architecture details: [`docs/architecture/architecture.md`](docs/architecture/architecture.md)
+Full architecture details: [`docs/architecture/architecture.md`](docs/architecture/architecture.md)
 
 ---
 
 ## Tech Stack
 
-| Module | Technology | Purpose |
+| Module | Stack | What it does |
 |---|---|---|
-| `backend/` | Spring Boot 3.x, Java 17, Maven | REST API, JWT auth, price ingestion, recommendations |
-| `web/` | HTML5, CSS3, vanilla JS, jQuery | Responsive dashboard with traffic-light visualization |
-| `android/` | Android SDK (Java), WorkManager, Room | Mobile client, offline mode, local notifications |
-| `analytics-python/` | Flask/FastAPI, Pandas, SQLAlchemy | Statistical analytics, savings estimation, trends |
-| `desktop-admin/` | Java Swing, NetBeans, JDBC | CSV import/export, price correction, admin tools |
-| `docker/` | Docker Compose, Nginx, Prometheus, Grafana | Containerized deployment + observability |
+| `backend/` | Spring Boot 3.3.5, Java 17, Maven, JWT, Flyway | REST API, price ingestion, recommendations, alerts |
+| `web/` | HTML5, CSS3, jQuery 3.7.1 | Dashboard with traffic-light hourly chart, login, appliance CRUD |
+| `android/` | Java, Room, WorkManager, minSdk 26 | Mobile client, offline cache, local notifications |
+| `analytics-python/` | Flask, SQLAlchemy 2.x, pandas, prometheus_client | Statistical analytics, savings estimates, trends |
+| `desktop-admin/` | Java 17 Swing, JDBC, Apache Commons CSV | CSV import/export, price correction, admin tools |
+| `docker/` | Docker Compose, Nginx, Prometheus, Grafana | Containerized stack + observability |
 
 ---
 
@@ -84,40 +64,14 @@ flowchart LR
 
 ```
 WattWise/
-├── backend/                    # Spring Boot REST API
-│   ├── src/main/java/com/wattwise/
-│   ├── src/test/java/com/wattwise/
-│   └── pom.xml
-├── web/                        # Static web dashboard (HTML/CSS/JS)
-│   ├── index.html
-│   ├── css/
-│   ├── js/
-│   └── assets/
-├── android/                    # Android native app
-│   ├── app/src/main/java/com/wattwise/android/
-│   └── build.gradle
-├── analytics-python/           # Python analytics microservice
-│   ├── app/
-│   ├── tests/
-│   └── requirements.txt
-├── desktop-admin/              # Java Swing admin tool
-│   ├── src/main/java/com/wattwise/admin/
-│   └── pom.xml
-├── docker/                     # Docker Compose + Dockerfiles
-│   ├── docker-compose.yml
-│   ├── backend/
-│   ├── web/
-│   ├── nginx/
-│   ├── prometheus/
-│   └── grafana/
-├── scripts/
-│   ├── linux/                  # Bash scripts
-│   └── windows/                # PowerShell / .bat scripts
-├── docs/
-│   ├── architecture/           # System architecture documentation
-│   ├── adr/                    # Architecture Decision Records
-│   └── deployment/             # Deployment guides
-└── .github/workflows/          # CI/CD pipelines
+├── backend/                    Spring Boot REST API
+├── web/                        Static dashboard (HTML/CSS/jQuery)
+├── android/                    Android native app
+├── analytics-python/           Flask analytics microservice
+├── desktop-admin/              Java Swing admin tool
+├── docker/                     Compose files, Dockerfiles, nginx config
+├── docs/                       Architecture docs, ADRs
+└── scripts/                    Helper scripts (in progress)
 ```
 
 ---
@@ -128,42 +82,45 @@ WattWise/
 
 - **Java 17** — [Adoptium](https://adoptium.net/) or Oracle JDK
 - **Maven 3.9+** — [maven.apache.org](https://maven.apache.org/)
-- **Python 3.11+** — [python.org](https://www.python.org/)
-- **Docker & Docker Compose** — [docker.com](https://www.docker.com/)
-- **Android Studio** — [developer.android.com](https://developer.android.com/studio) (for Android module)
+- **Python 3.11+** — tested with 3.11 in Docker and 3.14 locally
+- **Docker & Docker Compose v2** — [docker.com](https://www.docker.com/)
+- **Android Studio** — for the Android module
 
 ### Quick Start with Docker
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/WattWise.git
+git clone https://github.com/Manstor21/WattWise.git
 cd WattWise
 
-# Start the full stack (backend + database + analytics + monitoring)
-docker-compose -f docker/docker-compose.yml up --build
+# Copy and edit environment variables
+cp docker/.env.example docker/.env
 
-# Access the services
-# Web Dashboard:    http://localhost:8080
-# API:              http://localhost:8080/api
-# Grafana:          http://localhost:3000  (admin/wattwise)
-# Prometheus:       http://localhost:9090
+# Start the full stack
+docker compose -f docker/docker-compose.yml up --build
 ```
+
+Services once running:
+
+| Service | URL | Notes |
+|---|---|---|
+| Web Dashboard | http://localhost:8080 | via Nginx reverse proxy |
+| API (Swagger) | http://localhost:8080/swagger-ui.html | JWT auth required |
+| Grafana | http://localhost:3000 | credentials from `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` in `.env` |
+| Prometheus | http://localhost:9090 | metrics scrape |
+
+All secrets come from environment variables — see `docker/.env.example` for the full list. **Never commit `.env`.**
 
 ### Local Development (without Docker)
 
 ```bash
-# 1. Start SQL Server (or use SQLite profile)
-# Option A: Docker only for SQL Server
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=WattWise2024!" -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
-
-# Option B: Use SQLite for local dev
+# Option A: use SQLite (no database server needed)
 export SPRING_PROFILES_ACTIVE=dev
+cd backend && mvn spring-boot:run
 
-# 2. Start the backend
-cd backend
-mvn spring-boot:run
+# Option B: run SQL Server via Docker
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<your-password>" -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
 
-# 3. Start the analytics microservice
+# Analytics microservice
 cd analytics-python
 python -m venv venv
 venv\Scripts\activate          # Windows
@@ -171,74 +128,43 @@ venv\Scripts\activate          # Windows
 pip install -r requirements.txt
 python -m app.main
 
-# 4. Open the web dashboard
-# Serve web/ with any static file server, or open web/index.html directly
+# Web dashboard — serve web/ with any static file server
 ```
-
-### Scripts
-
-Platform-specific helper scripts are available in `scripts/`:
-
-| Script | Purpose |
-|---|---|
-| `scripts/windows/start-full.bat` | Start the complete environment on Windows |
-| `scripts/linux/start-full.sh` | Start the complete environment on Linux |
-| `scripts/windows/backup-db.bat` | Back up the SQL Server database |
-| `scripts/linux/backup-db.sh` | Back up the database on Linux |
-| `scripts/windows/clean-logs.bat` | Purge old log files |
 
 ---
 
 ## Roadmap
 
-### Block 1 — Foundation ✅ (Current)
-- [x] Project structure and architecture documentation
-- [ ] Backend: price ingestion from ESIOS, traffic-light engine, CRUD APIs
-- [ ] Web dashboard: price chart, traffic-light grid, login
-- [ ] Docker Compose: full stack local environment
-- [ ] CI/CD: GitHub Actions build + test pipeline
+### Completed
 
-### Block 2 — Intelligence
-- [ ] Recommendation engine with Strategy pattern per appliance type
-- [ ] Alert system with Observer pattern
-- [ ] Android app: offline mode, local notifications via WorkManager
-- [ ] Analytics microservice: weekday averages, savings estimates
+- **Backend** — Spring Boot REST API with JWT auth, price ingestion from ESIOS, traffic-light engine, recommendation engine (Strategy pattern), alert system (Observer pattern), Flyway migrations (V1/V2), dual persistence (SQLite dev / SQL Server prod), springdoc-openapi
+- **Web Dashboard** — traffic-light hourly chart, login/register, appliance CRUD, recommendation cards
+- **Android App** — Room offline cache, WorkManager periodic sync, local notifications, JWT in EncryptedSharedPreferences
+- **Analytics Microservice** — Flask service with `/health`, `/ready`, and analytics endpoints (weekday averages, savings estimates, trends, anomalies)
+- **Desktop Admin** — Java Swing tool for CSV import/export, price correction, direct JDBC access
+- **Docker Compose** — 6 services configured (nginx, backend, sql-server, analytics, prometheus, grafana) with dev/prod overrides
 
-### Block 3 — Polish
-- [ ] Desktop admin: CSV import/export, price correction
-- [ ] Advanced Grafana dashboards, alerting rules
-- [ ] Historical trend analysis, anomaly detection
-- [ ] Mobile responsive refinement, accessibility audit
+### Still in progress
 
-### Block 4 — Scale
-- [ ] Multi-user support refinement, rate limiting
-- [ ] FCM notification extension (documented, optional)
-- [ ] Database performance tuning, query optimization
-- [ ] Backtesting with 12 months of historical PVPC data
-- [ ] User study and threshold calibration
-
----
-
-## Agile Management
-
-- **Project board:** [GitHub Projects](https://github.com/users/your-username/projects) (Kanban: Backlog → In Progress → Review → Done)
-- **Documentation:** `docs/` directory in-repo (no external wiki)
-- **Decision tracking:** Architecture Decision Records in `docs/adr/`
-- **Releases:** Tagged versions with GitHub Releases changelogs
+- Docker Compose end-to-end smoke test
+- CI/CD pipeline (GitHub Actions)
+- README polish and screenshots
+- FCM push notifications (documented as extension in ADR-005)
+- Backtesting with 12 months of historical PVPC data
 
 ---
 
 ## Architecture Decision Records
 
-All significant technical decisions are documented in `docs/adr/`:
+All significant technical decisions are documented in [`docs/adr/`](docs/adr/):
 
-- [ADR-001: Microservice Separation](docs/adr/) — Why analytics lives in a separate Python service
-- [ADR-002: SQL Server + SQLite Dual Persistence](docs/adr/) — How server and offline clients share data
-- [ADR-003: ESIOS API Resilience Strategy](docs/adr/) — Retry, backoff, and stale data handling
-- [ADR-004: Monorepo over Polyrepo](docs/adr/) — Cross-module atomic changes
-- [ADR-005: Local Notifications over FCM](docs/adr/) — Offline-first notification approach
+- **ADR-001: Microservice Separation** — Why analytics lives in a separate Python service (Pandas is the right tool for time-series; Java alternatives are heavier and less community-supported)
+- **ADR-002: SQL Server + SQLite Dual Persistence** — Server uses SQL Server; dev/demo/desktop use SQLite; Android has its own Room cache
+- **ADR-003: ESIOS API Resilience Strategy** — Retry with exponential backoff, stale data handling, late publication alerts
+- **ADR-004: Monorepo over Polyrepo** — Cross-module atomic changes, single Docker Compose file, one clone to get everything
+- **ADR-005: Local Notifications over FCM** — Offline-first notifications via WorkManager; no Firebase project setup needed, no device tokens leave the device
 
-→ Full trade-off analysis: [`docs/architecture/architecture.md`](docs/architecture/architecture.md#key-architectural-decisions--trade-offs)
+Full trade-off analysis: [`docs/architecture/architecture.md`](docs/architecture/architecture.md#key-architectural-decisions--trade-offs)
 
 ---
 
@@ -248,9 +174,6 @@ All significant technical decisions are documented in `docs/adr/`:
 2. Create a feature branch (`git checkout -b feature/my-feature`)
 3. Commit with conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
 4. Push and open a Pull Request
-5. CI must pass (build + tests + coverage ≥ 70%)
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for full guidelines (create as needed).
 
 ---
 
@@ -264,4 +187,3 @@ This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) 
 
 - **Price data:** [ESIOS — Red Eléctrica de España](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real) — Public API for Spanish electricity market data
 - **PVPC regulation:** [BOE — Boletín Oficial del Estado](https://www.boe.es/)
-- Built with ❤️ for energy-conscious consumers in Spain

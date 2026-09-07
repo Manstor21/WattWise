@@ -15,7 +15,7 @@ Central REST API serving all client applications. Owns business logic for price 
 - HikariCP connection pool
 - JaCoCo (coverage), JUnit 5 + Mockito (tests)
 
-### Proposed Folder Structure
+### Folder Structure
 
 ```
 backend/
@@ -42,14 +42,14 @@ backend/
 │   ├── scheduler/
 │   │   └── PriceFetchJob.java
 │   ├── recommendation/
-│   │   ├── RecommendationStrategy.java        ← interface
+│   │   ├── RecommendationStrategy.java        (interface)
 │   │   ├── WashingMachineStrategy.java
 │   │   ├── DishwasherStrategy.java
 │   │   ├── EvChargingStrategy.java
 │   │   ├── GenericApplianceStrategy.java
 │   │   └── StrategyFactory.java
 │   ├── alert/
-│   │   ├── AlertObserver.java                 ← interface
+│   │   ├── AlertObserver.java                 (interface)
 │   │   ├── PriceThresholdObserver.java
 │   │   ├── AnomalyObserver.java
 │   │   └── AlertManager.java
@@ -114,11 +114,11 @@ backend/
 - **ESIOS API** is consumed by the scheduled job.
 - **Prometheus** scrapes `/actuator/prometheus`.
 
-### Tests Planned
+### Tests
 - Unit: `TrafficLightClassifier`, `RecommendationStrategy` implementations, `PriceUtils`, service layer with Mockito.
 - Integration: `PriceController` endpoint tests with `@WebMvcTest`, repository tests with `@DataJpaTest` + H2/SQLite.
 - Contract: All REST endpoints validated against OpenAPI spec (springdoc-openapi).
-- Coverage target: ≥70% line coverage (JaCoCo enforced in CI).
+- Coverage target: ≥70% line coverage (JaCoCo, enforced via the Maven `verify` phase).
 
 ---
 
@@ -131,7 +131,7 @@ Browser-based responsive dashboard showing real-time prices, traffic-light class
 - HTML5, CSS3 (custom, no framework), vanilla JavaScript (ES6+), jQuery 3.x
 - AJAX (fetch API + jQuery `$.ajax`) for async data loading
 
-### Proposed Folder Structure
+### Folder Structure
 
 ```
 web/
@@ -173,7 +173,7 @@ web/
 - JWT stored in `localStorage`; sent as `Authorization: Bearer` header.
 - No server-side rendering — pure SPA-like static site.
 
-### Tests Planned
+### Tests
 - Manual responsive testing (browser devtools).
 - JS unit tests (optional, via Jest) for `api.js` and `utils.js`.
 - Lighthouse audit for performance/accessibility baseline.
@@ -192,7 +192,7 @@ Native mobile client providing traffic-light price visualization, recommendation
 - NotificationCompat for local notifications
 - Retrofit 2 + Gson for REST API communication
 
-### Proposed Folder Structure
+### Folder Structure
 
 ```
 android/
@@ -253,7 +253,7 @@ android/
 - JWT stored in EncryptedSharedPreferences.
 - Offline mode reads from Room (SQLite) — identical schema to server-side PriceRecord/Appliance tables.
 
-### Tests Planned
+### Tests
 - Unit: Repository layer, `ConflictResolver`, `PriceCheckWorker` logic.
 - Instrumentation: Room DAO CRUD operations, Retrofit API contract tests (MockWebServer).
 - UI: Basic Espresso tests for login flow and dashboard rendering.
@@ -266,12 +266,12 @@ android/
 Standalone microservice for statistical analysis of electricity prices: averages by weekday, savings projections, trend analysis, and anomaly detection. Exposes results via REST for consumption by the backend or direct dashboard display.
 
 ### Stack
-- Python 3.11+, Flask or FastAPI (TBD at implementation)
+- Python 3.11+, Flask
 - Pandas for time-series analysis
 - SQLAlchemy for SQL Server connectivity
 - Pytest for testing
 
-### Proposed Folder Structure
+### Folder Structure
 
 ```
 analytics-python/
@@ -319,7 +319,7 @@ analytics-python/
 - Backend proxies select analytics endpoints for the web/mobile clients.
 - Prometheus metrics exposed at `/metrics`.
 
-### Tests Planned
+### Tests
 - Unit: Each service function with mocked DataFrames.
 - Integration: Endpoint tests with testcontainers (SQL Server) or SQLite in-memory.
 - Data quality: Assertions on output schema and value ranges.
@@ -336,7 +336,7 @@ Administration tool for data managers: import/export CSV price data, correct err
 - JDBC (SQL Server in production, SQLite for local dev/demo)
 - Apache Commons CSV for import/export
 
-### Proposed Folder Structure
+### Folder Structure
 
 ```
 desktop-admin/
@@ -380,7 +380,7 @@ desktop-admin/
 - Can optionally call backend API for job log retrieval.
 - Reads/writes the same `price_records` and `users` tables as the backend.
 
-### Tests Planned
+### Tests
 - Unit: `CsvService` parse/serialize, `PriceCorrectionService` validation logic.
 - Manual: UI workflow testing (import, correct, export round-trip).
 
@@ -398,7 +398,7 @@ Containerize all services and provide a one-command local development environmen
 - Grafana (metrics visualization + alerting)
 - SQL Server 2022 (or SQL Server for Linux)
 
-### Proposed Folder Structure
+### Folder Structure
 
 ```
 docker/
@@ -447,7 +447,7 @@ docker/
 - Grafana reads from Prometheus datasource.
 - All services on a shared Docker network (`wattwise-net`).
 
-### Tests Planned
+### Tests
 - Smoke test: `docker-compose up` starts all services, health checks pass.
 - Prometheus targets all UP.
 - Grafana dashboards render without errors.

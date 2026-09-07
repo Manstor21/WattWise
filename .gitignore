@@ -78,3 +78,6 @@ Thumbs.db
 *.swp
 
 desktop-admin/target/
+
+# ---------- Herramientas internas del autor (local, NO en repo) ----------
+.engram/
