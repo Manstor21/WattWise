@@ -1,0 +1,252 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "9ff4481df34f34761303e4c131fcdc64",
+    "entities": [
+      {
+        "tableName": "price_records",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`timestamp` TEXT NOT NULL, `serverId` INTEGER NOT NULL, `priceEurPerKwh` TEXT, `plusTaxEurPerKwh` TEXT, `totalEurPerKwh` TEXT, `source` TEXT, `color` TEXT, PRIMARY KEY(`timestamp`))",
+        "fields": [
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "serverId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priceEurPerKwh",
+            "columnName": "priceEurPerKwh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "plusTaxEurPerKwh",
+            "columnName": "plusTaxEurPerKwh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "totalEurPerKwh",
+            "columnName": "totalEurPerKwh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "source",
+            "columnName": "source",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "color",
+            "columnName": "color",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "timestamp"
+          ]
+        },
+        "indices": [
+          {
+            "name": "index_price_records_timestamp",
+            "unique": true,
+            "columnNames": [
+              "timestamp"
+            ],
+            "orders": [],
+            "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_price_records_timestamp` ON `${TABLE_NAME}` (`timestamp`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "appliances",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`localId` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `serverId` INTEGER, `name` TEXT, `type` TEXT, `powerWatts` INTEGER, `avgCycleKwh` TEXT, `estimatedCycleMinutes` INTEGER, `isActive` INTEGER NOT NULL, `isPendingSync` INTEGER NOT NULL, `isDeleted` INTEGER NOT NULL, `updatedAt` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "localId",
+            "columnName": "localId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "serverId",
+            "columnName": "serverId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "type",
+            "columnName": "type",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "powerWatts",
+            "columnName": "powerWatts",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "avgCycleKwh",
+            "columnName": "avgCycleKwh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "estimatedCycleMinutes",
+            "columnName": "estimatedCycleMinutes",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isActive",
+            "columnName": "isActive",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isPendingSync",
+            "columnName": "isPendingSync",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isDeleted",
+            "columnName": "isDeleted",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "updatedAt",
+            "columnName": "updatedAt",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "localId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "recommendations",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`applianceId` INTEGER NOT NULL, `applianceName` TEXT, `applianceType` TEXT, `recommendedStart` TEXT, `recommendedEnd` TEXT, `recommendedPriceEurPerKwh` TEXT, `estimatedCostEur` TEXT, `worstCaseCostEur` TEXT, `estimatedSavingsEur` TEXT, `savingsPercentage` TEXT, `semaphore` TEXT, `windowJson` TEXT, `lastUpdated` INTEGER NOT NULL, PRIMARY KEY(`applianceId`))",
+        "fields": [
+          {
+            "fieldPath": "applianceId",
+            "columnName": "applianceId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "applianceName",
+            "columnName": "applianceName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "applianceType",
+            "columnName": "applianceType",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recommendedStart",
+            "columnName": "recommendedStart",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recommendedEnd",
+            "columnName": "recommendedEnd",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "recommendedPriceEurPerKwh",
+            "columnName": "recommendedPriceEurPerKwh",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "estimatedCostEur",
+            "columnName": "estimatedCostEur",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "worstCaseCostEur",
+            "columnName": "worstCaseCostEur",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "estimatedSavingsEur",
+            "columnName": "estimatedSavingsEur",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "savingsPercentage",
+            "columnName": "savingsPercentage",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "semaphore",
+            "columnName": "semaphore",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "windowJson",
+            "columnName": "windowJson",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastUpdated",
+            "columnName": "lastUpdated",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": false,
+          "columnNames": [
+            "applianceId"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9ff4481df34f34761303e4c131fcdc64')"
+    ]
+  }
+}

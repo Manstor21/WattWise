@@ -1,0 +1,92 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.wattwise.android'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.wattwise.android"
+        // java.time is available natively from API 26, so no desugaring is required.
+        minSdk 26
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        debug {
+            // 10.0.2.2 = the host machine's loopback as seen from the Android emulator.
+            buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:8080\""
+            minifyEnabled false
+        }
+        release {
+            // Production URL placeholder; point this at the real deployment host.
+            buildConfigField "String", "API_BASE_URL", "\"https://api.wattwise.example\""
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    defaultConfig {
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+    }
+
+    buildFeatures {
+        buildConfig true
+    }
+
+    lint {
+        abortOnError false
+        warningsAsErrors false
+    }
+
+    packaging {
+        resources {
+            excludes += ['META-INF/DEPENDENCIES', 'META-INF/LICENSE*', 'META-INF/NOTICE*', 'META-INF/AL2.0', 'META-INF/LGPL2.1']
+        }
+    }
+}
+
+dependencies {
+    // AndroidX
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'androidx.core:core:1.12.0'
+    implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+
+    // Room (SQLite ORM) — Java annotation processing.
+    implementation 'androidx.room:room-runtime:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+
+    // WorkManager (periodic sync + price notification scheduling).
+    implementation 'androidx.work:work-runtime:2.9.0'
+
+    // EncryptedSharedPreferences for the JWT + user ids.
+    implementation 'androidx.security:security-crypto:1.1.0-alpha06'
+
+    // Network: Retrofit 2 + OkHttp + Gson.
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Unit tests (JVM only — repositories/DAOs require Robolectric or instrumentation;
+    // the pure logic classes tested here have no Android dependencies).
+    testImplementation 'junit:junit:4.13.2'
+}

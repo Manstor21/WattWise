@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Design tokens use java.time + Europe/Madrid; the app is Spanish-first. -->
+    <string name="app_name">WattWise</string>
+
+    <!-- Navigation -->
+    <string name="tab_dashboard">Resumen</string>
+    <string name="tab_recommendations">Recomendaciones</string>
+    <string name="tab_appliances">Aparatos</string>
+    <string name="tab_settings">Ajustes</string>
+
+    <!-- Auth -->
+    <string name="login_title">Bienvenido a WattWise</string>
+    <string name="login_subtitle">Optimiza tu consumo eléctrico según el precio horario</string>
+    <string name="register_title">Crea tu cuenta</string>
+    <string name="tab_login">Iniciar sesión</string>
+    <string name="tab_register">Registrarse</string>
+    <string name="field_username">Usuario</string>
+    <string name="field_email">Correo electrónico</string>
+    <string name="field_password">Contraseña</string>
+    <string name="action_login">Iniciar sesión</string>
+    <string name="action_register">Crear cuenta</string>
+    <string name="action_logout">Cerrar sesión</string>
+    <string name="error_credentials">Usuario o contraseña incorrectos</string>
+    <string name="error_network">No se pudo conectar. Comprueba tu conexión.</string>
+    <string name="error_generic">Algo salió mal. Inténtalo de nuevo.</string>
+    <string name="error_min_password">La contraseña debe tener al menos 8 caracteres</string>
+    <string name="password_mismatch">Las contraseñas no coinciden</string>
+    <string name="progress_auth">Espera…</string>
+
+    <!-- Dashboard / prices -->
+    <string name="tab_today">Hoy</string>
+    <string name="tab_tomorrow">Mañana</string>
+    <string name="price_cheapest">Más barata</string>
+    <string name="price_costliest">Más cara</string>
+    <string name="price_mean">Precio medio</string>
+    <string name="price_unit_kwh">€/kWh</string>
+    <string name="price_no_data">Sin precios disponibles</string>
+    <string name="slot_until">hasta</string>
+
+    <!-- Offline -->
+    <string name="offline_banner">Datos sin conexión</string>
+    <string name="offline_last_update">Última actualización: %1$s</string>
+
+    <!-- Login overlay -->
+    <string name="action_login_prompt">Inicia sesión para guardar tus aparatos y recibir recomendaciones</string>
+    <string name="action_go_login">Iniciar sesión</string>
+
+    <!-- Appliances -->
+    <string name="action_add_appliance">Añadir aparato</string>
+    <string name="title_add_appliance">Nuevo aparato</string>
+    <string name="title_edit_appliance">Editar aparato</string>
+    <string name="appliance_name">Nombre</string>
+    <string name="appliance_type">Tipo</string>
+    <string name="appliance_power">Potencia (W)</string>
+    <string name="appliance_cycle_kwh">kWh por ciclo</string>
+    <string name="appliance_cycle_min">Minutos por ciclo</string>
+    <string name="appliance_active">Activo</string>
+    <string name="action_save">Guardar</string>
+    <string name="action_cancel">Cancelar</string>
+    <string name="action_delete">Borrar</string>
+    <string name="action_edit">Editar</string>
+    <string name="confirm_delete_appliance">¿Eliminar este aparato?</string>
+    <string name="no_appliances">Aún no tienes aparatos.\nPulsa + para añadir el primero.</string>
+    <string name="error_appliance_fields">Rellena al menos un nombre válido con potencia y consumo positivos</string>
+    <string name="sync_pending_tag">Pendiente de sincronizar</string>
+
+    <!-- Recommendations -->
+    <string name="no_recommendations">Sin recomendaciones por ahora.\nAñade un aparato activo para ver su ventana óptima.</string>
+    <string name="recommendation_window">Ventana recomendada</string>
+    <string name="recommendation_price">Precio</string>
+    <string name="estimated_cost">Coste estimado</string>
+    <string name="worst_case">Peor caso</string>
+    <string name="savings">Ahorro</string>
+    <string name="savings_percent">Ahorro: %1$s (%2$s)</string>
+
+    <!-- Settings / alerts -->
+    <string name="alert_threshold">Umbral de precio</string>
+    <string name="alert_percent_below">%1$d%% por debajo de la media</string>
+    <string name="alert_enabled">Alertas activadas</string>
+    <string name="alert_appliance_scope">Solo para aparato (opcional)</string>
+    <string name="action_check_alerts">Comprobar alertas ahora</string>
+    <string name="action_sync">Sincronizar ahora</string>
+    <string name="alert_checked">Alertas comprobadas</string>
+    <string name="no_alerts">No hay alertas disparadas hoy</string>
+    <string name="alert_fired">Se han disparado %1$d alerta(s)</string>
+    <string name="syncing">Sincronizando…</string>
+    <string name="sync_complete">Sincronización completada</string>
+    <string name="sync_failed">No se pudo sincronizar ahora</string>
+    <string name="session_expired">La sesión ha caducado. Vuelve a iniciar sesión.</string>
+    <string name="save_preferences">Guardar preferencias</string>
+    <string name="prefs_saved">Preferencias guardadas</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Alertas de precio</string>
+    <string name="notification_channel_desc">Avisos cuando el precio baja de tu umbral o hay una ventana verde óptima</string>
+    <string name="notification_optimal_window">Ventana óptima</string>
+    <string name="notification_optimal_body">Programa tu consumo de %1$s a %2$s a %3$s €/kWh</string>
+    <string name="notification_low_price">Precio bajo detectado</string>
+    <string name="notification_low_price_body">El precio baja a %1$s €/kWh a las %2$s</string>
+
+    <!-- Appliance types -->
+    <string name="type_washing_machine">Lavadora</string>
+    <string name="type_dishwasher">Lavavajillas</string>
+    <string name="type_ev_charger">Cargador VE</string>
+    <string name="type_dryer">Secadora</string>
+    <string name="type_pool_pump">Bomba de piscina</string>
+    <string name="type_ac">Aire acondicionado</string>
+    <string name="type_other">Otro</string>
+</resources>

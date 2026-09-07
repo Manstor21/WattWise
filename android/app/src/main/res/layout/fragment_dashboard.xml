@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_base"
+    android:orientation="vertical">
+
+    <!-- Offline banner (hidden unless data came from cache). -->
+    <LinearLayout
+        android:id="@+id/offlineBanner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_3"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:contentDescription="@string/offline_banner"
+            android:src="@drawable/ic_cloud_off" />
+
+        <TextView
+            android:id="@+id/txtOffline"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_2"
+            android:layout_weight="1"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_sm" />
+    </LinearLayout>
+
+    <!-- Login prompt overlay (shown only when no session exists). -->
+    <LinearLayout
+        android:id="@+id/loginPromptCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/space_4"
+        android:background="@drawable/bg_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_4"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/action_login_prompt"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_sm" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoLogin"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_go_login"
+            android:textColor="@color/accent" />
+    </LinearLayout>
+
+    <!-- Day summary header card. -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_4"
+        android:layout_marginEnd="@dimen/space_4"
+        android:layout_marginBottom="@dimen/space_3"
+        android:background="@drawable/bg_card"
+        android:orientation="vertical"
+        android:padding="@dimen/space_4">
+
+        <TextView
+            android:id="@+id/txtDayTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_today"
+            android:textColor="@color/text_primary"
+            android:textSize="@dimen/text_md"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/space_3"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_cheapest"
+                    android:textColor="@color/text_muted"
+                    android:textSize="@dimen/text_xs" />
+
+                <TextView
+                    android:id="@+id/txtCheapest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:textColor="@color/semaphore_green"
+                    android:textSize="@dimen/text_sm"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_costliest"
+                    android:textColor="@color/text_muted"
+                    android:textSize="@dimen/text_xs" />
+
+                <TextView
+                    android:id="@+id/txtCostliest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:textColor="@color/semaphore_red"
+                    android:textSize="@dimen/text_sm"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/price_mean"
+                    android:textColor="@color/text_muted"
+                    android:textSize="@dimen/text_xs" />
+
+                <TextView
+                    android:id="@+id/txtMean"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="--"
+                    android:textColor="@color/text_primary"
+                    android:textSize="@dimen/text_sm"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- HOY / MAÃ‘ANA tabs. -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/dayTabs"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/bg_surface"
+        app:tabIndicatorColor="@color/accent"
+        app:tabMode="fixed"
+        app:tabSelectedTextColor="@color/accent"
+        app:tabTextColor="@color/text_secondary">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_today" />
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tab_tomorrow" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/priceList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="@dimen/space_3" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/txtNoPrices"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/price_no_data"
+        android:textColor="@color/text_muted"
+        android:visibility="gone" />
+</LinearLayout>

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_base">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Offline banner -->
+        <LinearLayout
+            android:id="@+id/offlineBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/bg_surface"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="@dimen/space_3"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:contentDescription="@string/offline_banner"
+                android:src="@drawable/ic_cloud_off" />
+
+            <TextView
+                android:id="@+id/txtOffline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_2"
+                android:layout_weight="1"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_sm" />
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommendationList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="@dimen/space_3" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtEmpty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:padding="@dimen/space_6"
+        android:text="@string/no_recommendations"
+        android:textColor="@color/text_muted"
+        android:visibility="gone" />
+
+    <!-- Login prompt overlay when anonymous. -->
+    <LinearLayout
+        android:id="@+id/loginPromptCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/space_4"
+        android:background="@drawable/bg_card"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/space_4"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/action_login_prompt"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_sm" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGoLogin"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/action_go_login"
+            android:textColor="@color/accent" />
+    </LinearLayout>
+</FrameLayout>

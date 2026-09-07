@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <menu xmlns:android="http://schemas.android.com/apk/res/android">
+        <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_dashboard"
+            android:title="@string/tab_dashboard" />
+        <item
+            android:id="@+id/nav_recommendations"
+            android:icon="@drawable/ic_bulb"
+            android:title="@string/tab_recommendations" />
+        <item
+            android:id="@+id/nav_appliances"
+            android:icon="@drawable/ic_plug"
+            android:title="@string/tab_appliances" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="@string/tab_settings" />
+    </menu>
+</resources>

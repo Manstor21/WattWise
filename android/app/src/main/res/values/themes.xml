@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--
+      App-wide dark theme rooted in the web palette (bg #0F172A / surface #1E293B,
+      accent cyan #22D3EE). Explicit colors keep the UI dark in both light and
+      dark system modes.
+    -->
+    <style name="Theme.WattWise" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/accent</item>
+        <item name="colorPrimaryVariant">@color/accent_strong</item>
+        <item name="colorOnPrimary">@color/text_on_accent</item>
+        <item name="colorSecondary">@color/semaphore_green</item>
+        <item name="colorSecondaryVariant">@color/semaphore_green_dark</item>
+        <item name="colorOnSecondary">@color/text_on_accent</item>
+        <item name="android:colorBackground">@color/bg_base</item>
+        <item name="colorSurface">@color/bg_surface</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="android:statusBarColor">@color/bg_base</item>
+        <item name="android:navigationBarColor">@color/bg_base</item>
+        <item name="android:windowBackground">@color/bg_base</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
+        <item name="android:textColorHint">@color/text_muted</item>
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Keep Material text fields readable on the dark surface. -->
+        <item name="colorControlNormal">@color/border</item>
+        <item name="colorControlActivated">@color/accent</item>
+        <item name="colorControlHighlight">@color/border_soft</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+    </style>
+
+    <!-- Full-screen dark variant used by the login screen container defaults. -->
+    <style name="Theme.WattWise.Login" parent="Theme.WattWise">
+        <item name="android:windowBackground">@color/bg_base</item>
+    </style>
+</resources>

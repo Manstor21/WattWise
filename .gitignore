@@ -35,6 +35,9 @@ android/.cxx/
 *.jks
 *.keystore.*.jks
 
+# El wrapper jar SÍ se versiona (builds reproducibles) a pesar de la regla *.jar
+!android/gradle/wrapper/gradle-wrapper.jar
+
 # ---------- Python / analytics ----------
 __pycache__/
 *.py[cod]
