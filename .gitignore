@@ -71,6 +71,11 @@ credentials*.json
 *.sqlite3
 logs/
 data/
+# Android data layer is a Java package, not local app data — re-include it
+!android/app/src/main/java/com/wattwise/android/data/
+!android/app/src/main/java/com/wattwise/android/data/**
+!android/app/src/test/java/com/wattwise/android/data/
+!android/app/src/test/java/com/wattwise/android/data/**
 
 # ---------- Sistema ----------
 .DS_Store
