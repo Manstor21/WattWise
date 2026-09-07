@@ -1,0 +1,25 @@
+# Build-context pruning for the WattWise monorepo (compose `build: context: ..`).
+.git
+.github
+
+# Language build output / caches
+**/target/
+**/node_modules/
+**/__pycache__/
+**/.venv/
+**/*.pyc
+
+# Local state & secrets (never ship them into images)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Editor / OS noise
+**/.idea/
+**/.vscode/
+**/*.swp
+**/.DS_Store
+**/Thumbs.db
+
+# Dev runtime data (SQLite)
+docker/data/

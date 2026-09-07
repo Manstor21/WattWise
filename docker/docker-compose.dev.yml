@@ -1,0 +1,46 @@
+# =============================================================================
+# WattWise — local development overrides.
+#
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up -d --build
+#
+# Changes vs. the base stack:
+#   * backend  -> Spring `dev` profile backed by a SQLite file mounted from ./data
+#                 (no SQL Server required; Flyway stays disabled as per application-dev.yml)
+#   * sql-server -> excluded by default (it gets an inactive compose profile).
+#                   Bring it up explicitly when needed:
+#                   docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml --profile sql-server up -d
+#   * backend and analytics run SQLite-first in dev (no wait on SQL Server).
+#   * backend publishes 8080 on the host for direct access to Actuator/Swagger while debugging.
+#
+# SQLite keeps state in docker/data/ (git-ignored by the repo root). Delete the file
+# to reset your local database.
+# =============================================================================
+
+services:
+  backend:
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:sqlite:./data/wattwise.db
+      DB_USERNAME: ""
+      DB_PASSWORD: ""
+    volumes:
+      - ./data:/app/data
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 60s
+
+  analytics-python:
+    # SQLite-backed for a zero-SQL-Server dev run; SQLAlchemy resolves SQLite via
+    # the DATABASE_URL below (table auto-creation in app/main.py).
+    environment:
+      DATABASE_URL: sqlite:////app/data/wattwise-analytics.db
+    volumes:
+      - ./data:/app/data
+
+  sql-server:
+    profiles: ["sql-server"]

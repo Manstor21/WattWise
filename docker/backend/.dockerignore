@@ -1,0 +1,10 @@
+# Exclude build artifacts and VCS metadata from the monorepo-root build context.
+**/target/
+**/.git/
+**/*.class
+**/*.jar.tmp
+**/*~
+**/.DS_Store
+**/node_modules/
+**/__pycache__/
+**/.venv/

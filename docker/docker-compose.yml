@@ -1,0 +1,217 @@
+# =============================================================================
+# WattWise — full stack (xref docs/architecture/modules.md §6, §7)
+#
+#   docker compose -f docker/docker-compose.yml up -d --build
+#
+# Services (internal port -> host):
+#   nginx 80 -> 8080    | sql-server 1433 -> 1433   | analytics-python 5000 -> 5001
+#   backend 8080 (internal only)                    | prometheus 9090 -> 9090
+#   grafana 3000 -> 3000
+#
+# All secrets come from environment (see .env.example). NEVER commit .env.
+# Run from repo root (`-f docker/docker-compose.yml`) or `cd docker`.
+# =============================================================================
+
+name: wattwise
+
+services:
+  # ---------------------------------------------------------------------------
+  # Reverse proxy + static web (builds from web/ + docker/nginx/)
+  # ---------------------------------------------------------------------------
+  nginx:
+    build:
+      context: ..
+      dockerfile: docker/web/Dockerfile
+    container_name: wattwise-nginx
+    ports:
+      - "8080:80"
+    networks:
+      - wattwise-net
+    depends_on:
+      backend:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost/ || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Spring Boot API (prod profile, SQL Server). Flyway owns the DB schema.
+  # ---------------------------------------------------------------------------
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/backend/Dockerfile
+    container_name: wattwise-backend
+    expose:
+      - "8080"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SERVER_PORT: 8080
+      DB_URL: jdbc:sqlserver://sql-server:1433;databaseName=${DB_NAME:-wattwise_db};encrypt=true;trustServerCertificate=true
+      DB_USERNAME: ${DB_USER:-wattwise_user}
+      DB_PASSWORD: ${DB_PASSWORD:-wattwise_password}
+      JWT_SECRET: ${JWT_SECRET:-replace-me-dev-secret-change-in-production-at-least-32-chars}
+      ESIOS_API_TOKEN: ${ESIOS_API_TOKEN:-}
+      PRICE_FETCH_ENABLED: ${PRICE_FETCH_ENABLED:-true}
+      PRICE_FETCH_CRON: ${PRICE_FETCH_CRON:-0 15 20 * * *}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:8080,http://localhost:3000}
+    networks:
+      - wattwise-net
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/actuator/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 12
+      start_period: 90s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # SQL Server 2022 — the entrypoint wrapper creates `wattwise_db` + app login.
+  # Tables are created by the backend's Flyway migrations, never here.
+  # ---------------------------------------------------------------------------
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: wattwise-sql-server
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: ${MSSQL_PID:-Developer}
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD:-W4ttWise!StrongPwd}
+      DB_NAME: ${DB_NAME:-wattwise_db}
+      DB_USER: ${DB_USER:-wattwise_user}
+      DB_PASSWORD: ${DB_PASSWORD:-wattwise_password}
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+      - ./sql-server/init-scripts:/opt/wattwise/init:ro
+    # The official image does not auto-run /docker-entrypoint-initdb.d; our
+    # wrapper starts sqlservr and applies docker/sql-server/init-scripts/*.sql.
+    entrypoint: ["/bin/bash", "/opt/wattwise/init/init.sh"]
+    networks:
+      - wattwise-net
+    healthcheck:
+      # Only healthy once the app database exists (init.sh has run).
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -d $$DB_NAME -Q 'SELECT 1' -b -o /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 40s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Analytics microservice (Flask + prometheus_client)
+  # ---------------------------------------------------------------------------
+  analytics-python:
+    build:
+      context: ..
+      dockerfile: docker/analytics-python/Dockerfile
+    container_name: wattwise-analytics
+    environment:
+      FLASK_ENV: production
+      PORT: 5000
+      DATABASE_URL: mssql+pyodbc://${DB_USER:-wattwise_user}:${DB_PASSWORD:-wattwise_password}@sql-server:1433/${DB_NAME:-wattwise_db}?driver=ODBC+Driver+18+for+SQL+Server&encrypt=yes&trustServerCertificate=yes
+      DAYS_DEFAULT: ${ANALYTICS_DAYS_DEFAULT:-30}
+    ports:
+      - "5001:5000"
+    networks:
+      - wattwise-net
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:5000/health')\""]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Prometheus (15s scrape interval)
+  # ---------------------------------------------------------------------------
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: wattwise-prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+    networks:
+      - wattwise-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:9090/-/healthy || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  # ---------------------------------------------------------------------------
+  # Grafana (provisioned datasource + dashboards)
+  # ---------------------------------------------------------------------------
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: wattwise-grafana
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+    volumes:
+      - ./grafana/grafana.ini:/etc/grafana/grafana.ini:ro
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - wattwise-net
+    depends_on:
+      prometheus:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3000/api/health || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 15s
+    restart: unless-stopped
+
+# ---------------------------------------------------------------------------
+  # Blackbox Exporter (probes for services without a /metrics endpoint)
+  # ---------------------------------------------------------------------------
+  blackbox-exporter:
+    image: prom/blackbox-exporter:v0.25.0
+    container_name: wattwise-blackbox-exporter
+    volumes:
+      - ./blackbox/blackbox.yml:/config/blackbox.yml:ro
+    command:
+      - --config.file=/config/blackbox.yml
+    expose:
+      - "9115"
+    networks:
+      - wattwise-net
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:9115/-/healthy || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+networks:
+  wattwise-net:
+    name: wattwise-net
+    driver: bridge
+
+volumes:
+  sqlserver-data:
+    name: wattwise-sqlserver-data
+  prometheus-data:
+    name: wattwise-prometheus-data
+  grafana-data:
+    name: wattwise-grafana-data

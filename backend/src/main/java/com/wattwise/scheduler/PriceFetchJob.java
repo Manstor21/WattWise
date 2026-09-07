@@ -5,12 +5,16 @@ import com.wattwise.model.dto.EsiosPricePoint;
 import com.wattwise.service.EsiosClientService;
 import com.wattwise.service.PriceService;
 import com.wattwise.util.PriceUtils;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Gauge;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -30,6 +34,10 @@ public class PriceFetchJob {
 
     private final EsiosClientService esiosClientService;
     private final PriceService priceService;
+    private final Counter esiosFetchSuccess;
+    private final Counter esiosFetchError;
+    private final Counter priceRecordsInserted;
+    private volatile long lastSuccessfulFetchEpochSec;
 
     @Value("${wattwise.scheduler.enabled:true}")
     private boolean enabled;
@@ -43,9 +51,16 @@ public class PriceFetchJob {
     @Value("${wattwise.esios.retry.max-backoff-ms:30000}")
     private long maxBackoffMs;
 
-    public PriceFetchJob(EsiosClientService esiosClientService, PriceService priceService) {
+    public PriceFetchJob(EsiosClientService esiosClientService, PriceService priceService, MeterRegistry meterRegistry) {
         this.esiosClientService = esiosClientService;
         this.priceService = priceService;
+        // Observability (modules.md §7): counters exposed at /actuator/prometheus.
+        this.esiosFetchSuccess = meterRegistry.counter("esiros_fetch_total", "status", "success");
+        this.esiosFetchError = meterRegistry.counter("esiros_fetch_total", "status", "error");
+        this.priceRecordsInserted = meterRegistry.counter("price_records_inserted_total", "source", "esiros");
+        // Gauge feeding the "data staleness" panel (dashboard wattwise-price-pipeline).
+        // Synchronized on the mutable volatile so Prometheus reads the latest value.
+        meterRegistry.gauge("esiros_last_fetch_success_timestamp", this, PriceFetchJob::lastSuccessfulFetchEpochSec);
     }
 
     /** Cron "0 15 20 * * *" = 20:15:00 every day (Spain time). */
@@ -62,11 +77,18 @@ public class PriceFetchJob {
 
     /** Fetch+persist a single date; never propagates failures. */
     void fetchForDate(LocalDate date) {
+        boolean success = false;
         try {
             List<EsiosPricePoint> points = fetchWithRetry(date);
-            priceService.saveEsiosPoints(date, points);
+            int inserted = priceService.saveEsiosPoints(date, points).size();
+            priceRecordsInserted.increment(inserted);
+            lastSuccessfulFetchEpochSec = Instant.now().getEpochSecond();
+            success = true;
         } catch (ExternalApiException ex) {
             log.error("[ALERT] ESIOS price fetch failed for {}: {}", date, ex.getMessage());
+        } finally {
+            // Always record the outcome after an attempt, even on unexpected exceptions.
+            (success ? esiosFetchSuccess : esiosFetchError).increment();
         }
     }
 
@@ -95,5 +117,9 @@ public class PriceFetchJob {
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    long lastSuccessfulFetchEpochSec() {
+        return lastSuccessfulFetchEpochSec;
     }
 }

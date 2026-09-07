@@ -1,0 +1,65 @@
+# =============================================================================
+# WattWise — Prometheus scrape configuration.
+# Two targets, 15s interval.
+# =============================================================================
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: "wattwise-backend"
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ["backend:8080"]
+        labels:
+          service: "wattwise-backend"
+
+  - job_name: "wattwise-analytics"
+    static_configs:
+      - targets: ["analytics-python:5000"]
+        labels:
+          service: "wattwise-analytics"
+
+  # Blackbox probes for the services that expose no /metrics endpoint.
+  # Dashboard wattwise-overview renders probe_success for these four.
+  - job_name: "wattwise-blackbox"
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - "nginx:80"
+          - "prometheus:9090"
+          - "grafana:3000"
+        labels:
+          service: "wattwise-container"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - source_labels: [__address__]
+        target_label: __address__
+        replacement: blackbox-exporter:9115
+      - source_labels: [service]
+        target_label: service
+        replacement: wattwise
+
+  - job_name: "wattwise-blackbox-tcp"
+    metrics_path: /probe
+    params:
+      module: [tcp_connect]
+    static_configs:
+      - targets:
+          - "sql-server:1433"
+        labels:
+          service: "wattwise-db"
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - source_labels: [__address__]
+        target_label: __address__
+        replacement: blackbox-exporter:9115

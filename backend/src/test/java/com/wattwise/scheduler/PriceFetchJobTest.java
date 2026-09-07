@@ -4,6 +4,8 @@ import com.wattwise.exception.ExternalApiException;
 import com.wattwise.model.dto.EsiosPricePoint;
 import com.wattwise.service.EsiosClientService;
 import com.wattwise.service.PriceService;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,11 +36,13 @@ class PriceFetchJobTest {
     @Mock
     private PriceService priceService;
 
+    private MeterRegistry meterRegistry;
     private PriceFetchJob job;
 
     @BeforeEach
     void setUp() {
-        job = new PriceFetchJob(esiosClientService, priceService);
+        meterRegistry = new SimpleMeterRegistry();
+        job = new PriceFetchJob(esiosClientService, priceService, meterRegistry);
         ReflectionTestUtils.setField(job, "enabled", true);
         ReflectionTestUtils.setField(job, "maxAttempts", 3);
         ReflectionTestUtils.setField(job, "initialBackoffMs", 1L);
@@ -65,6 +69,31 @@ class PriceFetchJobTest {
         // The job swallows errors so the scheduler loop keeps running.
         assertThatCode(job::fetchDailyPrices).doesNotThrowAnyException();
         verify(priceService, never()).saveEsiosPoints(any(), any());
+    }
+
+    @Test
+    void fetchDailyPricesRecordsSuccessMetrics() {
+        List<EsiosPricePoint> points = List.of(
+                new EsiosPricePoint(LocalDateTime.of(2099, 6, 1, 0, 0), new BigDecimal("100")));
+        when(esiosClientService.fetchPricesForDate(any(LocalDate.class))).thenReturn(points);
+        when(priceService.saveEsiosPoints(any(LocalDate.class), eq(points)))
+                .thenReturn(List.of(new com.wattwise.model.entity.PriceRecord()));
+
+        job.fetchDailyPrices();
+
+        assertThat(meterRegistry.counter("esiros_fetch_total", "status", "success").count()).isEqualTo(2);
+        assertThat(meterRegistry.counter("price_records_inserted_total", "source", "esiros").count()).isEqualTo(2);
+        assertThat(meterRegistry.counter("esiros_fetch_total", "status", "error").count()).isZero();
+    }
+
+    @Test
+    void fetchFailureIncrementsErrorCounter() {
+        LocalDate date = LocalDate.of(2099, 6, 1);
+        when(esiosClientService.fetchPricesForDate(date)).thenThrow(new ExternalApiException("boom"));
+
+        assertThatCode(() -> job.fetchForDate(date)).doesNotThrowAnyException();
+        assertThat(meterRegistry.counter("esiros_fetch_total", "status", "error").count()).isEqualTo(1);
+        assertThat(meterRegistry.counter("esiros_fetch_total", "status", "success").count()).isZero();
     }
 
     @Test

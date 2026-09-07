@@ -1,0 +1,80 @@
+# =============================================================================
+# WattWise — production overrides.
+#
+#   docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up -d --build
+#
+# Adds resource limits and restart policies to every service. All credentials must
+# be supplied via a docker/.env file (see .env.example) or the orchestrator's secrets.
+# =============================================================================
+
+services:
+  nginx:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 128M
+
+  backend:
+    restart: always
+    depends_on:
+      sql-server:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "1.5"
+          memory: 1G
+        reservations:
+          cpus: "0.5"
+          memory: 512M
+
+  sql-server:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "2"
+          memory: 2G
+        reservations:
+          cpus: "1"
+          memory: 1G
+
+  analytics-python:
+    restart: always
+    depends_on:
+      sql-server:
+        condition: service_started
+    deploy:
+      resources:
+        limits:
+          cpus: "0.75"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 256M
+
+  prometheus:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+  grafana:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+  blackbox-exporter:
+    restart: always
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 128M
