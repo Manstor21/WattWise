@@ -1,0 +1,6 @@
+flask>=3.0
+pandas>=2.1
+numpy>=1.26
+sqlalchemy>=2.0
+prometheus-client>=0.20
+pytest>=8.0
