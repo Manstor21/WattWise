@@ -76,3 +76,5 @@ data/
 .DS_Store
 Thumbs.db
 *.swp
+
+desktop-admin/target/
