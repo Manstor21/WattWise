@@ -31,10 +31,12 @@ RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
 # Copy the executable Spring Boot fat jar from the build stage.
 COPY --from=build /build/backend/target/wattwise-backend-*.jar /app/app.jar
 
+# Volatile data dir used by the dev (SQLite) profile override.
+# Must be created BEFORE switching to the non-root user: /app is root-owned,
+# so appuser cannot mkdir there. Chown so the SQLite profile can write it.
+RUN mkdir -p /app/data && chown appuser:appgroup /app/data
+
 USER appuser
 EXPOSE 8080
-
-# Volatile data dir used by the dev (SQLite) profile override.
-RUN mkdir -p /app/data
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]
