@@ -143,11 +143,11 @@ python -m app.main
 - **Analytics Microservice** — Flask service with `/health`, `/ready`, and analytics endpoints (weekday averages, savings estimates, trends, anomalies)
 - **Desktop Admin** — Java Swing tool for CSV import/export, price correction, direct JDBC access
 - **Docker Compose** — 6 services configured (nginx, backend, sql-server, analytics, prometheus, grafana) with dev/prod overrides
+- **CI/CD** — GitHub Actions pipeline: per-module unit tests (backend with JaCoCo coverage gate, Android, analytics, desktop-admin), web smoke test, compose validation and Docker image builds
 
 ### Still in progress
 
 - Docker Compose end-to-end smoke test
-- CI/CD pipeline (GitHub Actions)
 - README polish and screenshots
 - FCM push notifications (documented as extension in ADR-005)
 - Backtesting with 12 months of historical PVPC data
