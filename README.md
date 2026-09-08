@@ -144,10 +144,10 @@ python -m app.main
 - **Desktop Admin** — Java Swing tool for CSV import/export, price correction, direct JDBC access
 - **Docker Compose** — 6 services configured (nginx, backend, sql-server, analytics, prometheus, grafana) with dev/prod overrides
 - **CI/CD** — GitHub Actions pipeline: per-module unit tests (backend with JaCoCo coverage gate, Android, analytics, desktop-admin), web smoke test, compose validation and Docker image builds
+- **Docker Compose smoke test** — full-stack end-to-end boot verified (2026-09-08): clean-SQL-Server migrations via Flyway (V1/V2), JWT register/login, appliance CRUD, recommendations, analytics `/health`/`/ready`, Prometheus 6/6 targets up, Grafana login
 
 ### Still in progress
 
-- Docker Compose end-to-end smoke test
 - README polish and screenshots
 - FCM push notifications (documented as extension in ADR-005)
 - Backtesting with 12 months of historical PVPC data

@@ -104,13 +104,12 @@ backend/
 | `GET` | `/api/recommendations` | Personalized recommendations for all user appliances |
 | `GET` | `/api/recommendations?applianceId=X` | Recommendation for a specific appliance |
 | `GET/PUT` | `/api/alerts/preferences` | User alert thresholds |
-| `GET` | `/api/analytics/savings` | Proxy to Python analytics (aggregated savings) |
 
 ### Connection to Other Modules
 - **Web client** consumes all endpoints via AJAX.
 - **Android app** consumes all endpoints via HTTP + JWT.
 - **Desktop admin** connects directly to SQL Server (bypasses API for admin ops).
-- **Python analytics** reads from the same SQL Server; backend calls analytics for enriched endpoints.
+- **Python analytics** reads from the same SQL Server and serves `/api/analytics/*` on its own port (published as `localhost:5001` in compose); the backend does not proxy it.
 - **ESIOS API** is consumed by the scheduled job.
 - **Prometheus** scrapes `/actuator/prometheus`.
 
