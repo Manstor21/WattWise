@@ -56,8 +56,13 @@ def create_app(config_name: str | None = None) -> Flask:
         "SQLAlchemyProxy", (), {"session": db_session, "engine": engine}
     )()
 
-    # Create tables (safe for SQLite dev; in prod tables already exist)
-    Base.metadata.create_all(bind=engine)
+    # Create the local SQLite schema for development/testing only. In
+    # production the schema is owned by the Spring backend via Flyway
+    # (V1__init.sql creates price_records); creating PRICE_RECORD here would
+    # race with Flyway and make the backend refuse to migrate ("non-empty
+    # schema, no history table").
+    if config_name != "production":
+        Base.metadata.create_all(bind=engine)
 
     # --- Prometheus metrics middleware ---
     @app.before_request

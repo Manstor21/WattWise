@@ -1,7 +1,10 @@
-"""SQLAlchemy read-only model for the PRICE_RECORD table.
+"""SQLAlchemy read-only model for the price_records table.
 
 Uses SQLAlchemy 2.x declarative style with Mapped annotations.
-The table is owned by the Spring Boot backend; this service reads only.
+The table is owned by the Spring Boot backend (Flyway V1__init.sql); this
+service reads only. The table name and columns must match the backend schema
+exactly — SQL Server resolves object names according to the database
+collation, so a PRICE_RECORD mapping fails against Flyway's price_records.
 """
 
 from datetime import datetime
@@ -16,9 +19,9 @@ class Base(DeclarativeBase):
 
 
 class PriceRecord(Base):
-    """Read-only mapping to the PRICE_RECORD table."""
+    """Read-only mapping to the price_records table."""
 
-    __tablename__ = "PRICE_RECORD"
+    __tablename__ = "price_records"
 
     id: Mapped[int] = mapped_column(
         # INTEGER on SQLite (rowid alias so AUTOINCREMENT works in tests/dev),
@@ -32,7 +35,6 @@ class PriceRecord(Base):
     plus_tax_eur_per_kwh: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     total_eur_per_kwh: Mapped[float] = mapped_column(Float, nullable=False)
     source: Mapped[Optional[str]] = mapped_column(String(16), nullable=True)
-    color: Mapped[Optional[str]] = mapped_column(String(8), nullable=True)
 
     def __repr__(self) -> str:
         return (

@@ -108,7 +108,6 @@ def synthetic_prices(db_session):
                     plus_tax_eur_per_kwh=round(price * 1.05, 6),
                     total_eur_per_kwh=total,
                     source="ESIOS",
-                    color="GREEN" if total < 0.10 else ("RED" if total > 0.25 else "AMBER"),
                 )
             )
 
