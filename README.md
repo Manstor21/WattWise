@@ -39,7 +39,6 @@ flowchart LR
     JOB --> ESIOS
     JOB --> DB
     ANALYTICS --> DB
-    API --> ANALYTICS
     API --> OBS
 ```
 
@@ -95,9 +94,15 @@ cd WattWise
 # Copy and edit environment variables
 cp docker/.env.example docker/.env
 
-# Start the full stack
+# Start the full stack (7 containers: nginx, backend, sql-server,
+# analytics-python, prometheus, grafana, blackbox-exporter)
 docker compose -f docker/docker-compose.yml up --build
 ```
+
+> **Windows PowerShell:** run the same command from the repo root with `-f`,
+> or `cd docker` and plain `docker compose`. Some placeholders in
+> `docker/.env.example` are wrapped in quotes — keep them; PowerShell strips
+> unquoted `$` inside double-quoted strings.
 
 Services once running:
 
@@ -105,8 +110,9 @@ Services once running:
 |---|---|---|
 | Web Dashboard | http://localhost:8080 | via Nginx reverse proxy |
 | API (Swagger) | http://localhost:8080/swagger-ui.html | JWT auth required |
+| Analytics API | http://localhost:5001/ready | direct, not proxied by the backend |
 | Grafana | http://localhost:3000 | credentials from `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` in `.env` |
-| Prometheus | http://localhost:9090 | metrics scrape |
+| Prometheus | http://localhost:9090 | metrics scrape (6/6 targets when healthy) |
 
 All secrets come from environment variables — see `docker/.env.example` for the full list. **Never commit `.env`.**
 
@@ -120,16 +126,41 @@ cd backend && mvn spring-boot:run
 # Option B: run SQL Server via Docker
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<your-password>" -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
 
-# Analytics microservice
+# Analytics microservice (app.main has no `__main__` block; run via gunicorn or flask)
 cd analytics-python
 python -m venv venv
 venv\Scripts\activate          # Windows
 # source venv/bin/activate     # Linux/Mac
 pip install -r requirements.txt
-python -m app.main
+pip install gunicorn pyodbc   # container-only deps, needed outside Docker too
+gunicorn --bind 0.0.0.0:5000 "app.main:create_app()"
 
 # Web dashboard — serve web/ with any static file server
 ```
+
+---
+
+## Troubleshooting
+
+- **Backend stuck in `Restarting (1)` crash-loop** — usually a leftover database:
+  a previous run created objects in `dbo` that Flyway refuses to migrate over
+  (`Found non-empty schema(s) [dbo] but no schema history table`). Reset the
+  SQL Server volume (note: `docker compose down -v` may NOT remove the custom
+  named volume):
+  ```bash
+  docker compose -f docker/docker-compose.yml down
+  docker volume rm wattwise-sqlserver-data
+  docker compose -f docker/docker-compose.yml up --build
+  ```
+- **`/api/prices/today` returns `[]`** — `ESIOS_API_TOKEN` in `docker/.env` is
+  the placeholder `your-esi-os-api-token`. Get a free token from
+  [ESIOS/REE](https://api.esios.ree.es/) and put it in `.env`.
+- **Login failed / Flyway connection errors on first boot** — SQL Server takes
+  ~30–60s to run its init scripts before accepting connections. Containers
+  restart until healthy; wait for `docker compose ps` to show all green.
+- **Prompted to recreate volumes after changing schema** — expected: V1/V2 are
+  applied on a clean volume; schema changes should be new Flyway migrations
+  (`V3__.sql`), not edits to applied ones.
 
 ---
 
@@ -148,7 +179,7 @@ python -m app.main
 
 ### Still in progress
 
-- README polish and screenshots
+- Screenshots for the README (dashboard, Grafana, Android app)
 - FCM push notifications (documented as extension in ADR-005)
 - Backtesting with 12 months of historical PVPC data
 
