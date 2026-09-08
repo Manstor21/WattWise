@@ -1,6 +1,6 @@
 # WattWise
 
-**Personal electricity cost optimizer for Spain's hourly PVPC pricing**
+**Optimizador personal del coste eléctrico para el PVPC horario español**
 
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-17-orange)](https://adoptium.net/)
@@ -8,11 +8,11 @@
 [![Python](https://img.shields.io/badge/Python-3.11%2B-3776ab)](https://www.python.org/)
 [![Android](https://img.shields.io/badge/Android-8.0%2B-3ddc84)](https://developer.android.com)
 
-Since September 2025, Spain's regulated tariff (PVPC) publishes **96 prices per day** — one every 15 minutes. The gap between the cheapest and most expensive slot can exceed 400%. WattWise ingests those prices from [ESIOS (Red Eléctrica)](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real), classifies every slot with a traffic-light system, and tells you the cheapest windows to run your appliances.
+Desde septiembre de 2025, la tarifa regulada española (PVPC) publica **96 precios al día** — uno cada 15 minutos. La diferencia entre el tramo más barato y el más caro puede superar el 400%. WattWise ingiere esos precios desde [ESIOS (Red Eléctrica)](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real), clasifica cada tramo con un sistema de semáforo y te indica las ventanas más baratas para poner tus electrodomésticos.
 
 ---
 
-## Architecture
+## Arquitectura
 
 ```mermaid
 flowchart LR
@@ -24,12 +24,12 @@ flowchart LR
 
     subgraph Backend[Spring Boot 3.3.5]
         API[REST API + JWT]
-        JOB[Price Fetcher Job]
+        JOB[Job de descarga de precios]
     end
 
-    ANALYTICS[Python Analytics]
+    ANALYTICS[Analytics Python]
     DB[(SQL Server)]
-    ESIOS[ESIOS API — REE]
+    ESIOS[API ESIOS — REE]
     OBS[Prometheus + Grafana]
 
     WEB --> API
@@ -42,179 +42,180 @@ flowchart LR
     API --> OBS
 ```
 
-Full architecture details: [`docs/architecture/architecture.md`](docs/architecture/architecture.md)
+Detalles completos de la arquitectura: [`docs/architecture/architecture.md`](docs/architecture/architecture.md)
 
 ---
 
-## Tech Stack
+## Stack tecnológico
 
-| Module | Stack | What it does |
+| Módulo | Stack | Qué hace |
 |---|---|---|
-| `backend/` | Spring Boot 3.3.5, Java 17, Maven, JWT, Flyway | REST API, price ingestion, recommendations, alerts |
-| `web/` | HTML5, CSS3, jQuery 3.7.1 | Dashboard with traffic-light hourly chart, login, appliance CRUD |
-| `android/` | Java, Room, WorkManager, minSdk 26 | Mobile client, offline cache, local notifications |
-| `analytics-python/` | Flask, SQLAlchemy 2.x, pandas, prometheus_client | Statistical analytics, savings estimates, trends |
-| `desktop-admin/` | Java 17 Swing, JDBC, Apache Commons CSV | CSV import/export, price correction, admin tools |
-| `docker/` | Docker Compose, Nginx, Prometheus, Grafana | Containerized stack + observability |
+| `backend/` | Spring Boot 3.3.5, Java 17, Maven, JWT, Flyway | API REST, ingesta de precios, recomendaciones, alertas |
+| `web/` | HTML5, CSS3, jQuery 3.7.1 | Dashboard con gráfico horario de semáforo, login, CRUD de electrodomésticos |
+| `android/` | Java, Room, WorkManager, minSdk 26 | Cliente móvil, caché offline, notificaciones locales |
+| `analytics-python/` | Flask, SQLAlchemy 2.x, pandas, prometheus_client | Estadísticas, estimaciones de ahorro, tendencias |
+| `desktop-admin/` | Java 17 Swing, JDBC, Apache Commons CSV | Import/export CSV, corrección de precios, herramientas de administración |
+| `docker/` | Docker Compose, Nginx, Prometheus, Grafana | Stack contenerizado + observabilidad |
 
 ---
 
-## Project Structure
+## Estructura del proyecto
 
 ```
 WattWise/
-├── backend/                    Spring Boot REST API
-├── web/                        Static dashboard (HTML/CSS/jQuery)
-├── android/                    Android native app
-├── analytics-python/           Flask analytics microservice
-├── desktop-admin/              Java Swing admin tool
-├── docker/                     Compose files, Dockerfiles, nginx config
-├── docs/                       Architecture docs, ADRs
-└── scripts/                    Helper scripts (in progress)
+├── backend/                    API REST Spring Boot
+├── web/                        Dashboard estático (HTML/CSS/jQuery)
+├── android/                    App nativa Android
+├── analytics-python/           Microservicio de analítica Flask
+├── desktop-admin/              Herramienta de administración Java Swing
+├── docker/                     Archivos Compose, Dockerfiles, configuración nginx
+├── docs/                       Documentación de arquitectura, ADRs
+└── scripts/                    Scripts auxiliares (en progreso)
 ```
 
 ---
 
-## Getting Started
+## Primeros pasos
 
-### Prerequisites
+### Prerrequisitos
 
-- **Java 17** — [Adoptium](https://adoptium.net/) or Oracle JDK
+- **Java 17** — [Adoptium](https://adoptium.net/) u Oracle JDK
 - **Maven 3.9+** — [maven.apache.org](https://maven.apache.org/)
-- **Python 3.11+** — tested with 3.11 in Docker and 3.14 locally
-- **Docker & Docker Compose v2** — [docker.com](https://www.docker.com/)
-- **Android Studio** — for the Android module
+- **Python 3.11+** — probado con 3.11 en Docker y 3.14 en local
+- **Docker y Docker Compose v2** — [docker.com](https://www.docker.com/)
+- **Android Studio** — para el módulo Android
 
-### Quick Start with Docker
+### Inicio rápido con Docker
 
 ```bash
 git clone https://github.com/Manstor21/WattWise.git
 cd WattWise
 
-# Copy and edit environment variables
+# Copia y edita las variables de entorno
 cp docker/.env.example docker/.env
 
-# Start the full stack (7 containers: nginx, backend, sql-server,
+# Arranca el stack completo (7 contenedores: nginx, backend, sql-server,
 # analytics-python, prometheus, grafana, blackbox-exporter)
 docker compose -f docker/docker-compose.yml up --build
 ```
 
-> **Windows PowerShell:** run the same command from the repo root with `-f`,
-> or `cd docker` and plain `docker compose`. Some placeholders in
-> `docker/.env.example` are wrapped in quotes — keep them; PowerShell strips
-> unquoted `$` inside double-quoted strings.
+> **PowerShell en Windows:** ejecuta el mismo comando desde la raíz del repo con
+> `-f`, o entra en `docker` y usa `docker compose` a secas. Algunos marcadores de
+> `docker/.env.example` van entre comillas — consérvalas; PowerShell interpreta
+> el `$` sin comillas dentro de cadenas con comillas dobles.
 
-Services once running:
+Servicios una vez en marcha:
 
-| Service | URL | Notes |
+| Servicio | URL | Notas |
 |---|---|---|
-| Web Dashboard | http://localhost:8080 | via Nginx reverse proxy |
-| API (Swagger) | http://localhost:8080/swagger-ui.html | JWT auth required |
-| Analytics API | http://localhost:5001/ready | direct, not proxied by the backend |
-| Grafana | http://localhost:3000 | credentials from `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` in `.env` |
-| Prometheus | http://localhost:9090 | metrics scrape (6/6 targets when healthy) |
+| Web Dashboard | http://localhost:8080 | a través del proxy inverso Nginx |
+| API (Swagger) | http://localhost:8080/swagger-ui.html | requiere autenticación JWT |
+| API de Analytics | http://localhost:5001/ready | directa, sin proxy del backend |
+| Grafana | http://localhost:3000 | credenciales de `GRAFANA_ADMIN_USER` / `GRAFANA_ADMIN_PASSWORD` en `.env` |
+| Prometheus | http://localhost:9090 | scraping de métricas (6/6 targets en healthy) |
 
-All secrets come from environment variables — see `docker/.env.example` for the full list. **Never commit `.env`.**
+Todos los secretos vienen de variables de entorno — consulta `docker/.env.example` para la lista completa. **Nunca hagas commit de `.env`.**
 
-### Local Development (without Docker)
+### Desarrollo local (sin Docker)
 
 ```bash
-# Option A: use SQLite (no database server needed)
+# Opción A: usar SQLite (no necesitas servidor de base de datos)
 export SPRING_PROFILES_ACTIVE=dev
 cd backend && mvn spring-boot:run
 
-# Option B: run SQL Server via Docker
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<your-password>" -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
+# Opción B: SQL Server vía Docker
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=<tu-password>" -p 1433:1433 mcr.microsoft.com/mssql/server:2022-latest
 
-# Analytics microservice (app.main has no `__main__` block; run via gunicorn or flask)
+# Microservicio de analítica (app.main no tiene bloque `__main__`; usa gunicorn o flask)
 cd analytics-python
 python -m venv venv
 venv\Scripts\activate          # Windows
 # source venv/bin/activate     # Linux/Mac
 pip install -r requirements.txt
-pip install gunicorn pyodbc   # container-only deps, needed outside Docker too
+pip install gunicorn pyodbc   # dependencias solo-contenedor, también necesarias fuera de Docker
 gunicorn --bind 0.0.0.0:5000 "app.main:create_app()"
 
-# Web dashboard — serve web/ with any static file server
+# Web dashboard — sirve web/ con cualquier servidor de estáticos
 ```
 
 ---
 
-## Troubleshooting
+## Solución de problemas
 
-- **Backend stuck in `Restarting (1)` crash-loop** — usually a leftover database:
-  a previous run created objects in `dbo` that Flyway refuses to migrate over
-  (`Found non-empty schema(s) [dbo] but no schema history table`). Reset the
-  SQL Server volume (note: `docker compose down -v` may NOT remove the custom
-  named volume):
+- **Backend atascado en bucle de reinicio (`Restarting (1)`)** — normalmente es
+  una base de datos residual: una ejecución anterior creó objetos en `dbo` sobre
+  los que Flyway se niega a migrar (`Found non-empty schema(s) [dbo] but no
+  schema history table`). Resetea el volumen de SQL Server (ojo: `docker compose
+  down -v` puede NO eliminar el volumen nombrado personalizado):
   ```bash
   docker compose -f docker/docker-compose.yml down
   docker volume rm wattwise-sqlserver-data
   docker compose -f docker/docker-compose.yml up --build
   ```
-- **`/api/prices/today` returns `[]`** — `ESIOS_API_TOKEN` in `docker/.env` is
-  the placeholder `your-esi-os-api-token`. Get a free token from
-  [ESIOS/REE](https://api.esios.ree.es/) and put it in `.env`.
-- **Login failed / Flyway connection errors on first boot** — SQL Server takes
-  ~30–60s to run its init scripts before accepting connections. Containers
-  restart until healthy; wait for `docker compose ps` to show all green.
-- **Prompted to recreate volumes after changing schema** — expected: V1/V2 are
-  applied on a clean volume; schema changes should be new Flyway migrations
-  (`V3__.sql`), not edits to applied ones.
+- **`/api/prices/today` devuelve `[]`** — `ESIOS_API_TOKEN` en `docker/.env` es
+  el marcador `your-esi-os-api-token`. Consigue un token gratuito en
+  [ESIOS/REE](https://api.esios.ree.es/) y ponlo en `.env`.
+- **Errores de login / conexión de Flyway en el primer arranque** — SQL Server
+  tarda ~30–60 s en ejecutar sus scripts de init antes de aceptar conexiones.
+  Los contenedores se reinician hasta quedar healthy; espera a que `docker
+  compose ps` muestre todo en verde.
+- **Se pide recrear volúmenes al cambiar el esquema** — es lo esperado: V1/V2 se
+  aplican sobre un volumen limpio; los cambios de esquema deben ser nuevas
+  migraciones de Flyway (`V3__.sql`), no ediciones de las ya aplicadas.
 
 ---
 
-## Roadmap
+## Hoja de ruta
 
-### Completed
+### Completado
 
-- **Backend** — Spring Boot REST API with JWT auth, price ingestion from ESIOS, traffic-light engine, recommendation engine (Strategy pattern), alert system (Observer pattern), Flyway migrations (V1/V2), dual persistence (SQLite dev / SQL Server prod), springdoc-openapi
-- **Web Dashboard** — traffic-light hourly chart, login/register, appliance CRUD, recommendation cards
-- **Android App** — Room offline cache, WorkManager periodic sync, local notifications, JWT in EncryptedSharedPreferences
-- **Analytics Microservice** — Flask service with `/health`, `/ready`, and analytics endpoints (weekday averages, savings estimates, trends, anomalies)
-- **Desktop Admin** — Java Swing tool for CSV import/export, price correction, direct JDBC access
-- **Docker Compose** — 6 services configured (nginx, backend, sql-server, analytics, prometheus, grafana) with dev/prod overrides
-- **CI/CD** — GitHub Actions pipeline: per-module unit tests (backend with JaCoCo coverage gate, Android, analytics, desktop-admin), web smoke test, compose validation and Docker image builds
-- **Docker Compose smoke test** — full-stack end-to-end boot verified (2026-09-08): clean-SQL-Server migrations via Flyway (V1/V2), JWT register/login, appliance CRUD, recommendations, analytics `/health`/`/ready`, Prometheus 6/6 targets up, Grafana login
+- **Backend** — API REST Spring Boot con autenticación JWT, ingesta de precios de ESIOS, motor de semáforo, motor de recomendaciones (patrón Strategy), sistema de alertas (patrón Observer), migraciones Flyway (V1/V2), persistencia dual (SQLite dev / SQL Server prod), springdoc-openapi
+- **Web Dashboard** — gráfico horario de semáforo, login/registro, CRUD de electrodomésticos, tarjetas de recomendación
+- **Android App** — caché offline Room, sincronización periódica WorkManager, notificaciones locales, JWT en EncryptedSharedPreferences
+- **Microservicio de Analítica** — servicio Flask con `/health`, `/ready` y endpoints de analítica (medias por día de la semana, estimaciones de ahorro, tendencias, anomalías)
+- **Desktop Admin** — herramienta Java Swing para import/export CSV, corrección de precios, acceso JDBC directo
+- **Docker Compose** — 6 servicios configurados (nginx, backend, sql-server, analytics, prometheus, grafana) con overrides dev/prod
+- **CI/CD** — pipeline de GitHub Actions: tests unitarios por módulo (backend con umbral de cobertura JaCoCo, Android, analítica, desktop-admin), smoke test web, validación de compose y build de imágenes Docker
+- **Smoke test de Docker Compose** — arranque end-to-end verificado (2026-09-08): migraciones sobre SQL Server limpio vía Flyway (V1/V2), registro/login JWT, CRUD de electrodomésticos, recomendaciones, `/health`/`/ready` de analítica, Prometheus 6/6 targets up, login de Grafana
 
-### Still in progress
+### En progreso
 
-- Screenshots for the README (dashboard, Grafana, Android app)
-- FCM push notifications (documented as extension in ADR-005)
-- Backtesting with 12 months of historical PVPC data
-
----
-
-## Architecture Decision Records
-
-All significant technical decisions are documented in [`docs/adr/`](docs/adr/):
-
-- **ADR-001: Microservice Separation** — Why analytics lives in a separate Python service (Pandas is the right tool for time-series; Java alternatives are heavier and less community-supported)
-- **ADR-002: SQL Server + SQLite Dual Persistence** — Server uses SQL Server; dev/demo/desktop use SQLite; Android has its own Room cache
-- **ADR-003: ESIOS API Resilience Strategy** — Retry with exponential backoff, stale data handling, late publication alerts
-- **ADR-004: Monorepo over Polyrepo** — Cross-module atomic changes, single Docker Compose file, one clone to get everything
-- **ADR-005: Local Notifications over FCM** — Offline-first notifications via WorkManager; no Firebase project setup needed, no device tokens leave the device
-
-Full trade-off analysis: [`docs/architecture/architecture.md`](docs/architecture/architecture.md#key-architectural-decisions--trade-offs)
+- Capturas de pantalla para el README (dashboard, Grafana, app Android)
+- Notificaciones push FCM (documentadas como extensión en ADR-005)
+- Backtesting con 12 meses de datos históricos PVPC
 
 ---
 
-## Contributing
+## Registro de Decisiones de Arquitectura
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/my-feature`)
-3. Commit with conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
-4. Push and open a Pull Request
+Todas las decisiones técnicas relevantes están documentadas en [`docs/adr/`](docs/adr/):
+
+- **ADR-001: Separación de microservicios** — Por qué la analítica vive en un servicio Python separado (Pandas es la herramienta adecuada para series temporales; las alternativas Java son más pesadas y con menos soporte comunitario)
+- **ADR-002: Persistencia dual SQL Server + SQLite** — El servidor usa SQL Server; dev/demo/escritorio usan SQLite; Android tiene su propia caché Room
+- **ADR-003: Estrategia de resiliencia de la API ESIOS** — Reintentos con backoff exponencial, gestión de datos obsoletos, alertas de publicación tardía
+- **ADR-004: Monorepo frente a polyrepo** — Cambios atómicos entre módulos, un único archivo Docker Compose, un clon para tenerlo todo
+- **ADR-005: Notificaciones locales frente a FCM** — Notificaciones offline-first vía WorkManager; sin proyecto Firebase ni tokens de dispositivo que salgan del dispositivo
+
+Análisis completo de trade-offs: [`docs/architecture/architecture.md`](docs/architecture/architecture.md#key-architectural-decisions--trade-offs)
 
 ---
 
-## License
+## Contribuciones
 
-This project is licensed under the **MIT License** — see [`LICENSE`](LICENSE) for details.
+1. Haz un fork del repositorio
+2. Crea una rama de funcionalidad (`git checkout -b feature/mi-funcionalidad`)
+3. Haz commits con mensajes conventional (`feat:`, `fix:`, `docs:`, `chore:`)
+4. Haz push y abre una Pull Request
 
 ---
 
-## Data Sources & Acknowledgments
+## Licencia
 
-- **Price data:** [ESIOS — Red Eléctrica de España](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real) — Public API for Spanish electricity market data
-- **PVPC regulation:** [BOE — Boletín Oficial del Estado](https://www.boe.es/)
+Este proyecto está bajo la **Licencia MIT** — consulta [`LICENSE`](LICENSE) para más detalles.
+
+---
+
+## Fuentes de datos y agradecimientos
+
+- **Datos de precios:** [ESIOS — Red Eléctrica de España](https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real) — API pública de datos del mercado eléctrico español
+- **Regulación PVPC:** [BOE — Boletín Oficial del Estado](https://www.boe.es/)
