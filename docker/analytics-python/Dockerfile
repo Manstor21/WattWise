@@ -20,8 +20,10 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Non-root user
-RUN groupadd --system appgroup && useradd --system --gid appgroup appuser
+# Non-root user. --create-home also for --system users: gunicorn's control
+# server writes its socket under $HOME and fails with EACCES when the home
+# directory does not exist.
+RUN groupadd --system appgroup && useradd --system --create-home --gid appgroup appuser
 
 WORKDIR /app
 
