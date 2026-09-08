@@ -19,6 +19,12 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
 
+# Fail fast if JWT_SECRET is missing in production: an empty/weak secret
+# would let anyone forge tokens. JwtConfig validates >= 32 chars.
+wattwise:
+  security:
+    jwt-secret: ${JWT_SECRET:}
+
 logging:
   level:
     com.wattwise: INFO

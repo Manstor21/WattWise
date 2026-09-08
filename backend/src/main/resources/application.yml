@@ -31,7 +31,10 @@ management:
         include: health,info,metrics,prometheus
   endpoint:
     health:
-      show-details: always
+      # Details only for authenticated principals; anonymous callers
+      # see {status: UP}. Keeps DB/disk internals out of unauthenticated
+      # probes while remaining healthcheck-friendly.
+      show-details: when-authorized
 
 springdoc:
   swagger-ui:

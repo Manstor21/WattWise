@@ -22,7 +22,7 @@ window.WattWise = window.WattWise || {};
   // Nginx hará de proxy inverso y la base podrá ser relativa ''.
   WW.baseUrl = WW.baseUrl || 'http://localhost:8080';
 
-  // Almacenar el token actual (se sincroniza con auth.js/localStorage).
+  // Almacenar el token actual (se sincroniza con sessionStorage).
   WW.token = WW.token || null;
 
   // Cabeceras por defecto (content-type JSON siempre).

@@ -1,6 +1,6 @@
 /* ============================================================
    auth.js — Login, registro y logout. JWT persistido en
-   localStorage.
+   sessionStorage.
 
    Puntos de diseño:
    - Fallback del wrapper api.js: si hay error 401 se redirige a

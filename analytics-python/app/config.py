@@ -29,7 +29,7 @@ class ProductionConfig(Config):
     """Production — SQL Server via pyodbc.
 
     DATABASE_URL example (set via env, never commit credentials):
-        mssql+pyodbc://user:password@host:1433/dbname?driver=ODBC+Driver+17+for+SQL+Server
+        mssql+pyodbc://user:******@host:1433/dbname?driver=ODBC+Driver+17+for+SQL+Server
     """
 
     pass

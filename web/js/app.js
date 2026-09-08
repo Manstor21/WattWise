@@ -21,22 +21,24 @@ window.WattWise = window.WattWise || {};
   var $ = window.jQuery;
 
   /* ------------------------------------------------------------
-     Configuración incial: token persistido en localStorage.
-     Mantenemos sync entre WW.token (api.js) y localStorage.
+     Configuración incial: token en sessionStorage (vida = pestaña).
+     sessionStorage reduce la superficie de robo de token por XSS
+     frente a sessionStorage; la API sigue siendo la autoridad (401
+     global limpia la sesión). Sync entre WW.token (api.js) y storage.
      ------------------------------------------------------------ */
   var TOKEN_KEY = 'wattwise_token';
   var USER_KEY = 'wattwise_user';
 
   WW.getToken = function () {
-    if (!WW.token) { WW.token = localStorage.getItem(TOKEN_KEY); }
+    if (!WW.token) { WW.token = sessionStorage.getItem(TOKEN_KEY); }
     return WW.token;
   };
 
   WW.setSession = function (token, user) {
     WW.token = token;
-    localStorage.setItem(TOKEN_KEY, token);
+    sessionStorage.setItem(TOKEN_KEY, token);
     if (user) {
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      sessionStorage.setItem(USER_KEY, JSON.stringify(user));
       WW.user = user;
     }
   };
@@ -44,7 +46,7 @@ window.WattWise = window.WattWise || {};
   WW.getUser = function () {
     if (WW.user) { return WW.user; }
     try {
-      WW.user = JSON.parse(localStorage.getItem(USER_KEY) || 'null');
+      WW.user = JSON.parse(sessionStorage.getItem(USER_KEY) || 'null');
     } catch (e) {
       WW.user = null;
     }
@@ -58,8 +60,8 @@ window.WattWise = window.WattWise || {};
   WW.clearSession = function () {
     WW.token = null;
     WW.user = null;
-    localStorage.removeItem(TOKEN_KEY);
-    localStorage.removeItem(USER_KEY);
+    sessionStorage.removeItem(TOKEN_KEY);
+    sessionStorage.removeItem(USER_KEY);
   };
 
   /* 401 global: cuando la API rechaza un token, limpiamos sesión
@@ -262,7 +264,7 @@ window.WattWise = window.WattWise || {};
       page = file || 'index';
     }
 
-    // Aplicar token desde localStorage al arranque.
+    // Aplicar token desde sessionStorage al arranque.
     WW.getToken();
 
     // Marcar enlace de navegación activo.
