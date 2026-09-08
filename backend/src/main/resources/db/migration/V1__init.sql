@@ -86,7 +86,11 @@ CREATE TABLE alert_preferences (
     notified_at             DATETIME2 NULL,
     created_at              DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     CONSTRAINT fk_alert_pref_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_alert_pref_appliance FOREIGN KEY (appliance_id) REFERENCES appliances(id) ON DELETE CASCADE
+    -- NO ACTION on appliance: SQL Server forbids multiple cascade paths to the
+    -- same table (users -> appliances -> alert_preferences would also reach it
+    -- via users -> alert_preferences). ApplianceService.delete removes affected
+    -- alert_preferences first instead.
+    CONSTRAINT fk_alert_pref_appliance FOREIGN KEY (appliance_id) REFERENCES appliances(id) ON DELETE NO ACTION
 );
 
 CREATE INDEX ix_alert_pref_user ON alert_preferences(user_id);

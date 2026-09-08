@@ -5,6 +5,7 @@ import com.wattwise.model.dto.ApplianceDto;
 import com.wattwise.model.entity.Appliance;
 import com.wattwise.model.enums.ApplianceType;
 import com.wattwise.repository.ApplianceRepository;
+import com.wattwise.repository.AlertPreferenceRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,11 +28,14 @@ class ApplianceServiceTest {
     @Mock
     private ApplianceRepository applianceRepository;
 
+    @Mock
+    private AlertPreferenceRepository alertPreferenceRepository;
+
     private ApplianceService applianceService;
 
     @BeforeEach
     void setUp() {
-        applianceService = new ApplianceService(applianceRepository);
+        applianceService = new ApplianceService(applianceRepository, alertPreferenceRepository);
     }
 
     private ApplianceDto dto(String name, ApplianceType type) {

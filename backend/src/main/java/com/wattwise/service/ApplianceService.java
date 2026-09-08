@@ -6,6 +6,7 @@ import com.wattwise.model.entity.Appliance;
 import com.wattwise.model.entity.User;
 import com.wattwise.model.enums.ApplianceType;
 import com.wattwise.repository.ApplianceRepository;
+import com.wattwise.repository.AlertPreferenceRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,9 +22,12 @@ import java.util.List;
 public class ApplianceService {
 
     private final ApplianceRepository applianceRepository;
+    private final AlertPreferenceRepository alertPreferenceRepository;
 
-    public ApplianceService(ApplianceRepository applianceRepository) {
+    public ApplianceService(ApplianceRepository applianceRepository,
+                            AlertPreferenceRepository alertPreferenceRepository) {
         this.applianceRepository = applianceRepository;
+        this.alertPreferenceRepository = alertPreferenceRepository;
     }
 
     @Transactional(readOnly = true)
@@ -64,6 +68,9 @@ public class ApplianceService {
     @Transactional
     public void delete(Long applianceId, Long userId) {
         Appliance appliance = getApplianceForUser(applianceId, userId);
+        // V1 uses ON DELETE NO ACTION for fk_alert_pref_appliance (SQL Server
+        // forbids multiple cascade paths), so drop affected alerts first.
+        alertPreferenceRepository.deleteByApplianceId(applianceId);
         applianceRepository.delete(appliance);
     }
 

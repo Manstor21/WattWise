@@ -10,4 +10,7 @@ public interface AlertPreferenceRepository extends JpaRepository<AlertPreference
     Optional<AlertPreference> findByUserId(Long userId);
 
     boolean existsByUserId(Long userId);
+
+    /** Removes alert preferences pointing at an appliance (used before appliance deletion; see V1 FK NO ACTION). */
+    void deleteByApplianceId(Long applianceId);
 }
