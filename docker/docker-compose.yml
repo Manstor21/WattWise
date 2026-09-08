@@ -1,22 +1,22 @@
 # =============================================================================
-# WattWise — full stack (xref docs/architecture/modules.md §6, §7)
+# WattWise — stack completo (ver docs/architecture/modules.md §6, §7)
 #
 #   docker compose -f docker/docker-compose.yml up -d --build
 #
-# Services (internal port -> host):
+# Servicios (puerto interno -> host):
 #   nginx 80 -> 8080    | sql-server 1433 -> 1433   | analytics-python 5000 -> 5001
-#   backend 8080 (internal only)                    | prometheus 9090 -> 9090
+#   backend 8080 (solo interno)                     | prometheus 9090 -> 9090
 #   grafana 3000 -> 3000
 #
-# All secrets come from environment (see .env.example). NEVER commit .env.
-# Run from repo root (`-f docker/docker-compose.yml`) or `cd docker`.
+# Todos los secretos provienen del entorno (ver .env.example). NUNCA hagas commit de .env.
+# Ejecuta desde la raíz del repo (`-f docker/docker-compose.yml`) o `cd docker`.
 # =============================================================================
 
 name: wattwise
 
 services:
   # ---------------------------------------------------------------------------
-  # Reverse proxy + static web (builds from web/ + docker/nginx/)
+  # Proxy inverso + web estática (se construye desde web/ + docker/nginx/)
   # ---------------------------------------------------------------------------
   nginx:
     build:
@@ -39,7 +39,7 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
-  # Spring Boot API (prod profile, SQL Server). Flyway owns the DB schema.
+  # API Spring Boot (perfil prod, SQL Server). Flyway es dueño del esquema de la BD.
   # ---------------------------------------------------------------------------
   backend:
     build:
@@ -70,8 +70,8 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
-  # SQL Server 2022 — the entrypoint wrapper creates `wattwise_db` + app login.
-  # Tables are created by the backend's Flyway migrations, never here.
+  # SQL Server 2022 — el wrapper del entrypoint crea `wattwise_db` + el login de la app.
+  # Las tablas las crean las migraciones de Flyway del backend, nunca aquí.
   # ---------------------------------------------------------------------------
   sql-server:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -88,13 +88,13 @@ services:
     volumes:
       - sqlserver-data:/var/opt/mssql
       - ./sql-server/init-scripts:/opt/wattwise/init:ro
-    # The official image does not auto-run /docker-entrypoint-initdb.d; our
-    # wrapper starts sqlservr and applies docker/sql-server/init-scripts/*.sql.
+    # La imagen oficial no ejecuta automáticamente /docker-entrypoint-initdb.d; nuestro
+    # wrapper arranca sqlservr y aplica docker/sql-server/init-scripts/*.sql.
     entrypoint: ["/bin/bash", "/opt/wattwise/init/init.sh"]
     networks:
       - wattwise-net
     healthcheck:
-      # Only healthy once the app database exists (init.sh has run).
+      # Solo healthy una vez que la BD de la app existe (init.sh se ha ejecutado).
       test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -C -d $$DB_NAME -Q 'SELECT 1' -b -o /dev/null || exit 1"]
       interval: 10s
       timeout: 5s
@@ -103,7 +103,7 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
-  # Analytics microservice (Flask + prometheus_client)
+  # Microservicio de analítica (Flask + prometheus_client)
   # ---------------------------------------------------------------------------
   analytics-python:
     build:
@@ -128,7 +128,7 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
-  # Prometheus (15s scrape interval)
+  # Prometheus (intervalo de scrape de 15s)
   # ---------------------------------------------------------------------------
   prometheus:
     image: prom/prometheus:v2.53.0
@@ -153,7 +153,7 @@ services:
     restart: unless-stopped
 
   # ---------------------------------------------------------------------------
-  # Grafana (provisioned datasource + dashboards)
+  # Grafana (datasource aprovisionado + dashboards)
   # ---------------------------------------------------------------------------
   grafana:
     image: grafana/grafana:11.2.0
@@ -182,7 +182,7 @@ services:
     restart: unless-stopped
 
 # ---------------------------------------------------------------------------
-  # Blackbox Exporter (probes for services without a /metrics endpoint)
+  # Blackbox Exporter (sondas para los servicios sin endpoint /metrics)
   # ---------------------------------------------------------------------------
   blackbox-exporter:
     image: prom/blackbox-exporter:v0.25.0

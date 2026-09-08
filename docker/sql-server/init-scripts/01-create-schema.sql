@@ -1,12 +1,12 @@
 -- =============================================================================
--- WattWise bootstrap schema for SQL Server.
+-- Esquema de arranque de WattWise para SQL Server.
 --
--- Creates ONLY the application database, its login and its user (idempotently).
--- Tables are owned by the backend's Flyway migrations (see
--- backend/src/main/resources/db/migration), NEVER created here.
+-- Crea SOLO la base de datos de la aplicación, su login y su usuario (de forma idempotente).
+-- Las tablas son propiedad de las migraciones de Flyway del backend (ver
+-- backend/src/main/resources/db/migration), NUNCA se crean aquí.
 --
--- Interpolated at runtime by init.sh via sqlcmd -v using the compose
--- env vars DB_NAME / DB_USER / DB_PASSWORD.
+-- Se interpola en tiempo de ejecución por init.sh vía sqlcmd -v usando las
+-- variables de entorno DB_NAME / DB_USER / DB_PASSWORD de compose.
 -- =============================================================================
 
 IF DB_ID(N'$(DB_NAME)') IS NULL
@@ -19,8 +19,8 @@ GO
 IF NOT EXISTS (SELECT 1 FROM sys.server_principals WHERE name = N'$(DB_USER)')
 BEGIN
     PRINT 'Creating login [$(DB_USER)].';
-    -- CHECK_POLICY = OFF keeps the default lightweight password workable in
-    -- containers; use a strong DB_PASSWORD in production .env.
+    -- CHECK_POLICY = OFF mantiene utilizable la contraseña ligera por defecto en
+    -- contenedores; usa una DB_PASSWORD fuerte en el .env de producción.
     CREATE LOGIN [$(DB_USER)] WITH PASSWORD = N'$(DB_PASSWORD)', CHECK_POLICY = OFF;
 END
 GO

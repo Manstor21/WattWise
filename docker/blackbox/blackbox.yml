@@ -1,11 +1,11 @@
 # =============================================================================
-# WattWise — Blackbox Exporter config.
-# Used to probe services that do not expose a Prometheus /metrics endpoint:
-#   * nginx http probe on port 80
-#   * SQL Server TCP connect probe on 1433
+# WattWise — config de Blackbox Exporter.
+# Se usa para sondear los servicios que no exponen un endpoint /metrics de Prometheus:
+#   * sonda http de nginx en el puerto 80
+#   * sonda de conexión TCP de SQL Server en 1433
 #   * Prometheus /-/healthy
 #   * Grafana /api/health
-# Produces probe_success, which the Overview dashboard uses for all 6 services.
+# Produce probe_success, que el dashboard Overview usa para los 6 servicios.
 # =============================================================================
 
 modules:

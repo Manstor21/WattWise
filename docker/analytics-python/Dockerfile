@@ -1,15 +1,15 @@
 # =============================================================================
-# WattWise analytics microservice — python:3.11-slim (bookworm).
+# Microservicio de analítica de WattWise — python:3.11-slim (bookworm).
 #
-# Build context is the MONOREPO ROOT (docker-compose.yml `build.context: ..`).
-# Installs the Microsoft ODBC driver so the production DATABASE_URL
-# (mssql+pyodbc) can talk to SQL Server. pyodbc is a container-only dep and
-# stays out of analytics-python's dev requirements.
+# El contexto de build es la RAÍZ DEL MONOREPO (docker-compose.yml `build.context: ..`).
+# Instala el driver ODBC de Microsoft para que la DATABASE_URL de producción
+# (mssql+pyodbc) pueda hablar con SQL Server. pyodbc es una dependencia solo de
+# contenedor y queda fuera de los requisitos de desarrollo de analytics-python.
 # =============================================================================
 
 FROM python:3.11-slim-bookworm
 
-# Microsoft's repo requires apt keys + curl/gnupg.
+# El repositorio de Microsoft requiere claves apt + curl/gnupg.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl gnupg apt-transport-https ca-certificates \
     && curl -fsSL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg \
@@ -20,27 +20,27 @@ RUN apt-get update \
     && apt-get purge -y --auto-remove gnupg \
     && rm -rf /var/lib/apt/lists/*
 
-# Non-root user. --create-home also for --system users: gunicorn's control
-# server writes its socket under $HOME and fails with EACCES when the home
-# directory does not exist.
+# Usuario no root. --create-home también para usuarios --system: el servidor de
+# control de gunicorn escribe su socket bajo $HOME y falla con EACCES cuando el
+# directorio home no existe.
 RUN groupadd --system appgroup && useradd --system --create-home --gid appgroup appuser
 
 WORKDIR /app
 
-# Install Python dependencies first (better layer caching).
+# Instala primero las dependencias de Python (mejor caché de capas).
 COPY analytics-python/requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# gunicorn + pyodbc are container-only runtime dependencies.
+# gunicorn + pyodbc son dependencias de runtime solo de contenedor.
 RUN pip install --no-cache-dir gunicorn pyodbc
 
-# Copy the application source.
+# Copia el código fuente de la aplicación.
 COPY analytics-python/app /app/app
 
 USER appuser
 EXPOSE 5000
 
-# The app factory reads config from env (DATABASE_URL, PORT, ...).
+# La app factory lee la configuración del entorno (DATABASE_URL, PORT, ...).
 ENV FLASK_ENV=production
 ENV PORT=5000
 

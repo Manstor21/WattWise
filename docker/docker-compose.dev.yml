@@ -1,19 +1,19 @@
 # =============================================================================
-# WattWise — local development overrides.
+# WattWise — overrides para desarrollo local.
 #
 #   docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml up -d --build
 #
-# Changes vs. the base stack:
-#   * backend  -> Spring `dev` profile backed by a SQLite file mounted from ./data
-#                 (no SQL Server required; Flyway stays disabled as per application-dev.yml)
-#   * sql-server -> excluded by default (it gets an inactive compose profile).
-#                   Bring it up explicitly when needed:
+# Cambios respecto al stack base:
+#   * backend  -> perfil `dev` de Spring respaldado por un archivo SQLite montado desde ./data
+#                 (sin necesidad de SQL Server; Flyway permanece deshabilitado según application-dev.yml)
+#   * sql-server -> excluido por defecto (tiene un perfil de compose inactivo).
+#                   Llévalo arriba explícitamente cuando lo necesites:
 #                   docker compose -f docker/docker-compose.yml -f docker/docker-compose.dev.yml --profile sql-server up -d
-#   * backend and analytics run SQLite-first in dev (no wait on SQL Server).
-#   * backend publishes 8080 on the host for direct access to Actuator/Swagger while debugging.
+#   * backend y analytics usan SQLite-first en dev (sin espera a SQL Server).
+#   * backend publica 8080 en el host para acceso directo a Actuator/Swagger mientras se depura.
 #
-# SQLite keeps state in docker/data/ (git-ignored by the repo root). Delete the file
-# to reset your local database.
+# SQLite conserva el estado en docker/data/ (ignorado por git en la raíz del repo).
+# Borra el archivo para reiniciar tu base de datos local.
 # =============================================================================
 
 services:
@@ -35,8 +35,8 @@ services:
       start_period: 60s
 
   analytics-python:
-    # SQLite-backed for a zero-SQL-Server dev run; SQLAlchemy resolves SQLite via
-    # the DATABASE_URL below (table auto-creation in app/main.py).
+    # Respaldado por SQLite para un run de dev sin SQL Server; SQLAlchemy resuelve
+    # SQLite vía la DATABASE_URL de abajo (auto-creación de tablas en app/main.py).
     environment:
       DATABASE_URL: sqlite:////app/data/wattwise-analytics.db
     volumes:

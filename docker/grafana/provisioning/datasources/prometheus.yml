@@ -1,6 +1,6 @@
 # =============================================================================
-# WattWise — Grafana datasource provisioning.
-# The unique id "prometheus" is referenced by all dashboard JSON panels.
+# WattWise — aprovisionamiento del datasource de Grafana.
+# El id único "prometheus" es referenciado por todos los paneles de los dashboards JSON.
 # =============================================================================
 
 apiVersion: 1

@@ -1,17 +1,17 @@
 #!/bin/bash
 # =============================================================================
-# WattWise SQL Server bootstrap wrapper.
+# Wrapper de arranque de SQL Server para WattWise.
 #
-# The official mcr.microsoft.com/mssql/server image does not run an
-# initdb.d-style folder, so this entrypoint:
-#   1. starts sqlservr in the background,
-#   2. waits until it accepts connections,
-#   3. applies every /opt/wattwise/init/*.sql script (mounted read-only from
-#      docker/sql-server/init-scripts/) — idempotent by design,
-#   4. waits on sqlservr so PID 1 lifecycle keeps working.
+# La imagen oficial mcr.microsoft.com/mssql/server no ejecuta una carpeta
+# estilo initdb.d, por lo que este entrypoint:
+#   1. arranca sqlservr en segundo plano,
+#   2. espera hasta que acepte conexiones,
+#   3. aplica cada script /opt/wattwise/init/*.sql (montado de solo lectura desde
+#      docker/sql-server/init-scripts/) — idempotente por diseño,
+#   4. espera a sqlservr para que el ciclo de vida del PID 1 siga funcionando.
 #
-# Environment: MSSQL_SA_PASSWORD, DB_NAME, DB_USER, DB_PASSWORD
-# are injected by docker-compose.yml from the .env file.
+# Entorno: MSSQL_SA_PASSWORD, DB_NAME, DB_USER, DB_PASSWORD
+# son inyectados por docker-compose.yml desde el archivo .env.
 # =============================================================================
 
 set -eu
@@ -20,8 +20,8 @@ SQLCMD=/opt/mssql-tools18/bin/sqlcmd
 
 log() { echo "[wattwise-init] $*"; }
 
-# The compose file overrides the image ENTRYPOINT to this script, so we are
-# PID 1: start SQL Server as a child and never exit until it does.
+# El archivo compose sobreescribe el ENTRYPOINT de la imagen con este script, por
+# lo que somos PID 1: arrancamos SQL Server como hijo y no salimos hasta que él salga.
 /opt/mssql/bin/sqlservr &
 SQLSERVR_PID=$!
 
@@ -40,7 +40,7 @@ for i in $(seq 1 60); do
 done
 [ "$ready" -eq 1 ] && log "SQL Server ready."
 
-# Apply init SQL (variables interpolated from the compose environment).
+# Aplica el SQL de init (variables interpoladas desde el entorno de compose).
 for f in /opt/wattwise/init/*.sql; do
     [ -e "$f" ] || continue
     log "Applying $f"
@@ -49,5 +49,5 @@ for f in /opt/wattwise/init/*.sql; do
 done
 log "Init scripts applied."
 
-# Stay in the foreground; propagate sqlservr exit status.
+# Quédate en primer plano; propaga el estado de salida de sqlservr.
 wait "$SQLSERVR_PID"

@@ -1,6 +1,6 @@
 # =============================================================================
-# WattWise — Prometheus scrape configuration.
-# Two targets, 15s interval.
+# WattWise — configuración de scrape de Prometheus.
+# Dos targets, intervalo de 15s.
 # =============================================================================
 
 global:
@@ -21,8 +21,8 @@ scrape_configs:
         labels:
           service: "wattwise-analytics"
 
-  # Blackbox probes for the services that expose no /metrics endpoint.
-  # Dashboard wattwise-overview renders probe_success for these four.
+  # Sondas Blackbox para los servicios que no exponen un endpoint /metrics.
+  # El dashboard wattwise-overview renderiza probe_success para estos cuatro.
   - job_name: "wattwise-blackbox"
     metrics_path: /probe
     params:

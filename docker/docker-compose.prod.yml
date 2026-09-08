@@ -1,10 +1,11 @@
 # =============================================================================
-# WattWise — production overrides.
+# WattWise — overrides para producción.
 #
 #   docker compose -f docker/docker-compose.yml -f docker/docker-compose.prod.yml up -d --build
 #
-# Adds resource limits and restart policies to every service. All credentials must
-# be supplied via a docker/.env file (see .env.example) or the orchestrator's secrets.
+# Añade límites de recursos y políticas de reinicio a cada servicio. Todas las
+# credenciales deben suministrarse mediante un archivo docker/.env (ver .env.example)
+# o los secretos del orquestador.
 # =============================================================================
 
 services:

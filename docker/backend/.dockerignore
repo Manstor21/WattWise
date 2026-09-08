@@ -1,4 +1,4 @@
-# Exclude build artifacts and VCS metadata from the monorepo-root build context.
+# Excluye los artefactos de build y los metadatos de VCS del contexto de build de la raíz del monorepo.
 **/target/
 **/.git/
 **/*.class
