@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Gson DTO for {@code GET/PUT /api/alerts/preferences}. {@code applianceId}
- * null means the preference applies to all appliances.
+ * DTO Gson para {@code GET/PUT /api/alerts/preferences}. {@code applianceId}
+ * nulo significa que la preferencia aplica a todos los electrodomésticos.
  */
 public class AlertPreferenceDto {
 

@@ -10,7 +10,7 @@ import com.wattwise.android.data.local.entity.RecommendationEntity;
 import java.util.List;
 
 /**
- * Cache for server-side recommendations (one per appliance).
+ * Caché de recomendaciones del servidor (una por electrodoméstico).
  */
 @Dao
 public interface RecommendationDao {

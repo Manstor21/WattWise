@@ -13,10 +13,10 @@ import com.wattwise.android.R;
 import com.wattwise.android.ui.MainActivity;
 
 /**
- * Builds and posts local notifications. FCM is intentionally NOT implemented;
- * everything delivered here is produced on-device (WorkManager + Room) and goes
- * through a single app channel, which API 26+ requires before any notification
- * can be shown.
+ * Construye y publica notificaciones locales. FCM está deliberadamente NO
+ * implementado; todo lo que se entrega aquí se produce en el dispositivo
+ * (WorkManager + Room) y pasa por un único canal de la app, que la API 26+
+ * exige antes de poder mostrar cualquier notificación.
  */
 public final class NotificationHelper {
 
@@ -27,7 +27,7 @@ public final class NotificationHelper {
     private NotificationHelper() {
     }
 
-    /** Called from WattWiseApp.onCreate; safe on every API level we support. */
+    /** Se llama desde WattWiseApp.onCreate; seguro en todos los niveles de API que soportamos. */
     public static void createChannel(Context context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             return;
@@ -44,7 +44,7 @@ public final class NotificationHelper {
         nm.createNotificationChannel(channel);
     }
 
-    /** Points the notification at the main screen. */
+    /** Apunta la notificación a la pantalla principal. */
     private static PendingIntent contentIntent(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -54,8 +54,8 @@ public final class NotificationHelper {
     }
 
     /**
-     * "Ventana óptima" notification — program your appliance from {@code start}
-     * to {@code end} at {@code priceEur}.
+     * Notificación de «ventana óptima» — programa tu electrodoméstico de
+     * {@code start} a {@code end} a {@code priceEur}.
      */
     public static void notifyOptimalWindow(Context context, String startHm, String endHm, String priceEur) {
         String title = context.getString(R.string.notification_optimal_window);
@@ -73,7 +73,7 @@ public final class NotificationHelper {
         }
     }
 
-    /** "Precio bajo detectado" notification for a single CHEAP slot. */
+    /** Notificación de «precio bajo detectado» para una sola franja CHEAP. */
     public static void notifyLowPrice(Context context, String priceEur, String atHm) {
         String body = context.getString(R.string.notification_low_price_body, priceEur, atHm);
         NotificationCompat.Builder builder = base(context)

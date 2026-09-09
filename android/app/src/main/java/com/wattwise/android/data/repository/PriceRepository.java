@@ -19,13 +19,14 @@ import java.util.List;
 import retrofit2.Response;
 
 /**
- * Offline-first access to price slots. The strategy:
+ * Acceso offline-first a las franjas de precio. Estrategia:
  * <ol>
- *   <li>Always try the API on a refresh request.</li>
- *   <li>On success, upsert everything into Room and purge slots older than
- *       three days.</li>
- *   <li>On failure, serve the cached slots for the requested Spanish date and
- *       flag the result as {@code offline} so the UI can show the banner.</li>
+ *   <li>Siempre intentar la API en una petición de refresco.</li>
+ *   <li>En caso de éxito, hacer upsert de todo en Room y purgar las franjas
+ *       de más de tres días.</li>
+ *   <li>En caso de error, servir las franjas en caché para la fecha española
+ *       solicitada y marcar el resultado como {@code offline} para que la UI
+ *       pueda mostrar el banner.</li>
  * </ol>
  */
 public class PriceRepository {
@@ -42,8 +43,9 @@ public class PriceRepository {
     }
 
     /**
-     * Public entry for workers to persist freshly-fetched price lists straight
-     * into Room (no callback, no UI result). Also runs the cache purge window.
+     * Entrada pública para que los workers persistan listas de precios recién
+     * descargadas directamente en Room (sin callback, sin resultado para la UI).
+     * También ejecuta la ventana de purga de caché.
      */
     public void cacheApiPrices(List<PriceDto> prices) {
         if (prices != null && !prices.isEmpty()) {
@@ -51,7 +53,7 @@ public class PriceRepository {
         }
     }
 
-    /** Loads cached slots synchronously (call on an IO thread). */
+    /** Carga las franjas en caché de forma síncrona (llamar en un hilo de E/S). */
     public List<PriceDto> cachedForDate(LocalDate madridDate) {
         String target = madridDate.toString();
         List<PriceDto> result = new ArrayList<>();
@@ -65,8 +67,8 @@ public class PriceRepository {
     }
 
     /**
-     * Fetches today+tomorrow (+history to fill the cache window) and delivers the
-     * slots for {@code targetDate} (Spanish calendar day).
+     * Descarga hoy+mañana (+histórico para llenar la ventana de caché) y entrega
+     * las franjas para {@code targetDate} (día del calendario español).
      */
     public void fetchDay(LocalDate targetDate, Callback<DayResult> callback) {
         AppExecutors.io(() -> {
@@ -124,9 +126,9 @@ public class PriceRepository {
         }
         db.priceDao().insertAll(entities);
 
-        // Purge anything outside the 3-day caching window.
+        // Purgar cualquier cosa fuera de la ventana de caché de 3 días.
         LocalDate cutoff = today.minusDays(CACHE_DAYS);
-        // The last slot of the cutoff day is cutoff+1 00:00 local → convert to UTC string.
+        // La última franja del día de corte es corte+1 00:00 local → convertir a cadena UTC.
         LocalDateTime cutoffUtc = cutoff.atStartOfDay().atZone(PriceUtils.SPAIN)
                 .withZoneSameInstant(PriceUtils.UTC).toLocalDateTime();
         db.priceDao().deleteOlderThan(cutoffUtc.format(PriceUtils.ISO));
@@ -144,7 +146,7 @@ public class PriceRepository {
         return dto;
     }
 
-    /** Bundle delivered to the UI after {@link #fetchDay}. */
+    /** Paquete entregado a la UI después de {@link #fetchDay}. */
     public static final class DayResult {
         public final List<PriceDto> slots;
         public final boolean offline;

@@ -10,9 +10,10 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Thin wrapper around a shared IO thread pool and the main looper so the rest of
- * the app doesn't need to carry a {@link ExecutorService} or {@link Handler}.
- * Kept intentionally simple — a production build would inject this.
+ * Envoltorio fino alrededor de un pool de hilos IO compartido y del looper
+ * principal, para que el resto de la app no tenga que manejar un {@link ExecutorService}
+ * o un {@link Handler}. Se mantiene intencionadamente simple — un build de producción
+ * inyectaría esto.
  */
 public final class AppExecutors {
 
@@ -28,12 +29,12 @@ public final class AppExecutors {
     private AppExecutors() {
     }
 
-    /** Post work to the IO thread pool. */
+    /** Encola trabajo en el pool de hilos IO. */
     public static void io(Runnable runnable) {
         IO.execute(runnable);
     }
 
-    /** Post work to the main (UI) thread. */
+    /** Encola trabajo en el hilo principal (UI). */
     public static void main(Runnable runnable) {
         MAIN.post(runnable);
     }

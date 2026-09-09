@@ -21,9 +21,9 @@ import com.wattwise.android.data.remote.SessionManager;
 import com.wattwise.android.util.Prefs;
 
 /**
- * Host for the four-tab navigation (Dashboard, Recommendations, Appliances,
- * Settings). Also owns the POST_NOTIFICATIONS runtime request (API 33+) and the
- * shared "go to login" exit path used after a 401.
+ * Anfitrión de la navegación de cuatro pestañas (Resumen, Recomendaciones, Aparatos,
+ * Ajustes). También gestiona la petición en tiempo de ejecución de POST_NOTIFICATIONS
+ * (API 33+) y la ruta de salida compartida "ir al login" usada tras un 401.
  */
 public class MainActivity extends AppCompatActivity {
 
@@ -95,8 +95,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * POST_NOTIFICATIONS is a runtime permission on API 33+. We ask once per
-     * install; denial just means notifications stay silent.
+     * POST_NOTIFICATIONS es un permiso en tiempo de ejecución en API 33+. Lo pedimos una vez por
+     * instalación; si se deniega, las notificaciones simplemente permanecen silenciadas.
      */
     private void requestNotificationPermissionIfNeeded() {
         Prefs prefs = new Prefs(this);
@@ -107,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
 
         notificationPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(),
-                        granted -> { /* result is best-effort; nothing to react to */ });
+                        granted -> { /* el resultado es best-effort; no hay nada que responder */ });
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                 != PackageManager.PERMISSION_GRANTED) {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
         }
     }
 
-    /** Shared exit: wipe the session and relaunch the login screen. */
+    /** Salida compartida: limpiar la sesión y relanzar la pantalla de login. */
     public static void clearSessionAndGoToLogin(AppCompatActivity activity) {
         new SessionManager(activity).clear();
         Intent intent = new Intent(activity, LoginActivity.class);

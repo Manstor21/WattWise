@@ -9,8 +9,8 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 
 /**
- * Parses Retrofit error responses into the backend's {@code ApiError} envelope
- * and exposes a single human-readable message.
+ * Convierte respuestas de error de Retrofit al envoltorio {@code ApiError} del
+ * backend y expone un único mensaje legible para el usuario.
  */
 public final class ApiErrorParser {
 
@@ -28,7 +28,7 @@ public final class ApiErrorParser {
                 }
             }
         } catch (IOException | RuntimeException ignored) {
-            // Fall through to the generic HTTP message.
+            // Se cae al mensaje HTTP genérico.
         }
         return "HTTP " + response.code();
     }

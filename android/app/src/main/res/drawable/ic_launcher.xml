@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Adaptive launcher foreground: accent bolt on transparent background.
-  Keep path data under the 108 dp safe zone. Placed at the centre.
+  Primer plano del launcher adaptativo: rayo en color acento sobre fondo transparente.
+  Mantén los datos del path dentro de la zona segura de 108 dp. Colocado en el centro.
 -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Bolt -->
+    <!-- Rayo -->
     <path
         android:pathData="M62,22L34,56h14l-6,30 34,-34H62z"
         android:fillColor="@color/accent" />

@@ -1,13 +1,13 @@
 package com.wattwise.android.util;
 
 /**
- * Simple result channel used across repositories. {@code authError} is true
- * when the backing call failed with 401/403 — the UI then clears the session
- * and redirects to the login screen.
+ * Canal de resultados sencillo usado en los repositorios. {@code authError} es
+ * true cuando la llamada subyacente falló con 401/403: la UI limpia entonces la
+ * sesión y redirige a la pantalla de inicio de sesión.
  *
- * <p>{@link #onError} is {@code default} so the interface stays functional
- * (lambdas can implement {@link #onSuccess} alone for local-only operations);
- * callers that care about failures override it.
+ * <p>{@link #onError} es {@code default} para que la interfaz siga siendo
+ * funcional (los lambdas pueden implementar solo {@link #onSuccess} para
+ * operaciones locales); quien necesite controlar los fallos lo sobrescribe.
  */
 public interface Callback<T> {
 

@@ -16,9 +16,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * Single Gson instance with the adapters the whole app relies on. Lives free of
- * Android imports so repositories and type converters can share it and the pure
- * logic classes stay JVM-testable.
+ * Instancia única de Gson con los adaptadores de los que depende toda la app.
+ * Libre de imports de Android para que los repositorios y conversores de tipos puedan
+ * compartirla y las clases de lógica pura sigan siendo testeables en la JVM.
  */
 public final class GsonProvider {
 
@@ -33,12 +33,12 @@ public final class GsonProvider {
 
     private static Gson build() {
         return new GsonBuilder()
-                // Backend serialises LocalDateTime without a zone suffix (UTC semantics).
+                // El backend serializa LocalDateTime sin sufijo de zona (semántica UTC).
                 .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
                 .create();
     }
 
-    /** Serializes/parses {@code yyyy-MM-ddTHH:mm:ss} (ISO_LOCAL_DATE_TIME). */
+    /** Serializa/deserializa {@code yyyy-MM-ddTHH:mm:ss} (ISO_LOCAL_DATE_TIME). */
     private static final class LocalDateTimeAdapter
             implements JsonSerializer<LocalDateTime>, JsonDeserializer<LocalDateTime> {
 

@@ -1,8 +1,8 @@
 package com.wattwise.android.data.remote.dto;
 
 /**
- * Body of {@code POST /api/auth/login}. The backend accepts a username OR an
- * email in the {@code username} field.
+ * Cuerpo de {@code POST /api/auth/login}. El backend acepta un nombre de
+ * usuario O un email en el campo {@code username}.
  */
 public class LoginRequest {
 

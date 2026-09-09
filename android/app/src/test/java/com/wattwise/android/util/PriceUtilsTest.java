@@ -11,15 +11,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * JVM-only tests for {@link PriceUtils}. The timezone conversion is the highest
- * risk surface: the backend serialises UTC timestamps WITHOUT a zone suffix;
- * verifying that a known UTC instant maps to the expected Spanish wall time
- * gives a solid safety net.
+ * Tests solo-JVM de {@link PriceUtils}. La conversión de zona horaria es la superficie
+ * de mayor riesgo: el backend serializa los timestamps UTC SIN sufijo de zona;
+ * comprobar que un instante UTC conocido se corresponde con la hora local española
+ * esperada ofrece una red de seguridad sólida.
  */
 public class PriceUtilsTest {
 
     /**
-     * 2025-01-05 23:00 UTC = 2025-01-06 00:00 CET (winter time, UTC+1).
+     * 2025-01-05 23:00 UTC = 2025-01-06 00:00 CET (horario de invierno, UTC+1).
      */
     @Test
     public void utcToSpain_winterTime() {
@@ -29,7 +29,7 @@ public class PriceUtilsTest {
     }
 
     /**
-     * 2025-07-15 22:30 UTC = 2025-07-16 00:30 CEST (summer time, UTC+2).
+     * 2025-07-15 22:30 UTC = 2025-07-16 00:30 CEST (horario de verano, UTC+2).
      */
     @Test
     public void utcToSpain_summerTime() {
@@ -39,9 +39,8 @@ public class PriceUtilsTest {
     }
 
     /**
-     * A slot stored at 2025-01-05T08:15:00 UTC must belong to Spanish date
-     * 2025-01-05 (09:15 CET). This is the grouping key used by the HOY / MAÑANA
-     * tabs.
+     * Un slot guardado a las 2025-01-05T08:15:00 UTC debe pertenecer a la fecha española
+     * 2025-01-05 (09:15 CET). Esta es la clave de agrupación usada por las pestañas HOY / MAÑANA.
      */
     @Test
     public void spanishDateOfSlot_matchesLocalDate() {
@@ -62,7 +61,7 @@ public class PriceUtilsTest {
 
     @Test
     public void windowLabel_showsSpanishTimes() {
-        // Madrid 00:00 CET in winter = UTC 23:00 the previous day.
+        // Madrid 00:00 CET en invierno = UTC 23:00 del día anterior.
         LocalDateTime startUtc = LocalDateTime.of(2025, 1, 5, 23, 0, 0);
         LocalDateTime endUtc   = LocalDateTime.of(2025, 1, 6, 1, 0, 0); // Madrid 02:00
         String label = PriceUtils.windowLabel(startUtc, endUtc);

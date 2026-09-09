@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Lightweight (non-secret) shared preferences for UI-only state such as last
- * sync timestamps and the locally-configured alert threshold. Secrets go into
- * {@link com.wattwise.android.data.remote.SessionManager}.
+ * Shared preferences ligeras (no secretas) para estado solo de UI, como los
+ * timestamps de la última sincronización y el umbral de alerta configurado
+ * localmente. Los secretos van en {@link com.wattwise.android.data.remote.SessionManager}.
  */
 public final class Prefs {
 
@@ -30,7 +30,7 @@ public final class Prefs {
         return prefs.edit();
     }
 
-    // ---- price sync ----
+    // ---- sincronización de precios ----
 
     public long priceLastUpdatedMs() {
         return prefs.getLong(KEY_PRICE_LAST_UPDATED, 0L);
@@ -48,7 +48,7 @@ public final class Prefs {
         ed().putLong(KEY_RECOMMENDATION_LAST_UPDATED, ms).apply();
     }
 
-    // ---- alert config ----
+    // ---- configuración de alertas ----
 
     public int alertThresholdPct() {
         return prefs.getInt(KEY_ALERT_THRESHOLD, 20);
@@ -74,7 +74,7 @@ public final class Prefs {
         ed().putLong(KEY_ALERT_APPLIANCE_ID, id).apply();
     }
 
-    // ---- notification dedup ----
+    // ---- deduplicación de notificaciones ----
 
     public String lastNotifiedWindowStart() {
         return prefs.getString(KEY_LAST_NOTIFIED_WINDOW, "");

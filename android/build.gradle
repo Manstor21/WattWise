@@ -1,5 +1,5 @@
-// WattWise Android — root project build file.
-// AGP 8.3.2 requires Gradle 8.4+; we pin Gradle 8.5 (see gradle/wrapper/gradle-wrapper.properties).
+// WattWise Android — archivo de build del proyecto raíz.
+// AGP 8.3.2 requiere Gradle 8.4+; fijamos Gradle 8.5 (ver gradle/wrapper/gradle-wrapper.properties).
 plugins {
     id 'com.android.application' version '8.3.2' apply false
 }

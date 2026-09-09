@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Rounded translucent card used for headers, banners and list items. -->
+<!-- Tarjeta translúcida redondeada usada para cabeceras, banners y elementos de lista. -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <solid android:color="@color/bg_surface" />
     <corners android:radius="@dimen/radius_lg" />

@@ -9,9 +9,10 @@ import com.wattwise.android.util.Callback;
 import retrofit2.Response;
 
 /**
- * Thin client for the alert preference endpoints (JWT required). No local cache:
- * preferences live as UI state in {@link com.wattwise.android.util.Prefs} so the
- * {@code PriceCheckWorker} can evaluate alerts without a session.
+ * Cliente ligero para los endpoints de preferencias de alerta (requieren JWT).
+ * Sin caché local: las preferencias viven como estado de la UI en
+ * {@link com.wattwise.android.util.Prefs} para que el {@code PriceCheckWorker}
+ * pueda evaluar alertas sin sesión.
  */
 public class AlertRepository {
 

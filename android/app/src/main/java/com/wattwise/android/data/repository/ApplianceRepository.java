@@ -17,11 +17,12 @@ import java.util.List;
 import retrofit2.Response;
 
 /**
- * Offline-first appliance CRUD.
+ * CRUD offline-first de electrodomésticos.
  *
- * <p>Writes are staged locally ({@code isPendingSync}) and only reach the server
- * through {@link com.wattwise.android.sync.SyncWorker}. Reads merge server
- * snapshots into Room using {@link ConflictResolver} (last-write-wins).
+ * <p>Las escrituras se escenifican localmente ({@code isPendingSync}) y solo
+ * llegan al servidor a través de {@link com.wattwise.android.sync.SyncWorker}.
+ * Las lecturas fusionan instantáneas del servidor en Room usando
+ * {@link ConflictResolver} (última escritura gana).
  */
 public class ApplianceRepository {
 
@@ -32,7 +33,7 @@ public class ApplianceRepository {
     }
 
     // ------------------------------------------------------------------
-    // Local reads (UI)
+    // Lectura local (UI)
     // ------------------------------------------------------------------
 
     public void getAllActive(Callback<List<ApplianceEntity>> callback) {
@@ -43,7 +44,7 @@ public class ApplianceRepository {
     }
 
     // ------------------------------------------------------------------
-    // Local writes (staged for sync)
+    // Escritura local (escenificada para sync)
     // ------------------------------------------------------------------
 
     public void createLocal(String name, String type, int powerWatts,
@@ -77,7 +78,7 @@ public class ApplianceRepository {
     public void deleteLocal(ApplianceEntity entity, Callback<Void> callback) {
         AppExecutors.io(() -> {
             if (entity.serverId == null) {
-                // Never reached the server — nothing to delete remotely.
+                // Nunca llegó al servidor — no hay nada que borrar en remoto.
                 db.applianceDao().deleteRow(entity.localId);
             } else {
                 db.applianceDao().markDeleted(entity.localId, System.currentTimeMillis());
@@ -87,12 +88,13 @@ public class ApplianceRepository {
     }
 
     // ------------------------------------------------------------------
-    // Sync (used by SyncWorker)
+    // Sync (usado por SyncWorker)
     // ------------------------------------------------------------------
 
     /**
-     * Push pending rows then pull the server snapshot, resolving conflicts with
-     * last-write-wins. Returns false with {@code authError=true} on 401/403.
+     * Envía las filas pendientes y luego descarga la instantánea del servidor,
+     * resolviendo conflictos con última escritura gana. Devuelve false con
+     * {@code authError=true} en 401/403.
      */
     public boolean sync(boolean[] authErrorOut) {
         try {
@@ -107,7 +109,7 @@ public class ApplianceRepository {
         }
     }
 
-    /** Sync used directly by the UI on app start (fire-and-forget refresh). */
+    /** Sync usado directamente por la UI al arrancar la app (refresco fire-and-forget). */
     public void refresh(Callback<List<ApplianceEntity>> callback) {
         AppExecutors.io(() -> {
             boolean[] auth = new boolean[1];
@@ -118,7 +120,7 @@ public class ApplianceRepository {
             } else if (auth[0]) {
                 AppExecutors.main(() -> callback.onError(true, "unauthorized"));
             } else {
-                AppExecutors.main(() -> callback.onSuccess(list)); // offline: cache is enough
+                AppExecutors.main(() -> callback.onSuccess(list)); // offline: basta con la caché
             }
         });
     }
@@ -132,7 +134,7 @@ public class ApplianceRepository {
             if (hasServerId && e.isDeleted) {
                 Response<Void> r = ApiClient.api().deleteAppliance(e.serverId).execute();
                 requireOk(r);
-                db.applianceDao().deleteRow(e.localId); // tombstone consumed
+                db.applianceDao().deleteRow(e.localId); // marca de borrado consumida
             } else if (hasServerId) {
                 Response<ApplianceDto> r = ApiClient.api()
                         .updateAppliance(e.serverId, toDto(e)).execute();
@@ -165,10 +167,10 @@ public class ApplianceRepository {
                         ? -1L
                         : d.getCreatedAt().atZone(ZoneOffset.UTC).toInstant().toEpochMilli();
                 if (ConflictResolver.resolve(local.updatedAt, serverWrite) == ConflictResolver.Winner.REMOTE) {
-                    // Server snapshot is newer/authoritative — adopt it.
+                    // La instantánea del servidor es más nueva/autoritativa — adoptarla.
                     db.applianceDao().insert(cleanEntity(d, local.serverId, local.localId));
                 }
-                // LOCAL wins → keep the staged pending row untouched.
+                // LOCAL gana → se conserva intacta la fila pendiente escenificada.
             }
         }
     }
@@ -215,7 +217,7 @@ public class ApplianceRepository {
         return dto;
     }
 
-    /** Internal signal for 401/403 during a sync pass. */
+    /** Señal interna para 401/403 durante una pasada de sync. */
     private static final class UnauthorizedException extends Exception {
     }
 }

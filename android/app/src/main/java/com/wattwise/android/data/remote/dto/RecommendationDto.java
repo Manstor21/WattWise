@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * Gson DTO for {@code GET /api/recommendations} responses. The window carries
- * the {@link PriceDto} slots that form the recommended period, plus the
- * savings computation done server-side.
+ * DTO Gson para respuestas {@code GET /api/recommendations}. La ventana
+ * contiene las franjas {@link PriceDto} que forman el periodo recomendado, más
+ * el cálculo de ahorro realizado en el servidor.
  */
 public class RecommendationDto {
 
@@ -20,7 +20,7 @@ public class RecommendationDto {
     private BigDecimal worstCaseCostEur;
     private BigDecimal estimatedSavingsEur;
     private BigDecimal savingsPercentage;
-    private String semaphore; // GREEN | AMBER | RED
+    private String semaphore; // Semáforo: GREEN | AMBER | RED
     private List<PriceDto> window;
 
     public ApplianceDto getAppliance() {

@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Offline banner -->
+        <!-- Banner sin conexión -->
         <LinearLayout
             android:id="@+id/offlineBanner"
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
         android:textColor="@color/text_muted"
         android:visibility="gone" />
 
-    <!-- Login prompt overlay when anonymous. -->
+    <!-- Superposición de aviso de login cuando es anónimo. -->
     <LinearLayout
         android:id="@+id/loginPromptCard"
         android:layout_width="match_parent"

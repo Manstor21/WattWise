@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Single price slot row. The whole cell is tinted by the traffic-light
-  colour; a small dot at the start reinforces the colour for accessibility.
+  Fila de un único slot de precio. Toda la celda se tiñe con el color del semáforo;
+  un pequeño punto al inicio refuerza el color para la accesibilidad.
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"

@@ -12,13 +12,14 @@ import com.wattwise.android.data.local.entity.PriceRecordEntity;
 import com.wattwise.android.data.local.entity.RecommendationEntity;
 
 /**
- * Room database. Version 1 is the launch schema.
+ * Base de datos Room. La versión 1 es el esquema de lanzamiento.
  *
- * <p>Migration strategy: every schema change increments {@code version} and adds
- * a {@code Migration} to {@link #MIGRATIONS} (an empty array today). Room runs
- * them in order; never bump the version without shipping a migration, otherwise
- * users lose their offline cache. {@code exportSchema=true} keeps the JSON schema
- * under {@code app/schemas} for the migration test we plan to add later.
+ * <p>Estrategia de migración: cada cambio de esquema incrementa {@code version}
+ * y añade una {@code Migration} a {@link #MIGRATIONS} (hoy un array vacío).
+ * Room las ejecuta en orden; nunca subir la versión sin enviar una migración,
+ * o los usuarios perderán su caché sin conexión. {@code exportSchema=true}
+ * mantiene el esquema JSON bajo {@code app/schemas} para la prueba de
+ * migración que planeamos añadir más adelante.
  */
 @Database(
         entities = {PriceRecordEntity.class, ApplianceEntity.class, RecommendationEntity.class},
@@ -30,7 +31,7 @@ public abstract class WattWiseDatabase extends RoomDatabase {
 
     private static final String DB_NAME = "wattwise.db";
 
-    /** Ordered list of migrations; empty on the launch schema. */
+    /** Lista ordenada de migraciones; vacía en el esquema de lanzamiento. */
     @SuppressWarnings("unused")
     private static final androidx.room.migration.Migration[] MIGRATIONS = new androidx.room.migration.Migration[0];
 
@@ -51,8 +52,9 @@ public abstract class WattWiseDatabase extends RoomDatabase {
                                     WattWiseDatabase.class,
                                     DB_NAME)
                             .addMigrations(MIGRATIONS)
-                            // The app is deliberately offline-first: stale local data
-                            // beats a crash loop when the API is down.
+                            // La app es deliberadamente offline-first: unos datos
+                            // locales obsoletos son preferibles a un bucle de
+                            // cierres cuando la API no está disponible.
                             .fallbackToDestructiveMigrationOnDowngrade()
                             .build();
                 }

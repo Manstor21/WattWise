@@ -1,7 +1,7 @@
 package com.wattwise.android.data.remote.dto;
 
 /**
- * Body of {@code POST /api/auth/register}.
+ * Cuerpo de {@code POST /api/auth/register}.
  */
 public class RegisterRequest {
 

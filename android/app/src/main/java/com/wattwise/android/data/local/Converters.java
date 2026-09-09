@@ -5,8 +5,9 @@ import androidx.room.TypeConverter;
 import java.math.BigDecimal;
 
 /**
- * Room type converters. SQLite has no BigDecimal; prices are stored as text so
- * we keep full precision (prices are the app's core data, never round them).
+ * Conversores de tipo de Room. SQLite no tiene BigDecimal; los precios se
+ * almacenan como texto para conservar precisión total (los precios son los
+ * datos centrales de la app; nunca redondearlos).
  */
 public class Converters {
 

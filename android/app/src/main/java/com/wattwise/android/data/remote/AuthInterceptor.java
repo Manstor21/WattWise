@@ -9,9 +9,9 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * OkHttp interceptor that injects the {@code Authorization: Bearer} header
- * into every outgoing request when a JWT is present in the session. Prices
- * are public and need no token, but attaching it when absent does no harm.
+ * Interceptor OkHttp que inyecta la cabecera {@code Authorization: Bearer}
+ * en cada petición saliente cuando hay un JWT en la sesión. Los precios son
+ * públicos y no necesitan token, pero adjuntarlo cuando no existe no hace daño.
  */
 public final class AuthInterceptor implements Interceptor {
 

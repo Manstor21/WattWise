@@ -11,10 +11,11 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 
 /**
- * JWT and user identity stored in an {@link EncryptedSharedPreferences}
- * backed by an Android Keystore master key. If the Keystore is unavailable
- * (rooted/emulator edge cases), a plain {@link SharedPreferences} fallback
- * ensures the app still works — degraded security, not a crash.
+ * JWT e identidad de usuario almacenados en un {@link EncryptedSharedPreferences}
+ * respaldado por una clave maestra de Android Keystore. Si el Keystore no está
+ * disponible (casos límite de root/emulador), un {@link SharedPreferences}
+ * plano como respaldo asegura que la app siga funcionando — seguridad
+ * degradada, no un cierre.
  */
 public final class SessionManager {
 
@@ -42,8 +43,9 @@ public final class SessionManager {
                     EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                     EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
         } catch (GeneralSecurityException | IOException e) {
-            // Keystore unavailable on this device — fall back to plain storage so
-            // the app is usable (JWT would still travel in cleartext HTTP header).
+            // Keystore no disponible en este dispositivo — se vuelve al almacenamiento
+            // plano para que la app sea utilizable (el JWT seguiría viajando en
+            // la cabecera HTTP en claro).
             return context.getSharedPreferences(PREF_NAME + "_fallback", Context.MODE_PRIVATE);
         }
     }

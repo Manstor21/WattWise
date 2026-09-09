@@ -1,8 +1,8 @@
 package com.wattwise.android.data.remote.dto;
 
 /**
- * Gson DTO for {@code POST /api/auth/register} and {@code POST /api/auth/login}
- * responses: the JWT plus a compact user view.
+ * DTO Gson para las respuestas de {@code POST /api/auth/register} y
+ * {@code POST /api/auth/login}: el JWT más una vista compacta del usuario.
  */
 public class AuthResponse {
 

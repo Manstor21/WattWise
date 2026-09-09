@@ -28,9 +28,10 @@ import android.content.Intent;
 import java.util.List;
 
 /**
- * Personalized recommendations per appliance. Server data is cached in Room and
- * the cached copy is served instantly; a refresh replaces it when a session
- * exists. Offline shows the stale list; anonymous users see the login prompt.
+ * Recomendaciones personalizadas por aparato. Los datos del servidor se cachean en
+ * Room y la copia cacheada se sirve al instante; un refresh la reemplaza cuando existe
+ * sesión. Sin conexión se muestra la lista obsoleta; los usuarios anónimos ven el aviso
+ * de inicio de sesión.
  */
 public class RecommendationsFragment extends Fragment {
 
@@ -78,13 +79,13 @@ public class RecommendationsFragment extends Fragment {
         boolean loggedIn = new SessionManager(requireContext()).hasSession();
         loginPrompt.setVisibility(loggedIn ? View.GONE : View.VISIBLE);
 
-        // 1) serve cache instantly
+        // 1) servir la caché al instante
         AppExecutors.io(() -> {
             List<RecommendationEntity> cached = repository.getAllCachedSync();
             AppExecutors.main(() -> render(cached, false));
         });
 
-        // 2) refresh from server when a session exists
+        // 2) refrescar desde el servidor cuando existe sesión
         if (loggedIn && !authRedirectPending) {
             authRedirectPending = true;
             repository.refresh(new Callback<List<RecommendationEntity>>() {
@@ -104,9 +105,9 @@ public class RecommendationsFragment extends Fragment {
                             MainActivity.clearSessionAndGoToLogin((MainActivity) getActivity());
                         }
                     } else if (adapterCachedEmpty()) {
-                        // Nothing cached to fall back on — the empty state stays visible.
+                        // Nada en caché a lo que recurrir — el estado vacío sigue visible.
                     } else {
-                        // Offline: the stale cache already rendered; label it.
+                        // Offline: la caché obsoleta ya se ha renderizado; etiquetarla.
                         offlineBanner.setVisibility(View.VISIBLE);
                         long last = new Prefs(requireContext()).recommendationLastUpdatedMs();
                         String time = last > 0

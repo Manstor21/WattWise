@@ -20,8 +20,8 @@ import java.util.List;
 import retrofit2.Response;
 
 /**
- * Loads and caches server-side recommendations. When the API is unreachable the
- * cached rows (last sync) are served and flagged as offline.
+ * Carga y almacena en caché las recomendaciones del servidor. Cuando la API no
+ * está disponible se sirven las filas en caché (último sync) marcadas como offline.
  */
 public class RecommendationRepository {
 
@@ -43,12 +43,12 @@ public class RecommendationRepository {
         });
     }
 
-    /** Blocking Room read (for fragments that pre-render from cache). */
+    /** Lectura bloqueante de Room (para fragmentos que prerenderizan desde caché). */
     public List<RecommendationEntity> getAllCachedSync() {
         return db.recommendationDao().getAll();
     }
 
-    /** Pull from the server, then deliver the fresh list. */
+    /** Descarga del servidor y luego entrega la lista fresca. */
     public void refresh(Callback<List<RecommendationEntity>> callback) {
         AppExecutors.io(() -> {
             try {

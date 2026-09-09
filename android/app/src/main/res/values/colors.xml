@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Design tokens — mirrored from web/css/variables.css so both clients share the
-  same dark "energy" palette and traffic-light semantics:
+  Design tokens — espejo de web/css/variables.css para que ambos clientes compartan
+  la misma paleta oscura "energy" y la semántica de semáforo:
 
     GREEN #34d399 / #10b981    AMBER #fbbf24 / #d97706    RED #f87171 / #dc2626
     bg #0f172a, surface #1e293b, elevated #273449, accent #22d3ee
 -->
 <resources>
-    <!-- Surfaces -->
+    <!-- Superficies -->
     <color name="bg_base">#0F172A</color>
     <color name="bg_surface">#1E293B</color>
     <color name="bg_elevated">#273449</color>
     <color name="bg_input">#1B2536</color>
 
-    <!-- Borders -->
+    <!-- Bordes -->
     <color name="border">#334155</color>
     <color name="border_soft">#29354A</color>
 
-    <!-- Text -->
+    <!-- Texto -->
     <color name="text_primary">#E2E8F0</color>
     <color name="text_secondary">#94A3B8</color>
     <color name="text_muted">#64748B</color>
     <color name="text_on_accent">#0F172A</color>
 
-    <!-- Brand accent -->
+    <!-- Acento de marca -->
     <color name="accent">#22D3EE</color>
     <color name="accent_strong">#06B6D4</color>
 
-    <!-- Traffic light -->
+    <!-- Semáforo -->
     <color name="semaphore_green">#34D399</color>
     <color name="semaphore_green_dark">#10B981</color>
     <color name="semaphore_amber">#FBBF24</color>
@@ -35,12 +35,12 @@
     <color name="semaphore_red">#F87171</color>
     <color name="semaphore_red_dark">#DC2626</color>
 
-    <!-- Translucent slot backgrounds (16% alpha, matching web green-bg / amber-bg / red-bg) -->
+    <!-- Fondos de slot translúcidos (16% alfa, equivalentes a green-bg / amber-bg / red-bg de la web) -->
     <color name="bg_slot_green">#2934D399</color>
     <color name="bg_slot_amber">#29FBBF24</color>
     <color name="bg_slot_red">#29F87171</color>
 
-    <!-- States -->
+    <!-- Estados -->
     <color name="danger">#F87171</color>
     <color name="success">#34D399</color>
     <color name="warning">#FBBF24</color>

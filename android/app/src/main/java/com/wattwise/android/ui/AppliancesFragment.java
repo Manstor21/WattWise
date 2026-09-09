@@ -34,10 +34,10 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Appliance list backed by Room. Staged (offline) edits show the
- * "Pendiente de sincronizar" tag; the {@link com.wattwise.android.sync.SyncWorker}
- * pushes them next time the network is available. Anonymous users still see the
- * FAB so they can start locally, but a toast nudge to sync appears.
+ * Lista de aparatos respaldada por Room. Las ediciones (offline) en espera muestran la
+ * etiqueta "Pendiente de sincronizar"; el {@link com.wattwise.android.sync.SyncWorker}
+ * las envía la próxima vez que haya red disponible. Los usuarios anónimos siguen viendo
+ * el FAB para poder empezar en local, pero aparece un toast invitando a sincronizar.
  */
 public class AppliancesFragment extends Fragment implements ApplianceAdapter.Listener {
 
@@ -93,7 +93,7 @@ public class AppliancesFragment extends Fragment implements ApplianceAdapter.Lis
 
                 @Override
                 public void onError(boolean authError, String message) {
-                    // offline fallback
+                    // respaldo offline
                     repository.getAllActive(data -> show(data));
                 }
             });
@@ -139,10 +139,10 @@ public class AppliancesFragment extends Fragment implements ApplianceAdapter.Lis
                 android.R.layout.simple_dropdown_item_1line, TYPE_LABELS));
         editType.setText(null);
 
-        // Fill defaults for the selected type
+        // Rellena los valores por defecto del tipo seleccionado
         editType.setOnItemClickListener((parent, v, position, id) -> applyCatalogDefaults(position, editPower, editKwh, editMin));
 
-        // Pre-fill when editing
+        // Relleno previo al editar
         if (existing != null) {
             editName.setText(existing.name);
             int idx = Arrays.asList(TYPE_KEYS).indexOf(existing.type);
@@ -155,7 +155,7 @@ public class AppliancesFragment extends Fragment implements ApplianceAdapter.Lis
             switchActive.setChecked(existing.isActive);
         } else {
             switchActive.setChecked(true);
-            // Default to washing machine
+            // Por defecto, lavadora
             editType.setText(TYPE_LABELS[0], false);
             applyCatalogDefaults(0, editPower, editKwh, editMin);
         }

@@ -8,24 +8,26 @@ import androidx.room.PrimaryKey;
 import java.math.BigDecimal;
 
 /**
- * Local cache of a single 15-minute price slot. The primary key is the UTC
- * ISO timestamp, so re-inserting with {@code REPLACE} overwrites the slot —
- * prices are immutable per slot, making idempotent sync safe.
+ * Caché local de una franja de precio de 15 minutos. La clave primaria es la
+ * marca de tiempo UTC en ISO, por lo que reinsertar con {@code REPLACE} sobrescribe
+ * la franja — los precios son inmutables por franja, lo que hace seguro el
+ * sync idempotente.
  *
- * <p>The server id is also kept so MANUAL/source metadata round-trips, but it is
- * not unique (two source systems could theoretically share ids across days).
+ * <p>También se conserva el id del servidor para que la metadatos MANUAL/fuente
+ * hagan round-trip, pero no es único (dos sistemas de origen podrían teóricamente
+ * compartir ids entre días).
  */
 @Entity(tableName = "price_records", indices = {@Index(value = {"timestamp"}, unique = true)})
 public class PriceRecordEntity {
 
     @PrimaryKey
     @NonNull
-    public String timestamp; // UTC ISO-8601, e.g. "2025-01-05T23:00:00"
+    public String timestamp; // UTC ISO-8601, p. ej. "2025-01-05T23:00:00"
 
     public long serverId;
     public BigDecimal priceEurPerKwh;
     public BigDecimal plusTaxEurPerKwh;
     public BigDecimal totalEurPerKwh;
-    public String source; // ESIOS | MANUAL
-    public String color; // GREEN | AMBER | RED
+    public String source; // Origen: ESIOS | MANUAL
+    public String color; // Color: GREEN | AMBER | RED
 }

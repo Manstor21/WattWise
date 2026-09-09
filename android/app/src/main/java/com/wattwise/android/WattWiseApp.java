@@ -8,9 +8,10 @@ import com.wattwise.android.notification.NotificationHelper;
 import com.wattwise.android.notification.PriceCheckWorker;
 
 /**
- * Application entry point: initialises the Retrofit client with the current
- * session (token available to the auth interceptor before any request), creates
- * the notification channel and schedules the 6-hour price-check worker.
+ * Punto de entrada de la aplicación: inicializa el cliente Retrofit con la
+ * sesión actual (token disponible para el interceptor de autenticación antes de
+ * cualquier petición), crea el canal de notificación y programa el worker de
+ * comprobación de precios cada 6 horas.
  */
 public class WattWiseApp extends Application {
 

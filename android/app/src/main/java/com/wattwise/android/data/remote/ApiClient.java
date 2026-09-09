@@ -11,14 +11,14 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Singleton Retrofit client. {@link #init} is called from
- * {@link com.wattwise.android.WattWiseApp} with a fresh
- * {@link SessionManager} so the token is available before the first HTTP
- * request the UI fires.
+ * Cliente Retrofit singleton. {@link #init} se invoca desde
+ * {@link com.wattwise.android.WattWiseApp} con un {@link SessionManager}
+ * recién creado para que el token esté disponible antes de la primera
+ * petición HTTP que lance la UI.
  */
 public final class ApiClient {
 
-    private static final long TIMEOUT = 30L; // seconds
+    private static final long TIMEOUT = 30L; // segundos
 
     private static volatile ApiService apiService;
 
@@ -39,7 +39,7 @@ public final class ApiClient {
                 .addInterceptor(log)
                 .build();
 
-        // Backend expects a trailing slash for Retrofit to merge relative paths correctly.
+        // El backend espera una barra final para que Retrofit combine las rutas relativas correctamente.
         String baseUrl = BuildConfig.API_BASE_URL;
         if (!baseUrl.endsWith("/")) {
             baseUrl = baseUrl + "/";

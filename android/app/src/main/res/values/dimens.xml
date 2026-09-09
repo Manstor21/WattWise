@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Spacing scale (4 px steps, mirrors the web space token scale) -->
+    <!-- Escala de espaciado (pasos de 4 px, espejo de la escala de space tokens de la web) -->
     <dimen name="space_1">4dp</dimen>
     <dimen name="space_2">8dp</dimen>
     <dimen name="space_3">12dp</dimen>
@@ -8,13 +8,13 @@
     <dimen name="space_5">24dp</dimen>
     <dimen name="space_6">32dp</dimen>
 
-    <!-- Radii -->
+    <!-- Radios -->
     <dimen name="radius_sm">6dp</dimen>
     <dimen name="radius_md">10dp</dimen>
     <dimen name="radius_lg">16dp</dimen>
     <dimen name="radius_full">999dp</dimen>
 
-    <!-- Typography -->
+    <!-- Tipografía -->
     <dimen name="text_xs">11sp</dimen>
     <dimen name="text_sm">13sp</dimen>
     <dimen name="text_base">15sp</dimen>
@@ -22,7 +22,7 @@
     <dimen name="text_lg">20sp</dimen>
     <dimen name="text_xl">26sp</dimen>
 
-    <!-- Layout -->
+    <!-- Diseño -->
     <dimen name="appbar_height">56dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="slot_height">52dp</dimen>

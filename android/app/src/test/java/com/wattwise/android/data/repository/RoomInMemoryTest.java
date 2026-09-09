@@ -1,18 +1,18 @@
 package com.wattwise.android.data.repository;
 
 /*
- * Room in-memory tests require either:
- *   - Robolectric (annotate class with @RunWith(RobolectricTestRunner.class)),
- *   - or Android instrumentation tests (src/androidTest/).
+ * Los tests de Room en memoria requieren o bien:
+ *   - Robolectric (anotar la clase con @RunWith(RobolectricTestRunner.class)),
+ *   - o tests de instrumentación de Android (src/androidTest/).
  *
- * The project intentionally avoids a Robolectric dependency to keep the test
- * classpath JVM-only and fast. Repository logic that depends on Room is
- * therefore tested through the app's manual / instrumented QA; pure logic
- * (ConflictResolver, OptimalWindowScheduler) lives in sibling JVM tests.
+ * El proyecto evita a propósito la dependencia de Robolectric para mantener el
+ * classpath de tests solo JVM y rápido. La lógica de repositorio que depende de Room
+ * se prueba por tanto mediante el QA manual / instrumentado de la app; la lógica pura
+ * (ConflictResolver, OptimalWindowScheduler) vive en tests JVM hermanos.
  *
- * When a CI instrumented test run is added, the following skeleton can be
- * uncommented and moved to src/androidTest/ with appropriate Gradle
- * dependencies (androidTestImplementation 'androidx.room:room-testing:2.6.1').
+ * Cuando se añada una ejecución de tests instrumentados en CI, el siguiente esqueleto
+ * puede descomentarse y moverse a src/androidTest/ con las dependencias de Gradle
+ * adecuadas (androidTestImplementation 'androidx.room:room-testing:2.6.1').
  *
 import android.content.Context;
 import androidx.room.Room;

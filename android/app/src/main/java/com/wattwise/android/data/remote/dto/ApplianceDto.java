@@ -4,14 +4,15 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Gson DTO mirroring the backend {@code ApplianceDto}. Used both for the
- * appliance REST contract and nested inside {@link RecommendationDto}.
+ * DTO Gson que refleja el {@code ApplianceDto} del backend. Se usa tanto para
+ * el contrato REST de electrodomésticos como anidado dentro de
+ * {@link RecommendationDto}.
  */
 public class ApplianceDto {
 
     private Long id;
     private String name;
-    private String type; // WASHING_MACHINE | DISHWASHER | EV_CHARGER | DRYER | POOL_PUMP | AC | OTHER
+    private String type; // Valores posibles: WASHING_MACHINE | DISHWASHER | EV_CHARGER | DRYER | POOL_PUMP | AC | OTHER
     private Integer powerWatts;
     private BigDecimal avgCycleKwh;
     private Integer estimatedCycleMinutes;

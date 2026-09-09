@@ -1,31 +1,31 @@
 package com.wattwise.android.sync;
 
 /**
- * Last-write-wins conflict resolution between the local Room copy of an
- * appliance and the server state.
+ * Resolución de conflictos last-write-wins entre la copia local en Room de un
+ * aparato y el estado del servidor.
  *
- * <p>Pure Java on purpose (no Android imports) so it can be JVM-tested.
+ * <p>Java puro a propósito (sin imports de Android) para poder probarse en la JVM.
  *
- * <h2>Timestamp model</h2>
- * The backend exposes only {@code createdAt} (immutable) on {@code ApplianceDto};
- * there is no server {@code updatedAt} yet. Therefore:
+ * <h2>Modelo de timestamps</h2>
+ * El backend expone solo {@code createdAt} (inmutable) en {@code ApplianceDto};
+ * todavía no hay {@code updatedAt} en el servidor. Por tanto:
  * <ul>
- *   <li>Every local mutation stamps {@code updatedAt = System.currentTimeMillis()}
- *       on the Room row and sets {@code isPendingSync}.</li>
- *   <li>When the server DTO is fetched, its {@code createdAt} instant is used as the
- *       remote write time baseline. A local row wins if its local write happened
- *       after the remote baseline; otherwise the server snapshot wins and the local
- *       pending flag is cleared.</li>
+ *   <li>Cada mutación local sella {@code updatedAt = System.currentTimeMillis()}
+ *       en la fila de Room y activa {@code isPendingSync}.</li>
+ *   <li>Al recuperar el DTO del servidor, su instante {@code createdAt} se usa como
+ *       base temporal de la escritura remota. Una fila local gana si su escritura
+ *       local ocurrió después de la base remota; si no, gana la instantánea del
+ *       servidor y se limpia el flag local de pendiente.</li>
  * </ul>
- * Once the backend exposes an {@code updatedAt}, only the {@code resolve}
- * call sites change — the decision rule stays identical.
+ * Cuando el backend exponga un {@code updatedAt}, solo cambian los puntos de
+ * llamada a {@code resolve} — la regla de decisión permanece idéntica.
  */
 public final class ConflictResolver {
 
     public enum Winner {
-        /** Push the local pending state to the server. */
+        /** Envía el estado local pendiente al servidor. */
         LOCAL,
-        /** Discard local pending state and adopt the server snapshot. */
+        /** Descarta el estado local pendiente y adopta la instantánea del servidor. */
         REMOTE
     }
 
@@ -33,10 +33,10 @@ public final class ConflictResolver {
     }
 
     /**
-     * @param localWriteEpochMs  epoch millis of the last local mutation.
-     * @param remoteWriteEpochMs server-side last write baseline (defaults to the
-     *                           created-at instant) — {@code -1} means "unknown".
-     * @return {@link Winner#LOCAL} when the local write is strictly newer.
+     * @param localWriteEpochMs  epoch millis de la última mutación local.
+     * @param remoteWriteEpochMs baseline de la última escritura en el servidor (por defecto el
+     *                           instante created-at) — {@code -1} significa "desconocido".
+     * @return {@link Winner#LOCAL} cuando la escritura local es estrictamente más reciente.
      */
     public static Winner resolve(long localWriteEpochMs, long remoteWriteEpochMs) {
         if (remoteWriteEpochMs < 0) {
@@ -46,15 +46,15 @@ public final class ConflictResolver {
     }
 
     /**
-     * Whether a Room row still needs a server action. Deletions also travel
-     * through the sync pipeline (server DELETE) whenever the row already has a
-     * server id; never-synced rows are simply dropped locally.
+     * Indica si una fila de Room aún necesita una acción en el servidor. Los borrados también viajan
+     * por el pipeline de sync (DELETE en el servidor) siempre que la fila ya tenga un
+     * id de servidor; las filas nunca sincronizadas simplemente se descartan localmente.
      */
     public static boolean needsServerAction(boolean isPendingSync, boolean isDeleted, boolean hasServerId) {
         if (!isPendingSync) {
             return false;
         }
-        // A deletion of a never-synced row has nothing to tell the server.
+        // Un borrado de una fila nunca sincronizada no tiene nada que comunicar al servidor.
         return !(isDeleted && !hasServerId);
     }
 }

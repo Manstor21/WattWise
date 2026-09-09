@@ -26,16 +26,16 @@ import com.wattwise.android.util.Prefs;
 import java.math.BigDecimal;
 
 /**
- * Configures alert thresholds and triggers on-demand sync / alert checks.
+ * Configura los umbrales de alerta y dispara sync / comprobación de alertas a demanda.
  *
  * <ul>
- *   <li>Threshold SeekBar (0–100, default 20) defines how many percent below the
- *       daily mean a price must fall to fire an alert.</li>
- *   <li>Switch enables/disables alerts (consumed locally by {@link
+ *   <li>El SeekBar de umbral (0–100, por defecto 20) define cuántos puntos porcentuales
+ *       por debajo de la media diaria debe caer un precio para disparar una alerta.</li>
+ *   <li>El switch activa/desactiva las alertas (consumido localmente por {@link
  *       com.wattwise.android.notification.PriceCheckWorker}).</li>
- *   <li>The applianceId field is optional — when set, the server-side preference
- *       scopes to that appliance.</li>
- *   <li>Logout wipes the session and returns to the login screen.</li>
+ *   <li>El campo applianceId es opcional — si se define, la preferencia del servidor
+ *       se limita a ese aparato.</li>
+ *   <li>Logout limpia la sesión y vuelve a la pantalla de inicio de sesión.</li>
  * </ul>
  */
 public class SettingsFragment extends Fragment {

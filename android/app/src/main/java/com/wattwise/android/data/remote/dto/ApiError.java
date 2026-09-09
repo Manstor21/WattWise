@@ -1,9 +1,9 @@
 package com.wattwise.android.data.remote.dto;
 
 /**
- * Standard error envelope returned by the backend on 4xx/5xx responses:
- * {@code {"timestamp", "status", "error", "message", "path"}}. Parsed from
- * {@code Response.errorBody()} so the UI can surface the server message.
+ * Envoltorio de error estándar devuelto por el backend en respuestas 4xx/5xx:
+ * {@code {"timestamp", "status", "error", "message", "path"}}. Se parsea desde
+ * {@code Response.errorBody()} para que la UI pueda mostrar el mensaje del servidor.
  */
 public class ApiError {
 

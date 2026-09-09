@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Recommendation cards: appliance name, AC recommended window (local Madrid
- * time), €/kWh price, estimated cost vs worst case and the savings both in € and %.
+ * Tarjetas de recomendación: nombre del aparato, ventana recomendada (hora local
+ * de Madrid), precio en €/kWh, coste estimado frente al peor caso y el ahorro tanto
+ * en € como en %.
  */
 public class RecommendationAdapter extends RecyclerView.Adapter<RecommendationAdapter.RecHolder> {
 

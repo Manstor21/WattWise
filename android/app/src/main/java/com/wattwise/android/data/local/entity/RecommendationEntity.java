@@ -6,10 +6,11 @@ import androidx.room.PrimaryKey;
 import java.math.BigDecimal;
 
 /**
- * Cached server recommendation. One row per appliance (the API returns at most
- * one recommendation per appliance), keyed by the appliance server id.
- * The window's {@link com.wattwise.android.data.remote.dto.PriceDto}
- * list is stored as JSON (see {@link com.wattwise.android.util.GsonProvider}).
+ * Recomendación del servidor almacenada en caché. Una fila por electrodoméstico
+ * (la API devuelve como máximo una recomendación por electrodoméstico), claveada
+ * por el id del electrodoméstico en el servidor. La lista de la ventana
+ * {@link com.wattwise.android.data.remote.dto.PriceDto} se almacena como JSON
+ * (ver {@link com.wattwise.android.util.GsonProvider}).
  */
 @Entity(tableName = "recommendations")
 public class RecommendationEntity {
@@ -26,9 +27,9 @@ public class RecommendationEntity {
     public BigDecimal worstCaseCostEur;
     public BigDecimal estimatedSavingsEur;
     public BigDecimal savingsPercentage;
-    public String semaphore; // GREEN | AMBER | RED
+    public String semaphore; // Semáforo: GREEN | AMBER | RED
     public String windowJson;
 
-    /** Epoch millis of the fetch that produced this row. */
+    /** Milisegundos epoch de la descarga que produjo esta fila. */
     public long lastUpdated;
 }

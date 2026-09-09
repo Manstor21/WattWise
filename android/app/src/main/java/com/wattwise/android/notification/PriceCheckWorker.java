@@ -27,19 +27,21 @@ import java.util.concurrent.TimeUnit;
 import retrofit2.Response;
 
 /**
- * Periodic worker (every 6h — the real minimum for WorkManager periodic work is
- * 15 minutes, we deliberately use 6h to match the marketing cadence) that:
+ * Worker periódico (cada 6 h — el mínimo real para el trabajo periódico de
+ * WorkManager es 15 minutos; usamos 6 h deliberadamente para coincidir con la
+ * cadencia de marketing) que:
  * <ol>
- *   <li>Fetches today + tomorrow prices and upserts them into Room;</li>
- *   <li>compares the day's cheapest slots against the user's threshold (mean
- *       minus configured %);</li>
- *   <li>posts a local notification for the optimal future window and/or a low
- *       price slot, deduplicated by slot start so a 6h cadence doesn't spam.</li>
+ *   <li>obtiene los precios de hoy y mañana y los inserta o actualiza en Room;</li>
+ *   <li>compara los slots más baratos del día con el umbral del usuario (media
+ *       menos el % configurado);</li>
+ *   <li>publica una notificación local para la ventana futura óptima y/o un slot
+ *       de precio bajo, deduplicada por inicio de slot para que la cadencia de 6 h
+ *       no haga spam.</li>
  * </ol>
  */
 public class PriceCheckWorker extends Worker {
 
-    /** Default sliding window (in hours) used to build the "optimal window" alert. */
+    /** Ventana deslizante por defecto (en horas) usada para construir la alerta de "ventana óptima". */
     public static final double DEFAULT_WINDOW_HOURS = 2.0;
 
     private static final String WORK_NAME = "price-check";
@@ -51,7 +53,7 @@ public class PriceCheckWorker extends Worker {
         this.prefs = new Prefs(context);
     }
 
-    /** Enqueues (or replaces) the periodic run from the app entry point. */
+    /** Encola (o reemplaza) la ejecución periódica desde el punto de entrada de la app. */
     public static void schedule(Context context) {
         Constraints constraints = new Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -95,7 +97,7 @@ public class PriceCheckWorker extends Worker {
         try {
             evaluateAndNotify(ctx, all);
         } catch (RuntimeException ignored) {
-            // A malformed slot must never crash the worker; next run retries.
+            // Un slot malformado nunca debe tumbar el worker; el siguiente run reintenta.
         }
         return Result.success();
     }
@@ -109,7 +111,7 @@ public class PriceCheckWorker extends Worker {
             body = response.body();
         }
         if (body != null) {
-            // Cache into Room regardless of alert state — the dashboard profits.
+            // Guardar en Room con independencia del estado de alertas — el resumen se beneficia.
             repo.cacheApiPrices(body);
         }
         return body == null ? new ArrayList<>() : body;
@@ -122,7 +124,7 @@ public class PriceCheckWorker extends Worker {
                 .multiply(BigDecimal.valueOf(100 - pct))
                 .divide(BigDecimal.valueOf(100), 6, java.math.RoundingMode.HALF_UP);
 
-        // 1) Single-slot low price notification.
+        // 1) Notificación de precio bajo en un único slot.
         PriceDto lowest = OptimalWindowScheduler.lowestPrice(all);
         if (lowest != null
                 && lowest.getTimestamp() != null
@@ -137,7 +139,7 @@ public class PriceCheckWorker extends Worker {
             }
         }
 
-        // 2) Optimal future window notification.
+        // 2) Notificación de ventana futura óptima.
         List<PriceDto> future = OptimalWindowScheduler.futureSlots(
                 all, java.time.LocalDateTime.now(PriceUtils.UTC));
         OptimalWindowScheduler.Window window =

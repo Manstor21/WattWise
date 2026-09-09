@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Appliance rows with edit/delete actions. Rows staged for sync show the
- * "Pendiente de sincronizar" chip.
+ * Filas de aparatos con acciones de editar/borrar. Las filas en espera de sync
+ * muestran la etiqueta "Pendiente de sincronizar".
  */
 public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.ApplianceHolder> {
 

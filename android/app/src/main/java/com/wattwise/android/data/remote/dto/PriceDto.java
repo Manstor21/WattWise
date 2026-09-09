@@ -3,14 +3,14 @@ package com.wattwise.android.data.remote.dto;
 import java.math.BigDecimal;
 
 /**
- * Gson DTO for {@code GET /api/prices/*} responses (and PriceDto entries nested
- * inside a {@link RecommendationDto}).
+ * DTO Gson para respuestas {@code GET /api/prices/*} (y entradas PriceDto
+ * anidadas dentro de un {@link RecommendationDto}).
  *
- * <p>Field names must match the backend exactly (snake-ish names apart from the
- * abbreviated units, e.g. {@code totalEurPerKwh}). The backend serializes
- * {@code timestamp} as ISO-8601 WITHOUT a zone suffix (the stored value is UTC);
- * see {@link com.wattwise.android.util.PriceUtils} for the conversion strategy
- * to Spanish local time.
+ * <p>Los nombres de campo deben coincidir exactamente con el backend (nombres
+ * tipo snake aparte de las unidades abreviadas, p. ej. {@code totalEurPerKwh}).
+ * El backend serializa {@code timestamp} como ISO-8601 SIN sufijo de zona (el
+ * valor almacenado es UTC); ver {@link com.wattwise.android.util.PriceUtils}
+ * para la estrategia de conversión a hora local española.
  */
 public class PriceDto {
 
@@ -19,8 +19,8 @@ public class PriceDto {
     private BigDecimal priceEurPerKwh;
     private BigDecimal plusTaxEurPerKwh;
     private BigDecimal totalEurPerKwh;
-    private String source; // ESIOS | MANUAL
-    private String color; // GREEN | AMBER | RED
+    private String source; // Origen: ESIOS | MANUAL
+    private String color; // Color: GREEN | AMBER | RED
 
     public Long getId() {
         return id;

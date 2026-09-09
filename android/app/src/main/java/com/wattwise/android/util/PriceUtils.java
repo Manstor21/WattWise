@@ -14,21 +14,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 /**
- * Time and formatting helpers shared by the UI, workers and repositories.
+ * Helpers de tiempo y formato compartidos por la UI, los workers y los repositorios.
  *
- * <h2>Timezone strategy (documented decision)</h2>
- * The backend serialises every {@code timestamp} as an ISO-8601 {@code LocalDateTime}
- * WITHOUT a zone suffix, e.g. {@code 2025-01-05T23:00:00}. The values are stored in
- * UTC on the server. Two workable parsers exist:
+ * <h2>Estrategia de zona horaria (decisión documentada)</h2>
+ * El backend serializa cada {@code timestamp} como un {@code LocalDateTime} ISO-8601
+ * SIN sufijo de zona, p. ej. {@code 2025-01-05T23:00:00}. Los valores se almacenan en
+ * UTC en el servidor. Hay dos analizadores viables:
  * <ul>
- *   <li>{@link LocalDateTime#parse} (treat the naive value as UTC) and shift to
+ *   <li>{@link LocalDateTime#parse} (tratar el valor naive como UTC) y desplazarlo a
  *       {@code Europe/Madrid};</li>
- *   <li>{@link java.time.OffsetDateTime#parse} with a forced {@code +00:00} offset,
- *       then the same zone shift.</li>
+ *   <li>{@link java.time.OffsetDateTime#parse} con un offset forzado de {@code +00:00},
+ *       y después el mismo desplazamiento de zona.</li>
  * </ul>
- * Both converge to the exact same instant; we use {@link LocalDateTime#parse}
- * because the input has no offset component and this avoids inventing a zone in the
- * parser. All display conversions go through {@link #SPAIN}.
+ * Ambos convergen al mismo instante exacto; usamos {@link LocalDateTime#parse}
+ * porque la entrada no tiene componente de offset y esto evita inventar una zona en el
+ * analizador. Todas las conversiones para mostrar pasan por {@link #SPAIN}.
  */
 public final class PriceUtils {
 
@@ -42,37 +42,37 @@ public final class PriceUtils {
     private PriceUtils() {
     }
 
-    /** Parses a backend timestamp (UTC, no zone suffix) as a UTC {@link LocalDateTime}. */
+    /** Analiza un timestamp del backend (UTC, sin sufijo de zona) como {@link LocalDateTime} en UTC. */
     public static LocalDateTime parseUtc(String iso) {
         return LocalDateTime.parse(iso, ISO);
     }
 
-    /** Shifts a naive-UTC timestamp to the Spanish wall time. */
+    /** Desplaza un timestamp naive-UTC a la hora local de España. */
     public static LocalDateTime utcToSpain(LocalDateTime utc) {
         return utc.atZone(UTC).withZoneSameInstant(SPAIN).toLocalDateTime();
     }
 
-    /** Shifts a Spanish wall time back to naive-UTC (used when writing requests). */
+    /** Desplaza una hora local de España de vuelta a naive-UTC (usado al escribir peticiones). */
     public static LocalDateTime spainToUtc(LocalDateTime local) {
         return local.atZone(SPAIN).withZoneSameInstant(UTC).toLocalDateTime();
     }
 
-    /** The Spanish calendar date a slot belongs to (after converting its UTC instant). */
+    /** La fecha del calendario español a la que pertenece un slot (tras convertir su instante UTC). */
     public static LocalDate spanishDateOfSlot(LocalDateTime utcTimestamp) {
         return utcToSpain(utcTimestamp).toLocalDate();
     }
 
-    /** "HH:mm" of a slot in Spanish wall time (start of the 15-minute slot). */
+    /** "HH:mm" de un slot en hora local de España (inicio del slot de 15 minutos). */
     public static String slotStartLabel(LocalDateTime utcTimestamp) {
         return utcToSpain(utcTimestamp).format(TIME);
     }
 
-    /** "HH:mm" one slot later — the end of a 15-minute slot. */
+    /** "HH:mm" un slot más tarde — el final de un slot de 15 minutos. */
     public static String slotEndLabel(LocalDateTime utcTimestamp) {
         return utcToSpain(utcTimestamp).plusMinutes(15).format(TIME);
     }
 
-    /** Price with dot decimal separator, mirroring the web client's toFixed() output. */
+    /** Precio con separador decimal de punto, replicando la salida toFixed() del cliente web. */
     public static String formatPrice(BigDecimal pricePerKwh) {
         if (pricePerKwh == null) {
             return "--";
@@ -105,7 +105,7 @@ public final class PriceUtils {
         return local.toLocalDate().format(DATE) + " · " + local.format(TIME);
     }
 
-    /** Sum helper for the dashboard mean computation. */
+    /** Helper de suma para el cálculo de la media del resumen. */
     public static BigDecimal mean(BigDecimal... values) {
         if (values == null || values.length == 0) {
             return BigDecimal.ZERO;
@@ -124,17 +124,17 @@ public final class PriceUtils {
         return sum.divide(BigDecimal.valueOf(n), 6, RoundingMode.HALF_UP);
     }
 
-    /** Grouping key "yyyy-MM-dd" of the Spanish date a slot belongs to. */
+    /** Clave de agrupación "yyyy-MM-dd" de la fecha española a la que pertenece un slot. */
     public static String spanishDayKey(LocalDateTime utcTimestamp) {
         return spanishDateOfSlot(utcTimestamp).toString();
     }
 
-    /** Negligible helper reused by the scheduler: wall-time window label. */
+    /** Helper trivial reutilizado por el planificador: etiqueta de ventana en hora local. */
     public static String windowLabel(LocalDateTime utcStart, LocalDateTime utcEnd) {
         return utcToSpain(utcStart).format(TIME) + " – " + utcToSpain(utcEnd).format(TIME);
     }
 
-    /** Midnight as a LocalTime constant for hour-slot grouping helpers. */
+    /** Medianoche como constante LocalTime para los helpers de agrupación por horas. */
     public static LocalTime midnight() {
         return LocalTime.MIDNIGHT;
     }

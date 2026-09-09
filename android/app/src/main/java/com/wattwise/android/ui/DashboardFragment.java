@@ -32,15 +32,17 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Offline-first price dashboard.
+ * Resumen de precios offline-first.
  *
  * <ul>
- *   <li>SwipeRefreshLayout → API refresh; on failure the Room cache is rendered
- *       behind a "Datos sin conexión" banner with the last update time.</li>
- *   <li>HOY / MAÑANA tabs switch the slot list (grouped by Spanish calendar day).</li>
- *   <li>Header card: cheapest / costliest slot and the day mean of
- *       {@code totalEurPerKwh} (the model documented for charts).</li>
- *   <li>Anonymous users get an "Iniciar sesión" prompt instead of sync features.</li>
+ *   <li>SwipeRefreshLayout → refresh vía API; si falla, se renderiza la caché de Room
+ *       bajo un banner "Datos sin conexión" con la hora de la última actualización.</li>
+ *   <li>Las pestañas HOY / MAÑANA cambian la lista de slots (agrupados por día del
+ *       calendario español).</li>
+ *   <li>Tarjeta de cabecera: slot más barato / más caro y la media del día de
+ *       {@code totalEurPerKwh} (el modelo documentado para las gráficas).</li>
+ *   <li>Los usuarios anónimos ven un aviso "Iniciar sesión" en lugar de las funciones
+ *       de sincronización.</li>
  * </ul>
  */
 public class DashboardFragment extends Fragment {
@@ -132,7 +134,7 @@ public class DashboardFragment extends Fragment {
         if (selectedDate == null) {
             selectedDate = LocalDate.now(PriceUtils.SPAIN);
         }
-        // Render cached data instantly, then refresh in the background.
+        // Renderizar los datos cacheados al instante y luego refrescar en segundo plano.
         loadDay(selectedDate, true, null);
     }
 
@@ -158,7 +160,7 @@ public class DashboardFragment extends Fragment {
                 AppExecutors.main(() -> {
                     render(cache, cache.isEmpty() ? false : prefs.priceLastUpdatedMs() > 0, false);
                     if (getView() != null) {
-                        // Soft refresh so the cache is replaced once the API answers.
+                        // Refresh suave para que la caché se reemplace cuando responda la API.
                         refresh(finalDate, null);
                     }
                 });

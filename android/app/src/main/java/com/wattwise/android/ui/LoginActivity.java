@@ -24,9 +24,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Login / register screen. Credentials are validated client-side, sent to the
- * backend, and on success the JWT + user identity is persisted with
- * EncryptedSharedPreferences before navigating to the main screen.
+ * Pantalla de inicio de sesión / registro. Las credenciales se validan en el cliente,
+ * se envían al backend y, en caso de éxito, el JWT + la identidad del usuario se
+ * persisten con EncryptedSharedPreferences antes de navegar a la pantalla principal.
  */
 public class LoginActivity extends AppCompatActivity {
 
@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                 response.getUser().getUsername(),
                 response.getUser().getEmail());
 
-        // Kick a sync so recommendations/appliances are ready when Main opens.
+        // Dispara un sync para que recomendaciones/aparatos estén listos cuando se abra Main.
         SyncWorker.enqueue(this);
         goToMain();
     }

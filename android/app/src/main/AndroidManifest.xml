@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!-- Runtime permission on API 33+; declared here applies automatically to lower APIs. -->
+    <!-- Permiso en tiempo de ejecución en API 33+; declarado aquí se aplica automáticamente a APIs inferiores. -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WattWise">
 
-        <!-- Launcher: LoginActivity decides whether a stored session exists. -->
+        <!-- Launcher: LoginActivity decide si existe una sesión almacenada. -->
         <activity
             android:name=".ui.LoginActivity"
             android:exported="true"
@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <!-- Navigation target for the notification PendingIntent. -->
+        <!-- Destino de navegación para el PendingIntent de la notificación. -->
         <activity
             android:name=".ui.MainActivity"
             android:exported="true"

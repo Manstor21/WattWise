@@ -6,12 +6,12 @@ import androidx.room.PrimaryKey;
 import java.math.BigDecimal;
 
 /**
- * A user appliance with offline-editing bookkeeping:
+ * Un electrodoméstico del usuario con contabilidad de edición sin conexión:
  * <ul>
- *   <li>{@link #isPendingSync} — local changes not yet pushed to the server.</li>
- *   <li>{@link #isDeleted}   — tombstone; the SyncWorker sends a server DELETE.</li>
- *   <li>{@link #updatedAt}   — epoch millis of the last local mutation, the
- *       local half of the last-write-wins key in {@link
+ *   <li>{@link #isPendingSync} — cambios locales aún no enviados al servidor.</li>
+ *   <li>{@link #isDeleted}   — marca de borrado; el SyncWorker envía un DELETE al servidor.</li>
+ *   <li>{@link #updatedAt}   — milisegundos epoch de la última mutación local, la
+ *       mitad local de la clave «última escritura gana» en {@link
  *       com.wattwise.android.sync.ConflictResolver}.</li>
  * </ul>
  */
@@ -21,11 +21,11 @@ public class ApplianceEntity {
     @PrimaryKey(autoGenerate = true)
     public long localId;
 
-    /** Null until the row has been created on the server. */
+    /** Nulo hasta que la fila se ha creado en el servidor. */
     public Long serverId;
 
     public String name;
-    public String type; // WASHING_MACHINE | DISHWASHER | EV_CHARGER | DRYER | POOL_PUMP | AC | OTHER
+    public String type; // Valores posibles: WASHING_MACHINE | DISHWASHER | EV_CHARGER | DRYER | POOL_PUMP | AC | OTHER
     public Integer powerWatts;
     public BigDecimal avgCycleKwh;
     public Integer estimatedCycleMinutes;

@@ -16,9 +16,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Renders the HOY / MAÑANA price slots as a fully colour-coded list: the row
- * background and the leading dot take the traffic-light colour, with the slot
- * time range on the left and the €/kWh total (taxes included) on the right.
+ * Renderiza los slots de precio de HOY / MAÑANA como una lista totalmente codificada
+ * por color: el fondo de la fila y el punto inicial toman el color del semáforo, con
+ * el rango horario del slot a la izquierda y el total en €/kWh (impuestos incluidos)
+ * a la derecha.
  */
 public class PriceAdapter extends RecyclerView.Adapter<PriceAdapter.PriceHolder> {
 

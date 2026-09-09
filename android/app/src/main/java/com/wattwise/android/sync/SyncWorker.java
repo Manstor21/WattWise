@@ -31,14 +31,15 @@ import java.util.concurrent.TimeUnit;
 import retrofit2.Response;
 
 /**
- * One-shot worker that:
+ * Worker de un solo disparo que:
  * <ol>
- *   <li>pushes pending appliance rows to the server (LWW via
+ *   <li>envía las filas de aparatos pendientes al servidor (LWW mediante
  *       {@link ConflictResolver});</li>
- *   <li>pulls the server appliance snapshot;</li>
- *   <li>refreshes recommendations and currencies the three-day price cache.</li>
+ *   <li>descarga la instantánea de aparatos del servidor;</li>
+ *   <li>actualiza las recomendaciones y refresca la caché de precios de tres días.</li>
  * </ol>
- * A 401 anywhere clears the session (the next screen visit redirects to login).
+ * Un 401 en cualquier punto limpia la sesión (la siguiente visita a una pantalla
+ * redirige al inicio de sesión).
  */
 public class SyncWorker extends Worker {
 
@@ -48,10 +49,10 @@ public class SyncWorker extends Worker {
         super(context, params);
     }
 
-    /** Fire-and-forget schedule used by SettingsFragment and after login. */
+    /** Programación de lanzar-y-olvidar usada por SettingsFragment y tras el inicio de sesión. */
     public static void enqueue(Context context) {
         OneTimeWorkRequest request = new OneTimeWorkRequest.Builder(SyncWorker.class)
-                .setInitialDelay(10, TimeUnit.SECONDS) // let the UI settle first
+                .setInitialDelay(10, TimeUnit.SECONDS) // deja que la UI se asiente primero
                 .build();
         WorkManager.getInstance(context).enqueueUniqueWork(WORK_NAME, ExistingWorkPolicy.REPLACE, request);
     }
@@ -63,7 +64,7 @@ public class SyncWorker extends Worker {
         Prefs prefs = new Prefs(ctx);
         SessionManager session = new SessionManager(ctx);
         if (!session.hasSession()) {
-            return Result.success(); // nothing to sync for anonymous users
+            return Result.success(); // nada que sincronizar para usuarios anónimos
         }
 
         WattWiseDatabase db = WattWiseDatabase.get(ctx);
@@ -88,7 +89,7 @@ public class SyncWorker extends Worker {
             }
             return Result.success();
         } catch (IOException e) {
-            // Transient network error — schedule a retry later.
+            // Error de red transitorio — reintentar más tarde.
             return Result.retry();
         } catch (Exception e) {
             return Result.failure();
@@ -131,7 +132,7 @@ public class SyncWorker extends Worker {
             }
             prefs.setRecommendationLastUpdatedMs(System.currentTimeMillis());
         } catch (IOException ignored) {
-            // Recommendations are best-effort in this worker.
+            // Las recomendaciones son best-effort en este worker.
         }
     }
 }

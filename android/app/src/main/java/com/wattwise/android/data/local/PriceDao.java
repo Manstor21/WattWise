@@ -10,9 +10,9 @@ import com.wattwise.android.data.local.entity.PriceRecordEntity;
 import java.util.List;
 
 /**
- * Reads/writes cached price slots. The cache intentionally keeps roughly three
- * days of slots so the "HOY / MAÑANA" tabs and the offline dashboard always have
- * data to render.
+ * Lee/escribe franjas de precio en caché. La caché conserva intencionadamente
+ * unos tres días de franjas para que las pestañas "HOY / MAÑANA" y el dashboard
+ * sin conexión tengan siempre datos que renderizar.
  */
 @Dao
 public interface PriceDao {
@@ -26,7 +26,7 @@ public interface PriceDao {
     @Query("SELECT * FROM price_records ORDER BY timestamp ASC")
     List<PriceRecordEntity> getAll();
 
-    /** Slots inside an inclusive UTC ISO range {@code [fromIso, toIso]}. */
+    /** Franjas dentro de un rango inclusivo UTC en ISO {@code [fromIso, toIso]}. */
     @Query("SELECT * FROM price_records WHERE timestamp >= :fromIso AND timestamp <= :toIso ORDER BY timestamp ASC")
     List<PriceRecordEntity> getBetween(String fromIso, String toIso);
 

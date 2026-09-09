@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--
-      App-wide dark theme rooted in the web palette (bg #0F172A / surface #1E293B,
-      accent cyan #22D3EE). Explicit colors keep the UI dark in both light and
-      dark system modes.
+      Tema oscuro para toda la app basado en la paleta web (bg #0F172A / surface #1E293B,
+      acento cian #22D3EE). Los colores explícitos mantienen la UI oscura tanto en modo
+      claro como en modo oscuro del sistema.
     -->
     <style name="Theme.WattWise" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
@@ -23,7 +23,7 @@
         <item name="android:textColorHint">@color/text_muted</item>
         <item name="android:windowLightStatusBar">false</item>
 
-        <!-- Keep Material text fields readable on the dark surface. -->
+        <!-- Mantener los campos de texto de Material legibles sobre la superficie oscura. -->
         <item name="colorControlNormal">@color/border</item>
         <item name="colorControlActivated">@color/accent</item>
         <item name="colorControlHighlight">@color/border_soft</item>
@@ -32,7 +32,7 @@
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
 
-    <!-- Full-screen dark variant used by the login screen container defaults. -->
+    <!-- Variante oscura a pantalla completa usada por los contenedores por defecto del login. -->
     <style name="Theme.WattWise.Login" parent="Theme.WattWise">
         <item name="android:windowBackground">@color/bg_base</item>
     </style>

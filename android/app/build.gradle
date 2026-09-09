@@ -8,7 +8,7 @@ android {
 
     defaultConfig {
         applicationId "com.wattwise.android"
-        // java.time is available natively from API 26, so no desugaring is required.
+        // java.time está disponible de forma nativa desde API 26, por lo que no se requiere desugaring.
         minSdk 26
         targetSdk 34
         versionCode 1
@@ -19,12 +19,12 @@ android {
 
     buildTypes {
         debug {
-            // 10.0.2.2 = the host machine's loopback as seen from the Android emulator.
+            // 10.0.2.2 = el loopback de la máquina host visto desde el emulador de Android.
             buildConfigField "String", "API_BASE_URL", "\"http://10.0.2.2:8080\""
             minifyEnabled false
         }
         release {
-            // Production URL placeholder; point this at the real deployment host.
+            // URL de producción de ejemplo; apunta esto al host real de despliegue.
             buildConfigField "String", "API_BASE_URL", "\"https://api.wattwise.example\""
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -69,24 +69,24 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
-    // Room (SQLite ORM) — Java annotation processing.
+    // Room (ORM de SQLite) — procesamiento de anotaciones de Java.
     implementation 'androidx.room:room-runtime:2.6.1'
     annotationProcessor 'androidx.room:room-compiler:2.6.1'
 
-    // WorkManager (periodic sync + price notification scheduling).
+    // WorkManager (sync periódico + programación de notificaciones de precio).
     implementation 'androidx.work:work-runtime:2.9.0'
 
-    // EncryptedSharedPreferences for the JWT + user ids.
+    // EncryptedSharedPreferences para el JWT + ids de usuario.
     implementation 'androidx.security:security-crypto:1.1.0-alpha06'
 
-    // Network: Retrofit 2 + OkHttp + Gson.
+    // Red: Retrofit 2 + OkHttp + Gson.
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.12.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // Unit tests (JVM only — repositories/DAOs require Robolectric or instrumentation;
-    // the pure logic classes tested here have no Android dependencies).
+    // Tests unitarios (solo JVM — los repositorios/DAOs requieren Robolectric o instrumentación;
+    // las clases de lógica pura probadas aquí no tienen dependencias de Android).
     testImplementation 'junit:junit:4.13.2'
 }

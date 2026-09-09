@@ -5,9 +5,9 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Verifies the last-write-wins decision logic in {@link ConflictResolver}. The
- * rule is intentionally simple: larger epoch millis wins; a remote value of -1
- * always yields LOCAL.
+ * Verifica la lógica de decisión last-write-wins en {@link ConflictResolver}. La
+ * regla es intencionadamente simple: gana el epoch millis mayor; un valor remoto de
+ * -1 siempre produce LOCAL.
  */
 public class ConflictResolverTest {
 
@@ -50,19 +50,19 @@ public class ConflictResolverTest {
 
     @Test
     public void needsServerAction_pending_new_local() {
-        // Pending create (no server id yet) needs a POST.
+        // Una creación pendiente (sin id de servidor) necesita un POST.
         assertTrue(ConflictResolver.needsServerAction(true, false, false));
     }
 
     @Test
     public void needsServerAction_pending_deletion_existing_serverId() {
-        // Pending deletion of a server-known row needs a DELETE.
+        // Un borrado pendiente de una fila conocida por el servidor necesita un DELETE.
         assertTrue(ConflictResolver.needsServerAction(true, true, true));
     }
 
     @Test
     public void doesNot_needServerAction_pending_deletion_new_local() {
-        // Deleting a row that was never sent to the server just drops the local row.
+        // Borrar una fila nunca enviada al servidor solo descarta la fila local.
         assertFalse(ConflictResolver.needsServerAction(true, true, false));
     }
 
@@ -71,7 +71,7 @@ public class ConflictResolverTest {
         assertFalse(ConflictResolver.needsServerAction(false, false, true));
     }
 
-    // Thin wrappers for the verbose calls.
+    // Wrappers finos para las llamadas verbosas.
     private static void assertTrue(boolean v) { org.junit.Assert.assertTrue(v); }
     private static void assertFalse(boolean v) { org.junit.Assert.assertFalse(v); }
 }

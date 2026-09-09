@@ -6,7 +6,7 @@
     android:background="@color/bg_base"
     android:orientation="vertical">
 
-    <!-- Offline banner (hidden unless data came from cache). -->
+    <!-- Banner sin conexión (oculto salvo que los datos vengan de la caché). -->
     <LinearLayout
         android:id="@+id/offlineBanner"
         android:layout_width="match_parent"
@@ -33,7 +33,7 @@
             android:textSize="@dimen/text_sm" />
     </LinearLayout>
 
-    <!-- Login prompt overlay (shown only when no session exists). -->
+    <!-- Superposición de aviso de login (se muestra solo cuando no hay sesión). -->
     <LinearLayout
         android:id="@+id/loginPromptCard"
         android:layout_width="match_parent"
@@ -62,7 +62,7 @@
             android:textColor="@color/accent" />
     </LinearLayout>
 
-    <!-- Day summary header card. -->
+    <!-- Tarjeta de cabecera con resumen del día. -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -159,7 +159,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <!-- HOY / MAÃ‘ANA tabs. -->
+    <!-- Pestañas HOY / MAÑANA. -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/dayTabs"
         android:layout_width="match_parent"

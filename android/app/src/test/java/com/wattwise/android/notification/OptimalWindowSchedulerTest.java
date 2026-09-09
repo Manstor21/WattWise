@@ -15,9 +15,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
- * Pure-JVM tests of {@link OptimalWindowScheduler}: the cheapest 2-hour (8-slot)
- * window detection, mean price computation and the single-slot low-price helper.
- * No Android runtime required.
+ * Tests de JVM pura de {@link OptimalWindowScheduler}: detección de la ventana más
+ * barata de 2 horas (8 slots), cálculo de la media y el helper de precio bajo de un
+ * solo slot. No requiere runtime de Android.
  */
 public class OptimalWindowSchedulerTest {
 
@@ -33,7 +33,7 @@ public class OptimalWindowSchedulerTest {
 
     @Test
     public void fewerSlotsThanWindow_returnsNull() {
-        // 3 slots, but the window needs 8 (2h ÷ 15min).
+        // 3 slots, pero la ventana necesita 8 (2h ÷ 15 min).
         List<PriceDto> three = Arrays.asList(
                 slot("2025-01-01T10:00:00", "0.1200", "GREEN"),
                 slot("2025-01-01T10:15:00", "0.1100", "GREEN"),
@@ -43,7 +43,7 @@ public class OptimalWindowSchedulerTest {
 
     @Test
     public void picksLowestAverageWindow() {
-        // 12 slots. Slots 4..11 contain the cheapest 8-slot window.
+        // 12 slots. Los slots 4..11 contienen la ventana de 8 slots más barata.
         List<PriceDto> slots = Arrays.asList(
                 slot("2025-01-01T10:00:00", "0.20", "RED"),
                 slot("2025-01-01T10:15:00", "0.22", "RED"),
@@ -65,7 +65,7 @@ public class OptimalWindowSchedulerTest {
         assertEquals(LocalDateTime.of(2025, 1, 1, 11, 0), w.startUtc);
         assertEquals(LocalDateTime.of(2025, 1, 1, 13, 0), w.endUtc);
         assertEquals(8, w.slotCount);
-        // The cheapest 8-slot average from 11:00 is 0.62 ÷ 8 = 0.0775.
+        // La media de 8 slots más barata desde las 11:00 es 0.62 ÷ 8 = 0.0775.
         assertNotNull(w.averageEurPerKwh);
         assertEquals(0.0775, w.averageEurPerKwh.doubleValue(), 1e-4);
         assertEquals("GREEN", w.semaphore);

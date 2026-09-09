@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Only the Android emulator loopback (10.0.2.2) is allowed to talk cleartext HTTP,
-  and only in debug builds (see build.gradle). Everything else stays HTTPS-only.
+  Solo el loopback del emulador de Android (10.0.2.2) puede hablar HTTP en claro,
+  y solo en builds de debug (ver build.gradle). Todo lo demás permanece solo HTTPS.
 -->
 <network-security-config>
     <base-config cleartextTrafficPermitted="false" />

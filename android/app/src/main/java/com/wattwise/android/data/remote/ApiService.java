@@ -20,14 +20,15 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Retrofit interface matching the Spring Boot backend contract exactly.
+ * Interfaz Retrofit que coincide exactamente con el contrato del backend
+ * Spring Boot.
  *
- * <p>Prices are public — no JWT is needed. The {@link AuthInterceptor} attaches a
- * token when present, which is harmless for public endpoints.
+ * <p>Los precios son públicos — no se necesita JWT. El {@link AuthInterceptor}
+ * adjunta un token cuando existe, lo que es inofensivo para endpoints públicos.
  */
 public interface ApiService {
 
-    // ---- Auth (public) ----
+    // ---- Auth (público) ----
 
     @POST("api/auth/register")
     Call<AuthResponse> register(@Body RegisterRequest body);
@@ -35,7 +36,7 @@ public interface ApiService {
     @POST("api/auth/login")
     Call<AuthResponse> login(@Body LoginRequest body);
 
-    // ---- Prices (public) ----
+    // ---- Precios (público) ----
 
     @GET("api/prices/today")
     Call<List<PriceDto>> getTodayPrices();
@@ -45,14 +46,14 @@ public interface ApiService {
 
     /**
      * @param from YYYY-MM-DD
-     * @param to   YYYY-MM-DD (inclusive)
+     * @param to   YYYY-MM-DD (incluido)
      */
     @GET("api/prices/range")
     Call<List<PriceDto>> getPricesRange(
             @Query("from") String from,
             @Query("to") String to);
 
-    // ---- Appliances (JWT) ----
+    // ---- Electrodomésticos (JWT) ----
 
     @GET("api/appliances")
     Call<List<ApplianceDto>> getAppliances();
@@ -69,7 +70,7 @@ public interface ApiService {
     @DELETE("api/appliances/{id}")
     Call<Void> deleteAppliance(@Path("id") long id);
 
-    // ---- Recommendations (JWT) ----
+    // ---- Recomendaciones (JWT) ----
 
     @GET("api/recommendations")
     Call<List<RecommendationDto>> getRecommendations();
@@ -77,7 +78,7 @@ public interface ApiService {
     @GET("api/recommendations")
     Call<List<RecommendationDto>> getRecommendationForAppliance(@Query("applianceId") long applianceId);
 
-    // ---- Alerts (JWT) ----
+    // ---- Alertas (JWT) ----
 
     @GET("api/alerts/preferences")
     Call<AlertPreferenceDto> getAlertPreferences();

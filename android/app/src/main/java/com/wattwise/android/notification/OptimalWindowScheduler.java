@@ -11,17 +11,17 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Finds the cheapest contiguous window of 15-minute slots inside a price list
- * and derives the notification payload (window bounds, representative price,
- * semaphore colour).
+ * Encuentra la ventana contigua más barata de slots de 15 minutos dentro de una
+ * lista de precios y deriva el payload de la notificación (límites de la ventana,
+ * precio representativo, color del semáforo).
  *
- * <p>Pure Java (only {@link PriceDto} and java.time) so it can be JVM-tested.
- * Slots are assumed sorted by {@code timestamp}; the caller is responsible for
- * filtering to the future slots and for keeping them in ascending order.
+ * <p>Java puro (solo {@link PriceDto} y java.time) para poder probarse en la JVM.
+ * Se asume que los slots están ordenados por {@code timestamp}; el llamador es
+ * responsable de filtrar los slots futuros y de mantenerlos en orden ascendente.
  */
 public final class OptimalWindowScheduler {
 
-    /** Result of the search. Times are naive-UTC (backend semantics). */
+    /** Resultado de la búsqueda. Las horas son naive-UTC (semántica del backend). */
     public static final class Window {
         public final LocalDateTime startUtc;
         public final LocalDateTime endUtc;
@@ -39,17 +39,17 @@ public final class OptimalWindowScheduler {
         }
     }
 
-    private static final int SLOTS_PER_HOUR = 4; // 15-minute PVPC slots
+    private static final int SLOTS_PER_HOUR = 4; // slots PVPC de 15 minutos
 
     private OptimalWindowScheduler() {
     }
 
     /**
-     * Finds the {@code windowHours}-long cheapest slot window.
+     * Encuentra la ventana de slots más barata y contigua de longitud {@code windowHours}.
      *
-     * @param slots       sorted price slots (UTC timestamps). May be unsorted; we sort a copy.
-     * @param windowHours requested contiguous window length; < 0.25 clamps to 1 slot.
-     * @return the cheapest window or {@code null} if too few slots.
+     * @param slots       slots de precio ordenados (timestamps UTC). Pueden estar desordenados; ordenamos una copia.
+     * @param windowHours longitud de ventana contigua solicitada; < 0.25 se limita a 1 slot.
+     * @return la ventana más barata o {@code null} si hay demasiado pocos slots.
      */
     public static Window findCheapestWindow(List<PriceDto> slots, double windowHours) {
         if (slots == null || slots.isEmpty()) {
@@ -63,7 +63,7 @@ public final class OptimalWindowScheduler {
             return null;
         }
 
-        // Sliding-window sum over totalEurPerKwh (null = treated as 0 and skipped below).
+        // Suma de ventana deslizante sobre totalEurPerKwh (null = tratado como 0 y omitido abajo).
         double sum = 0;
         int counted = 0;
         double bestAvg = Double.POSITIVE_INFINITY;
@@ -105,8 +105,8 @@ public final class OptimalWindowScheduler {
     }
 
     /**
-     * Representative semaphore for a window: the colour of the cheapest slot in it
-     * (the driver of the scheduling decision), falling back to the next colour.
+     * Semáforo representativo de una ventana: el color del slot más barato en ella
+     * (el motor de la decisión de planificación), con retroceso al siguiente color.
      */
     public static String windowSemaphore(List<PriceDto> window) {
         if (window == null || window.isEmpty()) {
@@ -126,7 +126,7 @@ public final class OptimalWindowScheduler {
         return cheapest != null && cheapest.getColor() != null ? cheapest.getColor() : "AMBER";
     }
 
-    /** Cheapest single-slot price + its Madrid time label, for threshold alerts. */
+    /** Precio de un único slot más barato + su etiqueta de hora de Madrid, para alertas de umbral. */
     public static PriceDto lowestPrice(List<PriceDto> slots) {
         if (slots == null || slots.isEmpty()) {
             return null;
@@ -143,7 +143,7 @@ public final class OptimalWindowScheduler {
         return lowest;
     }
 
-    /** True when at least one slot is cheaper than {@code threshold}. */
+    /** True cuando al menos un slot es más barato que {@code threshold}. */
     public static boolean hasPriceBelow(List<PriceDto> slots, BigDecimal threshold) {
         if (threshold == null) {
             return false;
@@ -152,7 +152,7 @@ public final class OptimalWindowScheduler {
         return lowest != null && priceOf(lowest).compareTo(threshold) < 0;
     }
 
-    /** Mean of the total prices (naive average, for threshold framing). */
+    /** Media de los precios totales (media naive, para contextualizar el umbral). */
     public static BigDecimal meanPrice(List<PriceDto> slots) {
         if (slots == null || slots.isEmpty()) {
             return BigDecimal.ZERO;
@@ -169,7 +169,7 @@ public final class OptimalWindowScheduler {
         return n == 0 ? BigDecimal.ZERO : sum.divide(BigDecimal.valueOf(n), 6, java.math.RoundingMode.HALF_UP);
     }
 
-    /** Only slots whose Spanish wall time is after {@code nowUtc}. */
+    /** Solo slots cuya hora local de España es posterior a {@code nowUtc}. */
     public static List<PriceDto> futureSlots(List<PriceDto> slots, LocalDateTime nowUtc) {
         if (slots == null || slots.isEmpty()) {
             return Collections.emptyList();
