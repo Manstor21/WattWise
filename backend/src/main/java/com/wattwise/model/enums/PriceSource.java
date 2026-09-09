@@ -1,8 +1,8 @@
 package com.wattwise.model.enums;
 
 /**
- * Source of a price record. ESIOS = fetched from the REE API; MANUAL = entered
- * by an admin / manual import.
+ * Origen de un registro de precio. ESIOS = obtenido de la API de REE; MANUAL = introducido
+ * por un admin / importación manual.
  */
 public enum PriceSource {
     ESIOS,

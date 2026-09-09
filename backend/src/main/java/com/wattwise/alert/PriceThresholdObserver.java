@@ -9,11 +9,11 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Fires when the day's cheapest slot is at least {@code thresholdPctBelowMean}
- * below the daily mean — i.e. "today there is a very cheap window — now is the
- * moment to run your appliances".
+ * Se dispara cuando el slot más barato del día está al menos {@code thresholdPctBelowMean}
+ * por debajo de la media diaria, es decir, "hoy hay una ventana muy barata: ahora es el
+ * momento de poner en marcha tus electrodomésticos".
  *
- * <p>Pure: performs no I/O, so it is trivially unit-testable.
+ * <p>Puro: no realiza E/S, por lo que es trivialmente comprobable con tests unitarios.
  */
 @Component
 public class PriceThresholdObserver implements AlertObserver {
@@ -40,7 +40,7 @@ public class PriceThresholdObserver implements AlertObserver {
         if (minPrice == null) {
             return false;
         }
-        // Fire when min <= mean * (1 - threshold%).
+        // Se dispara cuando min <= mean * (1 - threshold%).
         BigDecimal factor = BigDecimal.ONE.subtract(
                 thresholdPct.divide(BigDecimal.valueOf(100), 6, RoundingMode.HALF_UP));
         return minPrice.compareTo(mean.multiply(factor)) <= 0;

@@ -1,7 +1,7 @@
 package com.wattwise.model.enums;
 
 /**
- * Traffic-light classification colors.
+ * Colores de clasificación de semáforo.
  */
 public enum TrafficLight {
     GREEN,

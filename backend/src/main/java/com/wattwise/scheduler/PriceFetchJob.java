@@ -19,13 +19,13 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Scheduled job that downloads today's and tomorrow's PVPC prices from ESIOS
- * (published daily around 20:15 CET) and persists them.
+ * Tarea programada que descarga los precios PVPC de hoy y mañana desde ESIOS
+ * (publicados a diario en torno a las 20:15 CET) y los persiste.
  *
- * <p><b>Resilience:</b> each date is fetched with exponential backoff retries
- * (configurable). A total failure is logged as an alert and never rethrown, so
- * the scheduler thread stays alive for the next run. The last-known prices stay
- * in the DB (the API serves "stale" data gracefully).
+ * <p><b>Resiliencia:</b> cada fecha se obtiene con reintentos de backoff exponencial
+ * (configurable). Un fallo total se registra como alerta y nunca se relanza, de modo que
+ * el hilo del scheduler sigue vivo para la siguiente ejecución. Los últimos precios
+ * conocidos permanecen en la BD (la API sirve datos "obsoletos" con elegancia).
  */
 @Component
 public class PriceFetchJob {
@@ -54,16 +54,16 @@ public class PriceFetchJob {
     public PriceFetchJob(EsiosClientService esiosClientService, PriceService priceService, MeterRegistry meterRegistry) {
         this.esiosClientService = esiosClientService;
         this.priceService = priceService;
-        // Observability (modules.md §7): counters exposed at /actuator/prometheus.
+        // Observabilidad (modules.md §7): contadores expuestos en /actuator/prometheus.
         this.esiosFetchSuccess = meterRegistry.counter("esiros_fetch_total", "status", "success");
         this.esiosFetchError = meterRegistry.counter("esiros_fetch_total", "status", "error");
         this.priceRecordsInserted = meterRegistry.counter("price_records_inserted_total", "source", "esiros");
-        // Gauge feeding the "data staleness" panel (dashboard wattwise-price-pipeline).
-        // Synchronized on the mutable volatile so Prometheus reads the latest value.
+        // Gauge que alimenta el panel de "obsolescencia de datos" (dashboard wattwise-price-pipeline).
+        // Sincronizado sobre el volatile mutable para que Prometheus lea el último valor.
         meterRegistry.gauge("esiros_last_fetch_success_timestamp", this, PriceFetchJob::lastSuccessfulFetchEpochSec);
     }
 
-    /** Cron "0 15 20 * * *" = 20:15:00 every day (Spain time). */
+    /** Cron "0 15 20 * * *" = 20:15:00 todos los días (hora de España). */
     @Scheduled(cron = "${wattwise.scheduler.price-fetch-cron:0 15 20 * * *}")
     public void fetchDailyPrices() {
         if (!enabled) {
@@ -75,7 +75,7 @@ public class PriceFetchJob {
         fetchForDate(today.plusDays(1));
     }
 
-    /** Fetch+persist a single date; never propagates failures. */
+    /** Obtiene y persiste una única fecha; nunca propaga fallos. */
     void fetchForDate(LocalDate date) {
         boolean success = false;
         try {
@@ -87,12 +87,12 @@ public class PriceFetchJob {
         } catch (ExternalApiException ex) {
             log.error("[ALERT] ESIOS price fetch failed for {}: {}", date, ex.getMessage());
         } finally {
-            // Always record the outcome after an attempt, even on unexpected exceptions.
+            // Registra siempre el resultado tras un intento, incluso ante excepciones inesperadas.
             (success ? esiosFetchSuccess : esiosFetchError).increment();
         }
     }
 
-    /** Linear-to-exponential backoff retry loop around the mockable ESIOS client. */
+    /** Bucle de reintentos con backoff lineal-exponencial alrededor del cliente ESIOS mockeable. */
     List<EsiosPricePoint> fetchWithRetry(LocalDate date) {
         long backoffMs = initialBackoffMs;
         ExternalApiException last = null;

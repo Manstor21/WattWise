@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Loads a user by username OR email (both are unique and accepted at login).
+ * Carga un usuario por nombre de usuario O email (ambos son únicos y se aceptan al iniciar sesión).
  */
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

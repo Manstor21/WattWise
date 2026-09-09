@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Shared builders for test fixtures (entities and DTOs).
+ * Constructores compartidos para los fixtures de test (entidades y DTOs).
  */
 public final class TestData {
 

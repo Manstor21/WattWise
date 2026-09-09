@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * User profile queries (JWT required).
+ * Consultas de perfil del usuario (requiere JWT).
  */
 @RestController
 @RequestMapping("/api/users")

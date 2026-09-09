@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * API view of a price slot. Includes the traffic-light color computed by
- * TrafficLightClassifier. Aligned with the web dashboard's cell rendering
- * (price in EUR/kWh + color).
+ * Vista de la API de un slot de precio. Incluye el color de semáforo calculado por
+ * TrafficLightClassifier. Alineada con el renderizado de celdas del panel web
+ * (precio en EUR/kWh + color).
  */
 public class PriceDto {
 

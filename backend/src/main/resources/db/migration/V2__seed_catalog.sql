@@ -1,8 +1,8 @@
 -- ---------------------------------------------------------------------------
--- WattWise — V2: seed appliance catalog with typical average consumption values
--- These are the per-type defaults used when a user creates an appliance without
--- supplying manual consumption figures. Values are representative of typical
--- Spanish household appliances (2023-2025).
+-- WattWise — V2: siembra el catálogo de electrodomésticos con valores típicos de consumo medio
+-- Estos son los valores por defecto por tipo usados cuando un usuario crea un electrodoméstico sin
+-- aportar cifras de consumo manuales. Los valores son representativos de electrodomésticos
+-- típicos de hogares españoles (2023-2025).
 -- ---------------------------------------------------------------------------
 
 MERGE INTO appliance_catalog AS target

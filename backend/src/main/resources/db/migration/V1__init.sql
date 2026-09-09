@@ -1,8 +1,9 @@
 -- ---------------------------------------------------------------------------
--- WattWise — V1: initial schema (SQL Server dialect)
--- The catalog of modules describes a simplified data model. We add a "maker/type"
--- lookup table seeded by V2 to power the appliance catalog and average consumption
--- values used by the recommendation engine (avgCycleKwh, estimatedCycleMinutes).
+-- WattWise — V1: esquema inicial (dialecto SQL Server)
+-- El catálogo de módulos describe un modelo de datos simplificado. Añadimos una tabla de
+-- búsqueda "maker/type" poblada por V2 para alimentar el catálogo de electrodomésticos y
+-- los valores de consumo medio usados por el motor de recomendaciones (avgCycleKwh,
+-- estimatedCycleMinutes).
 -- ---------------------------------------------------------------------------
 
 IF OBJECT_ID('price_records', 'U') IS NOT NULL DROP TABLE price_records;
@@ -12,13 +13,13 @@ IF OBJECT_ID('appliance_catalog', 'U') IS NOT NULL DROP TABLE appliance_catalog;
 IF OBJECT_ID('users', 'U') IS NOT NULL DROP TABLE users;
 
 -- ---------------------------------------------------------------
--- USERS
+-- USUARIOS
 -- ---------------------------------------------------------------
 CREATE TABLE users (
     id            BIGINT IDENTITY(1,1) PRIMARY KEY,
     username      NVARCHAR(50)  NOT NULL,
     email         NVARCHAR(255) NOT NULL,
-    password      NVARCHAR(255) NOT NULL,       -- BCrypt hash
+    password      NVARCHAR(255) NOT NULL,       -- hash BCrypt
     role          NVARCHAR(20)  NOT NULL DEFAULT 'USER',  -- USER | ADMIN
     created_at    DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME(),
     updated_at    DATETIME2     NOT NULL DEFAULT SYSUTCDATETIME(),
@@ -27,7 +28,7 @@ CREATE TABLE users (
 );
 
 -- ---------------------------------------------------------------
--- APPLIANCE CATALOG (seed data) — typical appliance types and average consumption
+-- CATÁLOGO DE ELECTRODOMÉSTICOS (datos de semilla) — tipos típicos y consumo medio
 -- ---------------------------------------------------------------
 CREATE TABLE appliance_catalog (
     id                       BIGINT IDENTITY(1,1) PRIMARY KEY,
@@ -39,7 +40,7 @@ CREATE TABLE appliance_catalog (
 );
 
 -- ---------------------------------------------------------------
--- APPLIANCES (per-user)
+-- ELECTRODOMÉSTICOS (por usuario)
 -- ---------------------------------------------------------------
 CREATE TABLE appliances (
     id                    BIGINT IDENTITY(1,1) PRIMARY KEY,
@@ -59,23 +60,23 @@ CREATE TABLE appliances (
 CREATE INDEX ix_appliances_user ON appliances(user_id);
 
 -- ---------------------------------------------------------------
--- PRICE_RECORDS (global price table, independent)
+-- PRICE_RECORDS (tabla global de precios, independiente)
 -- ---------------------------------------------------------------
 CREATE TABLE price_records (
     id                BIGINT IDENTITY(1,1) PRIMARY KEY,
-    timestamp         DATETIME2     NOT NULL,           -- slot start, UTC
-    price_eur_per_kwh DECIMAL(12,6) NOT NULL,           -- net price
-    plus_tax_eur_per_kwh DECIMAL(12,6) NULL,            -- taxes/peajes
-    total_eur_per_kwh DECIMAL(12,6) NOT NULL,           -- net + tax
+    timestamp         DATETIME2     NOT NULL,           -- inicio del slot, UTC
+    price_eur_per_kwh DECIMAL(12,6) NOT NULL,           -- precio neto
+    plus_tax_eur_per_kwh DECIMAL(12,6) NULL,            -- impuestos/peajes
+    total_eur_per_kwh DECIMAL(12,6) NOT NULL,           -- neto + impuestos
     source            NVARCHAR(10)  NOT NULL DEFAULT 'ESIOS',  -- ESIOS | MANUAL
-    date              DATE          NOT NULL,           -- derived LocalDate (UTC)
+    date              DATE          NOT NULL,           -- LocalDate derivado (UTC)
     CONSTRAINT uq_price_records_timestamp UNIQUE (timestamp)
 );
 
 CREATE INDEX ix_price_records_date ON price_records(date);
 
 -- ---------------------------------------------------------------
--- ALERT_PREFERENCES (one per user; appliance null = all appliances)
+-- ALERT_PREFERENCES (una por usuario; appliance nulo = todos los electrodomésticos)
 -- ---------------------------------------------------------------
 CREATE TABLE alert_preferences (
     id                      BIGINT IDENTITY(1,1) PRIMARY KEY,
@@ -86,10 +87,10 @@ CREATE TABLE alert_preferences (
     notified_at             DATETIME2 NULL,
     created_at              DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     CONSTRAINT fk_alert_pref_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
-    -- NO ACTION on appliance: SQL Server forbids multiple cascade paths to the
-    -- same table (users -> appliances -> alert_preferences would also reach it
-    -- via users -> alert_preferences). ApplianceService.delete removes affected
-    -- alert_preferences first instead.
+    -- NO ACTION en appliance: SQL Server prohíbe múltiples rutas de cascade hacia la
+    -- misma tabla (users -> appliances -> alert_preferences también la alcanzaría
+    -- vía users -> alert_preferences). ApplianceService.delete elimina las
+    -- alert_preferences afectadas primero.
     CONSTRAINT fk_alert_pref_appliance FOREIGN KEY (appliance_id) REFERENCES appliances(id) ON DELETE NO ACTION
 );
 

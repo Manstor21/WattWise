@@ -8,9 +8,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Resolves the {@link RecommendationStrategy} for an appliance by its type.
- * Strategies are discovered from the Spring context so new appliance types can
- * be supported by simply adding a bean.
+ * Resuelve la {@link RecommendationStrategy} de un electrodoméstico según su tipo.
+ * Las estrategias se detectan desde el contexto de Spring, por lo que basta con añadir
+ * un bean para soportar nuevos tipos de electrodoméstico.
  */
 @Component
 public class StrategyFactory {

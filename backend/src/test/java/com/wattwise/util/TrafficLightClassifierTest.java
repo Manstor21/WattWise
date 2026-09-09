@@ -41,7 +41,7 @@ class TrafficLightClassifierTest {
 
     @Test
     void rampDayProducesGreenAmberRedInPercentileOrder() {
-        // 96 slots: 0.05 .. 1.00. Cheapest third must be GREEN, top third RED.
+        // 96 slots: 0.05 .. 1.00. El tercio más barato debe ser GREEN, el tercio superior RED.
         List<BigDecimal> prices = rampDay(0.05, 0.01, 96);
         List<TrafficLight> result = classifier.classifyDay(prices);
 
@@ -52,11 +52,11 @@ class TrafficLightClassifierTest {
         assertThat(result).contains(TrafficLight.GREEN);
         assertThat(result).contains(TrafficLight.RED);
 
-        // Lowest third (indices 0..31) must be clean (no RED).
+        // El tercio inferior (índices 0..31) debe estar limpio (sin RED).
         for (int i = 0; i < 32; i++) {
             assertThat(result.get(i)).isNotEqualTo(TrafficLight.RED);
         }
-        // Highest third (indices 64..95) must be clean (no GREEN).
+        // El tercio superior (índices 64..95) debe estar limpio (sin GREEN).
         for (int i = 64; i < 96; i++) {
             assertThat(result.get(i)).isNotEqualTo(TrafficLight.GREEN);
         }
@@ -64,7 +64,7 @@ class TrafficLightClassifierTest {
 
     @Test
     void uniformFlatDayProducesAmberWhenAbsoluteLayerIsAmber() {
-        // CV = 0 ⇒ uniform day ⇒ percentile layer disabled.
+        // CV = 0 ⇒ día uniforme ⇒ capa de percentiles deshabilitada.
         List<BigDecimal> prices = rampDay(0.08, 0.0, 96);
         List<TrafficLight> result = classifier.classifyDay(prices);
         assertThat(result).containsOnly(TrafficLight.AMBER);
@@ -72,8 +72,8 @@ class TrafficLightClassifierTest {
 
     @Test
     void uniformDayAtDeepCheapPricesIsAmberPerSpec() {
-        // Uniform day at 0.03: absolute layer says GREEN, deviation says AMBER.
-        // uniformVote(GREEN, AMBER) => AMBER per methodology (needs both GREEN).
+        // Día uniforme a 0.03: la capa absoluta dice GREEN, la desviación dice AMBER.
+        // uniformVote(GREEN, AMBER) => AMBER según la metodología (necesita ambos GREEN).
         List<BigDecimal> prices = rampDay(0.03, 0.0, 24);
         List<TrafficLight> result = classifier.classifyDay(prices);
         assertThat(result).containsOnly(TrafficLight.AMBER);
@@ -81,7 +81,7 @@ class TrafficLightClassifierTest {
 
     @Test
     void uniformDayRespectsAbsoluteRed() {
-        // Uniform day at 0.30 (expensive): absolute layer => RED dominates.
+        // Día uniforme a 0.30 (caro): la capa absoluta => RED domina.
         List<BigDecimal> prices = rampDay(0.30, 0.0, 24);
         List<TrafficLight> result = classifier.classifyDay(prices);
         assertThat(result).containsOnly(TrafficLight.RED);
@@ -95,7 +95,7 @@ class TrafficLightClassifierTest {
 
     @Test
     void absoluteThresholdBoundariesHonorStrictInequalities() {
-        // Exactly at the boundary (price == absoluteGreenMax) is NOT green.
+        // Exactamente en el límite (price == absoluteGreenMax) NO es green.
         TrafficLightClassifier.Config strict = new TrafficLightClassifier.Config()
                 .absoluteGreenMax(0.10)
                 .absoluteRedMin(0.20);
@@ -106,7 +106,7 @@ class TrafficLightClassifierTest {
         assertThat(atGreenBoundary.get(0)).isEqualTo(TrafficLight.AMBER);
 
         List<BigDecimal> redBoundary = List.of(BigDecimal.valueOf(0.20));
-        // 0.20 is not > 0.20, so RED only via other layers; single-slot layer2 is AMBER.
+        // 0.20 no es > 0.20, así que RED solo vía otras capas; con un solo slot la capa 2 es AMBER.
         List<TrafficLight> atRedBoundary = c.classifyDay(redBoundary);
         assertThat(atRedBoundary.get(0)).isEqualTo(TrafficLight.AMBER);
     }
@@ -118,8 +118,8 @@ class TrafficLightClassifierTest {
                 .absoluteRedMin(0.60);
         TrafficLightClassifier c = new TrafficLightClassifier(cfg);
 
-        // idx1 (0.35) is AMBER in all three layers: percentile 0.333 (boundary),
-        // deviation -12.5% (within +/-25%), absolute 0.35 (neither cheap nor red).
+        // idx1 (0.35) es AMBER en las tres capas: percentil 0.333 (límite),
+        // desviación -12.5% (dentro de +/-25%), absoluta 0.35 (ni barato ni rojo).
         List<BigDecimal> prices = List.of(
                 BigDecimal.valueOf(0.05), // G
                 BigDecimal.valueOf(0.35), // A (would-be island)
@@ -129,7 +129,7 @@ class TrafficLightClassifierTest {
                 BigDecimal.valueOf(0.70)); // R
         List<TrafficLight> result = c.classifyDay(prices);
 
-        // With smoothing the single AMBER between the two GREENS becomes GREEN.
+        // Con suavizado, el único AMBER entre los dos GREEN se convierte en GREEN.
         assertThat(result.get(1)).isEqualTo(TrafficLight.GREEN);
     }
 
@@ -161,7 +161,7 @@ class TrafficLightClassifierTest {
 
         List<BigDecimal> prices = rampDay(0.05, 0.01, 10); // 0.05..0.14
         List<TrafficLight> result = c.classifyDay(prices);
-        // With narrow green band, index 0 is GREEN, index 9 is RED.
+        // Con una banda verde estrecha, el índice 0 es GREEN y el índice 9 es RED.
         assertThat(result.get(0)).isEqualTo(TrafficLight.GREEN);
         assertThat(result.get(9)).isEqualTo(TrafficLight.RED);
     }

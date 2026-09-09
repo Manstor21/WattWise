@@ -66,7 +66,7 @@ class PriceFetchJobTest {
         when(esiosClientService.fetchPricesForDate(any(LocalDate.class)))
                 .thenThrow(new ExternalApiException("ESIOS down"));
 
-        // The job swallows errors so the scheduler loop keeps running.
+        // El job traga los errores para que el bucle del scheduler siga funcionando.
         assertThatCode(job::fetchDailyPrices).doesNotThrowAnyException();
         verify(priceService, never()).saveEsiosPoints(any(), any());
     }

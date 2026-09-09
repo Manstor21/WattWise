@@ -8,10 +8,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 /**
- * Permissive security configuration used exclusively in {@code @WebMvcTest}
- * slices. It replaces the real JWT filter chain so controller tests can focus
- * on routing/validation while an explicit principal is injected via
- * {@link WithMockPrincipal}.
+ * Configuración de seguridad permisiva usada exclusivamente en slices de
+ * {@code @WebMvcTest}. Reemplaza la cadena de filtros JWT real para que los tests
+ * de controllers puedan centrarse en el enrutado/validación mientras se inyecta
+ * un principal explícito vía {@link WithMockPrincipal}.
  */
 @TestConfiguration
 public class TestSecurityConfig {

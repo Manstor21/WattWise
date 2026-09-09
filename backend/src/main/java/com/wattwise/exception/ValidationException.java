@@ -1,7 +1,7 @@
 package com.wattwise.exception;
 
 /**
- * Business/validation exception that maps to HTTP 400 Bad Request.
+ * Excepción de negocio/validación que se asigna al HTTP 400 Bad Request.
  */
 public class ValidationException extends RuntimeException {
 

@@ -100,7 +100,7 @@ class PriceServiceTest {
         EsiosPricePoint p1 = new EsiosPricePoint(LocalDateTime.of(2025, 1, 5, 0, 0), new BigDecimal("100"));
         EsiosPricePoint p2 = new EsiosPricePoint(LocalDateTime.of(2025, 1, 5, 0, 15), new BigDecimal("30000"));
         when(priceRecordRepository.existsByTimestamp(p1.datetime())).thenReturn(false);
-        when(priceRecordRepository.existsByTimestamp(p2.datetime())).thenReturn(true); // duplicate
+        when(priceRecordRepository.existsByTimestamp(p2.datetime())).thenReturn(true); // duplicado
         when(priceRecordRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         List<PriceRecord> saved = priceService.saveEsiosPoints(LocalDate.of(2025, 1, 5), List.of(p1, p2));

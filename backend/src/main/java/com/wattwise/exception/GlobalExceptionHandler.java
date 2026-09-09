@@ -16,7 +16,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import java.util.stream.Collectors;
 
 /**
- * Central exception handler producing a uniform {@link ApiError} body.
+ * Manejador central de excepciones que produce un cuerpo {@link ApiError} uniforme.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

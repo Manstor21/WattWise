@@ -11,8 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * CORS policy for the web dashboard (dev origins) and future mobile clients.
- * Origins are configurable via env var {@code CORS_ALLOWED_ORIGINS}.
+ * Política CORS para el panel web (orígenes de desarrollo) y futuros clientes móviles.
+ * Los orígenes se pueden configurar mediante la variable de entorno {@code CORS_ALLOWED_ORIGINS}.
  */
 @Configuration
 public class CorsConfig {

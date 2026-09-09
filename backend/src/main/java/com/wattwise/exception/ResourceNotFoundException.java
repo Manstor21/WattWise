@@ -1,8 +1,8 @@
 package com.wattwise.exception;
 
 /**
- * Thrown when a requested resource (user, appliance, price) does not exist.
- * Mapped by GlobalExceptionHandler to HTTP 404 Not Found.
+ * Se lanza cuando un recurso solicitado (usuario, electrodoméstico, precio) no existe.
+ * GlobalExceptionHandler lo asigna al HTTP 404 Not Found.
  */
 public class ResourceNotFoundException extends RuntimeException {
 

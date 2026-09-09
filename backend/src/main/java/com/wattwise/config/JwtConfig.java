@@ -5,8 +5,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * JWT configuration properties bound from {@code wattwise.security.*}.
- * {@code secret} maps to env var {@code JWT_SECRET} (see application.yml).
+ * Propiedades de configuración JWT vinculadas desde {@code wattwise.security.*}.
+ * {@code secret} se asigna a la variable de entorno {@code JWT_SECRET} (ver application.yml).
  */
 @Component
 @ConfigurationProperties(prefix = "wattwise.security")
@@ -32,13 +32,13 @@ public class JwtConfig {
     }
 
     /**
-     * Fail fast on a missing or weak signing secret.
+     * Falla rápido si falta el secreto de firma o es demasiado débil.
      *
-     * <p>In dev the base {@code application.yml} ships a long demo default;
-     * in prod {@code application-prod.yml} maps {@code jwt-secret} to
-     * {@code ${JWT_SECRET:}} with no default, so an unset env var becomes
-     * {@code null} here and the app refuses to start instead of signing
-     * tokens with a guessable key.
+     * <p>En dev, el {@code application.yml} base incluye un valor de demostración largo;
+     * en prod, {@code application-prod.yml} asigna {@code jwt-secret} a
+     * {@code ${JWT_SECRET:}} sin valor por defecto, de modo que una variable de entorno
+     * sin definir se convierte en {@code null} aquí y la aplicación se niega a arrancar
+     * en lugar de firmar tokens con una clave adivinable.
      */
     @PostConstruct
     void validateSecret() {

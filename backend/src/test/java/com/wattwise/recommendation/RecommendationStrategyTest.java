@@ -17,13 +17,13 @@ import static com.wattwise.testutil.TestData.price;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Verifies window selection + cost/savings math for every strategy.
+ * Verifica la selección de ventana y las matemáticas de coste/ahorro de cada estrategia.
  *
- * <p>The fixture (8 slots, 60-min cycles → 4-slot windows) contains two windows
- * with identical real average cost (0.125): w0 = [G,G,G,R] (index 0) and
- * w4 = [A,A,A,A] (index 4). A washer tolerates the red slot (weighted 0.62 vs
- * 0.625) while an EV charger rejects it (weighted 0.90 vs 0.75) — a real,
- * observable difference driven by the per-type penalties.
+ * <p>El fixture (8 slots, ciclos de 60 min → ventanas de 4 slots) contiene dos ventanas
+ * con el mismo coste medio real (0.125): w0 = [G,G,G,R] (índice 0) y
+ * w4 = [A,A,A,A] (índice 4). Una lavadora tolera el slot rojo (ponderado 0.62 frente a
+ * 0.625) mientras que un cargador EV lo rechaza (ponderado 0.90 frente a 0.75) — una
+ * diferencia real y observable impulsada por las penalizaciones por tipo.
  */
 class RecommendationStrategyTest {
 
@@ -56,19 +56,19 @@ class RecommendationStrategyTest {
 
         RecommendationDto dto = recommend(strategy, washer);
 
-        // Best window = slots 0..3 (real avg 0.125, weighted 0.62 beating 0.625).
+        // Mejor ventana = slots 0..3 (media real 0.125, ponderado 0.62 supera a 0.625).
         assertThat(dto.getRecommendedStart()).isEqualTo(prices.get(0).getTimestamp());
         assertThat(dto.getRecommendedEnd()).isEqualTo(prices.get(0).getTimestamp().plusMinutes(60));
 
-        // Cost model: avgWindowPrice x cycleKwh.
+        // Modelo de coste: avgWindowPrice x cycleKwh.
         assertThat(dto.getEstimatedCostEur())
                 .isEqualByComparingTo(new BigDecimal("0.125"));
-        // Worst window = slots 3..6 (0.20,0.13,0.12,0.13) real avg 0.145.
+        // Peor ventana = slots 3..6 (0.20,0.13,0.12,0.13) media real 0.145.
         assertThat(dto.getWorstCaseCostEur())
                 .isEqualByComparingTo(new BigDecimal("0.145"));
         assertThat(dto.getEstimatedSavingsEur())
                 .isEqualByComparingTo(new BigDecimal("0.020"));
-        assertThat(dto.getSemaphore()).isEqualTo("GREEN"); // dominant color across G,G,G,R
+        assertThat(dto.getSemaphore()).isEqualTo("GREEN"); // color dominante entre G,G,G,R
     }
 
     @Test
@@ -89,7 +89,7 @@ class RecommendationStrategyTest {
 
         RecommendationDto dto = recommend(strategy, ev);
 
-        // Same real average (0.125) but the all-AMBER window (slots 4..7) wins.
+        // Misma media real (0.125) pero gana la ventana toda-AMBER (slots 4..7).
         assertThat(dto.getRecommendedStart()).isEqualTo(prices.get(4).getTimestamp());
         assertThat(dto.getRecommendedEnd()).isEqualTo(prices.get(4).getTimestamp().plusMinutes(60));
         assertThat(dto.getEstimatedCostEur())
@@ -108,7 +108,7 @@ class RecommendationStrategyTest {
     @Test
     void returnsEmptyWhenNotEnoughData() {
         WashingMachineStrategy strategy = new WashingMachineStrategy();
-        Appliance longCycle = appliance(5L, ApplianceType.WASHING_MACHINE, 1.0, 240); // 16 slots needed
+        Appliance longCycle = appliance(5L, ApplianceType.WASHING_MACHINE, 1.0, 240); // se necesitan 16 slots
 
         Optional<RecommendationDto> dto = strategy.recommend(longCycle, prices);
         assertThat(dto).isEmpty();
@@ -150,7 +150,7 @@ class RecommendationStrategyTest {
                 .isInstanceOf(DishwasherStrategy.class);
         assertThat(factory.strategyFor(appliance(3L, ApplianceType.EV_CHARGER, 1.0, 60)))
                 .isInstanceOf(EvChargingStrategy.class);
-        // Types without a dedicated strategy fall back to the generic one.
+        // Los tipos sin estrategia dedicada recurren a la genérica.
         assertThat(factory.strategyFor(appliance(4L, ApplianceType.DRYER, 1.0, 60)))
                 .isInstanceOf(GenericApplianceStrategy.class);
         assertThat(factory.strategyFor(appliance(5L, ApplianceType.POOL_PUMP, 1.0, 60)))

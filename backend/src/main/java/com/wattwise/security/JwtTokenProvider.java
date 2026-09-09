@@ -13,8 +13,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 /**
- * Creates and validates JWT bearer tokens (jjwt 0.12.x API).
- * Keys are derived from the configured secret (HMAC-SHA256).
+ * Crea y valida tokens bearer JWT (API jjwt 0.12.x).
+ * Las claves se derivan del secreto configurado (HMAC-SHA256).
  */
 @Component
 public class JwtTokenProvider {

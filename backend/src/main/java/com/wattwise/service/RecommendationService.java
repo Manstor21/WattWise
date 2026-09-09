@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Orchestrates recommendations: assembles the candidate price context (today's
- * remaining slots + tomorrow's full day once published) and delegates the actual
- * optimization to the appliance-type-specific {@link RecommendationStrategy}.
+ * Orquesta las recomendaciones: monta el contexto de precios candidato (slots restantes
+ * de hoy + el día completo de mañana una vez publicado) y delega la optimización real
+ * en la {@link RecommendationStrategy} específica del tipo de electrodoméstico.
  */
 @Service
 public class RecommendationService {
@@ -62,9 +62,10 @@ public class RecommendationService {
     }
 
     /**
-     * Candidate prices = today's slots still in the future + tomorrow's full day
-     * (if published). Windows may span the midnight boundary when an appliance
-     * run continues past midnight (e.g. overnight EV charging), which is valid.
+     * Precios candidatos = slots de hoy aún futuros + el día completo de mañana
+     * (si se ha publicado). Las ventanas pueden cruzar la medianoche cuando una ejecución
+     * de electrodoméstico continúa pasada la medianoche (p. ej. carga nocturna de VE),
+     * lo cual es válido.
      */
     private List<PriceDto> assembleCandidatePrices() {
         LocalDateTime nowUtc = LocalDateTime.now(ZoneOffset.UTC);

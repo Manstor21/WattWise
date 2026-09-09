@@ -3,8 +3,8 @@ package com.wattwise.model.dto;
 import java.time.LocalDateTime;
 
 /**
- * Response of a successful register/login: the JWT bearer token plus a compact
- * view of the authenticated user.
+ * Respuesta de un register/login con éxito: el token bearer JWT más una vista
+ * compacta del usuario autenticado.
  */
 public class AuthResponse {
 

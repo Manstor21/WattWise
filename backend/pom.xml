@@ -38,13 +38,13 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
-        <!-- Security -->
+        <!-- Seguridad -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
-        <!-- Validation -->
+        <!-- Validación -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
@@ -56,7 +56,7 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
-        <!-- Prometheus exposure for /actuator/prometheus (observability, modules.md §7) -->
+        <!-- Exposición de Prometheus para /actuator/prometheus (observabilidad, modules.md §7) -->
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
@@ -89,7 +89,7 @@
             <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- Resilience / retry support -->
+        <!-- Resiliencia / soporte de reintentos -->
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
@@ -99,7 +99,7 @@
             <artifactId>spring-aspects</artifactId>
         </dependency>
 
-        <!-- Flyway DB migrations -->
+        <!-- Migraciones de base de datos con Flyway -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
@@ -109,14 +109,14 @@
             <artifactId>flyway-sqlserver</artifactId>
         </dependency>
 
-        <!-- SQL Server driver (production) -->
+        <!-- Controlador de SQL Server (producción) -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
             <artifactId>mssql-jdbc</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- SQLite driver + Hibernate community dialects (dev profile) -->
+        <!-- Controlador SQLite + dialectos de la comunidad de Hibernate (perfil dev) -->
         <dependency>
             <groupId>org.xerial</groupId>
             <artifactId>sqlite-jdbc</artifactId>
@@ -128,14 +128,14 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Lombok (optional convenience) -->
+        <!-- Lombok (comodidad opcional) -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
 
-        <!-- Test -->
+        <!-- Pruebas -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -146,7 +146,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-        <!-- H2 for repository tests (in-memory, portable across dialects) -->
+        <!-- H2 para pruebas de repositorio (en memoria, portable entre dialectos) -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>

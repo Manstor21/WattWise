@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.context.support.WithSecurityContextFactory;
 
 /**
- * Builds a {@link SecurityContext} whose principal is a {@link UserPrincipal}.
+ * Construye un {@link SecurityContext} cuyo principal es un {@link UserPrincipal}.
  */
 public class WithMockPrincipalFactory implements WithSecurityContextFactory<WithMockPrincipal> {
 

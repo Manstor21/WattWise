@@ -56,7 +56,7 @@ class EsiosClientServiceImplTest {
         List<EsiosPricePoint> points = client.parse(json, date);
 
         assertThat(points).hasSize(2);
-        // Offset +01:00 normalized to UTC.
+        // Offset +01:00 normalizado a UTC.
         assertThat(points.get(0).datetime()).isEqualTo(LocalDateTime.of(2025, 1, 4, 23, 0));
         assertThat(points.get(0).valueEurPerMwh()).isEqualByComparingTo(new BigDecimal("45.32"));
         // 2025-01-05T00:30+01:00 == 2025-01-04T23:30Z.

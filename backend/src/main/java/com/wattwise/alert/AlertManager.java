@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Observer manager: broadcasts a {@link PriceAlertContext} to every registered
- * {@link AlertObserver} and collects the alerts that fired. Observers are wired
- * automatically from the Spring context.
+ * Gestor de observers: difunde un {@link PriceAlertContext} a cada
+ * {@link AlertObserver} registrado y recoge las alertas que se han disparado.
+ * Los observers se conectan automáticamente desde el contexto de Spring.
  */
 @Component
 public class AlertManager {
@@ -22,7 +22,7 @@ public class AlertManager {
         this.observers = observers;
     }
 
-    /** Evaluate all observers and return the described alerts that fired. */
+    /** Evalúa todos los observers y devuelve las alertas descritas que se hayan disparado. */
     public List<String> checkAndNotify(PriceAlertContext context) {
         if (context == null) {
             return List.of();

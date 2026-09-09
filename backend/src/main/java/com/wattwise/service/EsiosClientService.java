@@ -6,21 +6,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Client for the public ESIOS API of Red Eléctrica de España (REE).
+ * Cliente de la API pública de ESIOS de Red Eléctrica de España (REE).
  *
  * <p>{@code https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real}
  *
- * <p>Defined as an interface so the scheduled job can be tested against a mock —
- * the real HTTP call is isolated in {@link EsiosClientServiceImpl}.
+ * <p>Definida como interfaz para que la tarea programada pueda probarse contra un mock —
+ * la llamada HTTP real queda aislada en {@link EsiosClientServiceImpl}.
  */
 public interface EsiosClientService {
 
     /**
-     * Fetch day-ahead prices for {@code date} (Spain local time; the request window
-     * covers the full 24h local day).
+     * Obtiene los precios day-ahead de {@code date} (hora local de España; la ventana de
+     * petición cubre el día local completo de 24 h).
      *
-     * @param date Spanish local date to fetch
-     * @return parsed price points in chronological order
+     * @param date fecha local española que se desea obtener
+     * @return puntos de precio parseados en orden cronológico
      */
     List<EsiosPricePoint> fetchPricesForDate(LocalDate date);
 }

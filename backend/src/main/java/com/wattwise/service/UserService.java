@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Authentication and user-profile operations. Controllers have no business
- * logic — everything user/auth-related lives here.
+ * Operaciones de autenticación y perfil de usuario. Los controllers no contienen lógica
+ * de negocio: todo lo relacionado con usuarios/auth vive aquí.
  */
 @Service
 public class UserService {

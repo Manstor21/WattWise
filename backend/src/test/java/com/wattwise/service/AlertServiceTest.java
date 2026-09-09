@@ -43,7 +43,7 @@ class AlertServiceTest {
 
     @BeforeEach
     void setUp() {
-        // Real observer beans wired through the real manager (Observer pattern E2E).
+        // Observadores reales conectados a través del manager real (patrón Observer de extremo a extremo).
         AlertManager manager = new AlertManager(List.of(
                 new PriceThresholdObserver(),
                 new AnomalyObserver()));
@@ -98,7 +98,7 @@ class AlertServiceTest {
     void checkForUserFiresThresholdObserverWhenWindowIsVeryCheap() {
         when(alertPreferenceRepository.findByUserId(5L))
                 .thenReturn(Optional.of(activePreference(7L, 5L, "20.00")));
-        // Mean 0.30; cheapest slot 0.18 => 40% below mean -> threshold (20%) fires.
+        // Media 0.30; slot más barato 0.18 => 40% por debajo de la media -> el umbral (20%) se dispara.
         when(priceService.getToday()).thenReturn(List.of(
                 price(0, 0.40, TrafficLight.RED),
                 price(1, 0.32, TrafficLight.AMBER),
@@ -115,7 +115,7 @@ class AlertServiceTest {
     void checkForUserDoesNotFireWhenPricesAreUniform() {
         when(alertPreferenceRepository.findByUserId(5L))
                 .thenReturn(Optional.of(activePreference(7L, 5L, "20.00")));
-        // Options identical to the mean -> no cheap window.
+        // Precios idénticos a la media -> no hay franja barata.
         when(priceService.getToday()).thenReturn(List.of(
                 price(0, 0.30, TrafficLight.AMBER),
                 price(1, 0.30, TrafficLight.AMBER)));
@@ -152,8 +152,8 @@ class AlertServiceTest {
     void anomalyObserverFiresWhenPriceExceedsDoubleMean() {
         when(alertPreferenceRepository.findByUserId(5L))
                 .thenReturn(Optional.of(activePreference(7L, 5L, "75.00")));
-        // Real mean 0.333334; the 0.80 slot exceeds 2x mean (0.666668) -> ANOMALY
-        // fires, while the threshold (75% below mean = 0.0833) does not.
+        // Media real 0.333334; el slot de 0.80 supera 2x la media (0.666668) -> ANOMALY
+        // se dispara, mientras que el umbral (75% por debajo de la media = 0.0833) no.
         when(priceService.getToday()).thenReturn(List.of(
                 price(0, 0.10, TrafficLight.GREEN),
                 price(1, 0.10, TrafficLight.GREEN),

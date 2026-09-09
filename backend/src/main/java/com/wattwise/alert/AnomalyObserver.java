@@ -8,11 +8,12 @@ import org.springframework.stereotype.Component;
 import java.math.BigDecimal;
 
 /**
- * Fires when today contains an anomalous price — defined (per the alert
- * methodology) as any slot whose price exceeds 2× the daily mean. A signal of
- * market stress (e.g. a supply crunch) that users should know about.
+ * Se dispara cuando hoy contiene un precio anómalo: se define (según la
+ * metodología de alertas) como cualquier slot cuyo precio supere 2× la media diaria.
+ * Es una señal de tensión del mercado (p. ej. un problema de suministro) que los
+ * usuarios deberían conocer.
  *
- * <p>Pure: performs no I/O.
+ * <p>Puro: no realiza E/S.
  */
 @Component
 public class AnomalyObserver implements AlertObserver {

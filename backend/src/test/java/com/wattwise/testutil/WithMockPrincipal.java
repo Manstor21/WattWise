@@ -8,9 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Test annotation that populates the SecurityContext with a real
- * {@code UserPrincipal} (id 1 by default), so controllers that cast
- * {@code authentication.getPrincipal()} work in {@code @WebMvcTest} slices.
+ * Anotación de test que rellena el SecurityContext con un {@code UserPrincipal}
+ * real (id 1 por defecto), para que los controllers que hacen cast de
+ * {@code authentication.getPrincipal()} funcionen en slices {@code @WebMvcTest}.
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.METHOD, ElementType.TYPE})

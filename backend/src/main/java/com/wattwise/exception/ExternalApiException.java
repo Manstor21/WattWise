@@ -1,8 +1,8 @@
 package com.wattwise.exception;
 
 /**
- * Thrown when the external ESIOS API fails (timeout, non-2xx, parse error).
- * Mapped by GlobalExceptionHandler to HTTP 502 Bad Gateway.
+ * Se lanza cuando falla la API externa de ESIOS (timeout, respuesta no 2xx, error de
+ * parseo). GlobalExceptionHandler lo asigna al HTTP 502 Bad Gateway.
  */
 public class ExternalApiException extends RuntimeException {
 

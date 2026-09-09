@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 /**
- * A personalized scheduling recommendation for an appliance: the cheapest
- * contiguous slot window within the appliance's scheduling constraints,
- * plus an estimate of the savings vs. the worst possible slot.
+ * Una recomendación de programación personalizada para un electrodoméstico: la ventana
+ * de slots contigua más barata dentro de las restricciones de programación del
+ * electrodoméstico, más una estimación del ahorro frente al peor slot posible.
  */
 public class RecommendationDto {
 
@@ -22,7 +22,7 @@ public class RecommendationDto {
     private BigDecimal worstCaseCostEur;
     private BigDecimal estimatedSavingsEur;
     private BigDecimal savingsPercentage;
-    private String semaphore; // GREEN/AMBER/RED of the recommended window
+    private String semaphore; // GREEN/AMBER/RED de la ventana recomendada
     private List<PriceDto> window;
 
     public ApplianceDto getAppliance() {

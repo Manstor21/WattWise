@@ -1,4 +1,4 @@
-# WattWise — dev profile: local SQLite database (zero-setup)
+# WattWise — perfil dev: base de datos SQLite local (sin configuración previa)
 spring:
   datasource:
     url: jdbc:sqlite:./data/wattwise.db
@@ -8,10 +8,10 @@ spring:
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
     hibernate:
-      # SQLite has limited DDL support; Hibernate creates tables from entities when ddl-auto=update.
-      # Flyway migrations are NOT enabled on the dev profile because SQLite's DDL differences
-      # with SQL Server make a single cross-dialect migration set awkward. The SQL Server schema
-      # is the source of truth (V1__init.sql / V2__seed_catalog.sql) for prod.
+      # SQLite tiene soporte DDL limitado; Hibernate crea las tablas a partir de las entidades cuando ddl-auto=update.
+      # Las migraciones de Flyway NO se habilitan en el perfil dev porque las diferencias de DDL de SQLite
+      # con SQL Server hacen incómodo un único conjunto de migraciones multi-dialecto. El esquema de SQL Server
+      # es la fuente de verdad (V1__init.sql / V2__seed_catalog.sql) para prod.
       ddl-auto: update
   flyway:
     enabled: false

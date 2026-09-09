@@ -7,16 +7,16 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * User alert preferences. {@code applianceId} null = all appliances.
+ * Preferencias de alerta del usuario. {@code applianceId} null = todos los electrodomésticos.
  */
 public class AlertPreferenceDto {
 
     private Long id;
 
-    /** Optional — when set, the alert is scoped to a single appliance. */
+    /** Opcional: si se indica, la alerta se limita a un único electrodoméstico. */
     private Long applianceId;
 
-    /** Alert fires when the best available price is this many % below the day's mean. */
+    /** La alerta se dispara cuando el mejor precio disponible está este % por debajo de la media del día. */
     @DecimalMin(value = "0.0", message = "thresholdPctBelowMean must be >= 0")
     @DecimalMax(value = "100.0", message = "thresholdPctBelowMean must be <= 100")
     private BigDecimal thresholdPctBelowMean;

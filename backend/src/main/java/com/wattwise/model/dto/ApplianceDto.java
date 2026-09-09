@@ -12,9 +12,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Request/response DTO for appliances. When {@code avgCycleKwh} / {@code
- * estimatedCycleMinutes} / {@code powerWatts} are omitted on creation, the service
- * fills them from the embedded catalog (see ApplianceType defaults).
+ * DTO de petición/respuesta para electrodomésticos. Cuando {@code avgCycleKwh} /
+ * {@code estimatedCycleMinutes} / {@code powerWatts} se omiten al crear, el service
+ * los rellena desde el catálogo embebido (ver valores por defecto de ApplianceType).
  */
 public class ApplianceDto {
 

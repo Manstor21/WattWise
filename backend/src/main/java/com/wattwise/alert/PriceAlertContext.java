@@ -6,9 +6,10 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * Immutable context handed to all {@link AlertObserver}s on each check. Carries
- * the day's prices, the daily mean and the user's threshold configuration so
- * observers stay pure (no I/O, easily unit-tested).
+ * Contexto inmutable entregado a todos los {@link AlertObserver} en cada comprobación.
+ * Transporta los precios del día, la media diaria y la configuración de umbral del
+ * usuario para que los observers se mantengan puros (sin E/S, fácilmente comprobados
+ * con tests unitarios).
  */
 public class PriceAlertContext {
 
@@ -31,7 +32,7 @@ public class PriceAlertContext {
         return dailyMeanEurPerKwh;
     }
 
-    /** e.g. 20 means "fire when today's best price is >= 20% below the mean". */
+    /** p. ej. 20 significa "disparar cuando el mejor precio de hoy esté >= 20 % por debajo de la media". */
     public BigDecimal getThresholdPctBelowMean() {
         return thresholdPctBelowMean;
     }

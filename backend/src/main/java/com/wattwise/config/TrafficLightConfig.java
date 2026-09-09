@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Binds {@code wattwise.traffic-light.*} from application.yml into the classifier
- * configuration and exposes a singleton {@link TrafficLightClassifier} bean.
+ * Vincula {@code wattwise.traffic-light.*} de application.yml a la configuración del
+ * clasificador y expone un bean singleton {@link TrafficLightClassifier}.
  */
 @Configuration
 @ConfigurationProperties(prefix = "wattwise.traffic-light")

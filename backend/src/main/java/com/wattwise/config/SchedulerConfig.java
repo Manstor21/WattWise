@@ -5,9 +5,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
- * Enables Spring scheduling (already done via WattWiseApplication, kept as a
- * dedicated config class so the schedule stays discoverable) and exposes the
- * cron expression from configuration.
+ * Habilita la programación de Spring (ya hecha vía WattWiseApplication; se mantiene
+ * como clase de configuración dedicada para que el schedule siga siendo localizable)
+ * y expone la expresión cron desde la configuración.
  */
 @Configuration
 @EnableScheduling

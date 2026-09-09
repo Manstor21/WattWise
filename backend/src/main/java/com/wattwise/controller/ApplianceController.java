@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * CRUD for the authenticated user's appliances. Every operation is scoped to
- * the JWT identity — another user's appliance resolves to 404.
+ * CRUD de los electrodomésticos del usuario autenticado. Cada operación está limitada
+ * al ámbito de la identidad JWT: un electrodoméstico de otro usuario se resuelve como 404.
  */
 @RestController
 @RequestMapping("/api/appliances")

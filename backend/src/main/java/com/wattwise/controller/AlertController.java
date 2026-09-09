@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
- * User alert preferences (JWT required).
+ * Preferencias de alerta del usuario (requiere JWT).
  */
 @RestController
 @RequestMapping("/api/alerts")

@@ -8,29 +8,29 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Pure, unit-testable hybrid traffic-light classifier.
+ * Clasificador de semáforo híbrido puro y comprobable con tests unitarios.
  *
- * <p>The algorithm is described in {@code docs/architecture/traffic-light-methodology.md}
- * and combines three classification layers plus a uniform-day short-circuit and
- * optional edge smoothing:
+ * <p>El algoritmo se describe en {@code docs/architecture/traffic-light-methodology.md}
+ * y combina tres capas de clasificación más un atajo para días uniformes y un suavizado
+ * de bordes opcional:
  *
  * <ol>
- *   <li><b>Percentile layer (relative to the day)</b>: each slot is ranked against
- *       every other slot of the same day. Bottom third = GREEN, middle third = AMBER,
- *       top third = RED.</li>
- *   <li><b>Deviation layer (relative to the daily mean)</b>: how far a slot deviates
- *       from the arithmetic mean. {@code &lt; -25%} = GREEN, {@code -25%..+25%} = AMBER,
+ *   <li><b>Capa de percentil (relativa al día)</b>: cada slot se ordena frente a todos los
+ *       demás slots del mismo día. Tercio inferior = GREEN, tercio medio = AMBER,
+ *       tercio superior = RED.</li>
+ *   <li><b>Capa de desviación (relativa a la media diaria)</b>: cuánto se desvía un slot
+ *       de la media aritmética. {@code &lt; -25%} = GREEN, {@code -25%..+25%} = AMBER,
  *       {@code &gt; +25%} = RED.</li>
- *   <li><b>Absolute context layer</b>: fixed thresholds calibrated to the Spanish PVPC
- *       market (configurable). Very cheap = GREEN, expensive = RED.</li>
+ *   <li><b>Capa de contexto absoluto</b>: umbrales fijos calibrados para el mercado PVPC
+ *       español (configurables). Muy barato = GREEN, caro = RED.</li>
  * </ol>
  *
- * <p>Negative prices are always treated as deep GREEN regardless of other layers
- * (excess renewable generation in Spain).
+ * <p>Los precios negativos siempre se tratan como GREEN profundo, con independencia de las
+ * demás capas (exceso de generación renovable en España).
  */
 public class TrafficLightClassifier {
 
-    /** Configuration holder (carries default values). */
+    /** Contenedor de configuración (lleva los valores por defecto). */
     public static class Config {
         double percentileGreenMax = 0.33;
         double percentileRedMin = 0.67;
@@ -62,12 +62,13 @@ public class TrafficLightClassifier {
     }
 
     /**
-     * Classify a full day worth of prices. The list length should typically be 96
-     * (or 24 for hourly data). Returns one TrafficLight per input price, same order.
+     * Clasifica un día completo de precios. La longitud de la lista suele ser 96
+     * (o 24 para datos horarios). Devuelve un TrafficLight por precio de entrada, en el
+     * mismo orden.
      *
-     * @param pricesEurPerKwh prices of one day, in chronological order
-     * @return parallel list of classifications
-     * @throws IllegalArgumentException if the list is null or empty
+     * @param pricesEurPerKwh precios de un día, en orden cronológico
+     * @return lista paralela de clasificaciones
+     * @throws IllegalArgumentException si la lista es null o está vacía
      */
     public List<TrafficLight> classifyDay(List<BigDecimal> pricesEurPerKwh) {
         if (pricesEurPerKwh == null || pricesEurPerKwh.isEmpty()) {
@@ -85,7 +86,7 @@ public class TrafficLightClassifier {
         for (int i = 0; i < n; i++) {
             BigDecimal price = pricesEurPerKwh.get(i);
 
-            // Deep-green rule for negative prices (excess renewables).
+            // Regla de verde profundo para precios negativos (exceso de renovables).
             if (price != null && price.signum() < 0) {
                 result.add(TrafficLight.GREEN);
                 continue;
@@ -105,7 +106,7 @@ public class TrafficLightClassifier {
         return result;
     }
 
-    /** Layer 1: bottom/middle/top thirds by within-day rank. */
+    /** Capa 1: tercios inferior/medio/superior por rango dentro del día. */
     private List<TrafficLight> percentileLayer(List<BigDecimal> prices) {
         int n = prices.size();
         List<Integer> sortedIndexes = new ArrayList<>(n);
@@ -114,7 +115,7 @@ public class TrafficLightClassifier {
         }
         sortedIndexes.sort(Comparator.comparing(o -> prices.get(o) == null ? BigDecimal.ZERO : prices.get(o)));
 
-        // percentile of each slot: rank / total
+        // percentil de cada slot: rango / total
         double[] percentile = new double[n];
         for (int rank = 0; rank < n; rank++) {
             percentile[sortedIndexes.get(rank)] = (double) rank / n;
@@ -134,7 +135,7 @@ public class TrafficLightClassifier {
         return result;
     }
 
-    /** Layer 2: deviation from the arithmetic mean. */
+    /** Capa 2: desviación respecto a la media aritmética. */
     private List<TrafficLight> deviationLayer(List<BigDecimal> prices) {
         double mean = mean(prices);
         List<TrafficLight> result = new ArrayList<>(prices.size());
@@ -142,7 +143,7 @@ public class TrafficLightClassifier {
             double price = p == null ? 0 : p.doubleValue();
             double deviation;
             if (mean == 0) {
-                // Degenerate: mean of zero. Treat raw sign.
+                // Caso degenerado: media cero. Se trata el signo bruto.
                 deviation = price == 0 ? 0 : (price > 0 ? Double.POSITIVE_INFINITY : Double.NEGATIVE_INFINITY);
             } else {
                 deviation = (price - mean) / mean;
@@ -158,13 +159,13 @@ public class TrafficLightClassifier {
         return result;
     }
 
-    /** Layer 3: absolute context thresholds (EUR/kWh). */
+    /** Capa 3: umbrales de contexto absoluto (EUR/kWh). */
     private List<TrafficLight> absoluteLayer(List<BigDecimal> prices) {
         List<TrafficLight> result = new ArrayList<>(prices.size());
         for (BigDecimal p : prices) {
             double price = p == null ? 0 : p.doubleValue();
             if (price < 0) {
-                result.add(TrafficLight.GREEN); // deep green
+                result.add(TrafficLight.GREEN); // verde profundo
             } else if (price < config.absoluteGreenMax) {
                 result.add(TrafficLight.GREEN);
             } else if (price > config.absoluteRedMin) {
@@ -177,10 +178,10 @@ public class TrafficLightClassifier {
     }
 
     /**
-     * Uniform day detection: coefficient of variation (stddev/mean) below the
-     * configured threshold. On such days we skip the percentile layer entirely
-     * because forcing a bottom/middle/top split on a flat price curve would be
-     * misleading.
+     * Detección de día uniforme: coeficiente de variación (desv. estándar/media) por debajo
+     * del umbral configurado. En esos días se omite por completo la capa de percentil,
+     * porque forzar una división inferior/medio/superior en una curva de precios plana
+     * sería engañoso.
      */
     private boolean isUniformDay(List<BigDecimal> prices) {
         double mean = mean(prices);
@@ -192,7 +193,7 @@ public class TrafficLightClassifier {
         return cv < config.uniformDayCvThreshold;
     }
 
-    /** Fusion for uniform days — no percentile layer, contests between absolute and deviation. */
+    /** Fusión para días uniformes: sin capa de percentil, disputa entre absoluto y desviación. */
     private TrafficLight uniformVote(TrafficLight l3, TrafficLight l2) {
         if (l3 == TrafficLight.GREEN && l2 == TrafficLight.GREEN) {
             return TrafficLight.GREEN;
@@ -203,7 +204,7 @@ public class TrafficLightClassifier {
         return TrafficLight.AMBER;
     }
 
-    /** Normal fusion: majority of (GREEN,RED); ties reported per spec. */
+    /** Fusión normal: mayoría de (GREEN, RED); los empates se resuelven según la especificación. */
     private TrafficLight fusionVote(TrafficLight l1, TrafficLight l2, TrafficLight l3) {
         int greens = 0;
         int reds = 0;
@@ -213,11 +214,11 @@ public class TrafficLightClassifier {
         }
         if (greens >= 2) return TrafficLight.GREEN;
         if (reds >= 2) return TrafficLight.RED;
-        // Split / all-amber: default to AMBER.
+        // Empate / todo ámbar: por defecto AMBER.
         return TrafficLight.AMBER;
     }
 
-    /** Optional island smoothing: an AMBER surrounded by identical GREEN or RED becomes that color. */
+    /** Suavizado de islas opcional: un AMBER rodeado de GREEN o RED idénticos pasa a ese color. */
     private void smoothIslands(List<TrafficLight> result) {
         for (int i = 1; i < result.size() - 1; i++) {
             if (result.get(i) == TrafficLight.AMBER

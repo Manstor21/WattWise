@@ -7,15 +7,15 @@ import com.wattwise.model.enums.TrafficLight;
 import java.util.Map;
 
 /**
- * Fallback strategy used for appliance types without a dedicated implementation
- * (DRYER, POOL_PUMP, AC, OTHER) and as a default for unknown types. Penalties are
- * drawn from the methodology's per-appliance preference table:
+ * Estrategia de respaldo usada para tipos de electrodoméstico sin implementación dedicada
+ * (DRYER, POOL_PUMP, AC, OTHER) y como valor por defecto para tipos desconocidos. Las
+ * penalizaciones se extraen de la tabla de preferencias por electrodoméstico de la metodología:
  *
  * <ul>
- *   <li>Dryer: green 60 / amber 30 / red 10</li>
- *   <li>Pool pump: green 75 / amber 20 / red 5</li>
- *   <li>AC/heat pump: green 50 / amber 30 / red 20 (comfort override)</li>
- *   <li>Other: green 65 / amber 25 / red 10</li>
+ *   <li>Secadora: verde 60 / ámbar 30 / rojo 10</li>
+ *   <li>Bomba de piscina: verde 75 / ámbar 20 / rojo 5</li>
+ *   <li>AC/bomba de calor: verde 50 / ámbar 30 / rojo 20 (prioridad de confort)</li>
+ *   <li>Otros: verde 65 / ámbar 25 / rojo 10</li>
  * </ul>
  */
 public class GenericApplianceStrategy extends AbstractApplianceStrategy {
@@ -34,11 +34,11 @@ public class GenericApplianceStrategy extends AbstractApplianceStrategy {
 
     @Override
     protected double penalty(TrafficLight color) {
-        // Default penalties = OTHER row.
+        // Penalizaciones por defecto = fila OTHER.
         return penaltyFor(ApplianceType.OTHER, color);
     }
 
-    /** Allows the factory to dispatch e.g. a DRYER while keeping single-instance strategy. */
+    /** Permite que la factory distribuya p. ej. un DRYER manteniendo una estrategia de instancia única. */
     double penaltyFor(ApplianceType type, TrafficLight color) {
         double[] p = PENALTIES.getOrDefault(type, PENALTIES.get(ApplianceType.OTHER));
         return switch (color) {

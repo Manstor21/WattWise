@@ -9,31 +9,31 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Strategy pattern: one implementation per appliance type. Each strategy
- * translates the traffic-light context into an appliance-specific scheduling
- * recommendation (optimal window within the appliance's constraints).
+ * Patrón Strategy: una implementación por tipo de electrodoméstico. Cada estrategia
+ * traduce el contexto de semáforo en una recomendación de programación específica del
+ * electrodoméstico (ventana óptima dentro de sus restricciones).
  *
  * @see StrategyFactory
  */
 public interface RecommendationStrategy {
 
-    /** The appliance type this strategy serves. Must be unique per implementation. */
+    /** El tipo de electrodoméstico que atiende esta estrategia. Debe ser único por implementación. */
     ApplianceType supportedType();
 
     /**
-     * Whether this strategy handles {@code appliance}. Default: matches the
-     * declared {@link #supportedType()}. Multi-type strategies override this.
+     * Indica si esta estrategia gestiona {@code appliance}. Por defecto: coincide con el
+     * {@link #supportedType()} declarado. Las estrategias multi-tipo lo sobreescriben.
      */
     default boolean appliesTo(Appliance appliance) {
         return supportedType() == appliance.getType();
     }
 
     /**
-     * Compute the best contiguous price window for {@code appliance}.
+     * Calcula la mejor ventana de precios contigua para {@code appliance}.
      *
-     * @param appliance the user's appliance
-     * @param prices    classified future price slots (chronological)
-     * @return the recommendation, or empty when there is not enough data
+     * @param appliance el electrodoméstico del usuario
+     * @param prices    slots de precio futuros clasificados (en orden cronológico)
+     * @return la recomendación, o vacío cuando no hay datos suficientes
      */
     Optional<RecommendationDto> recommend(Appliance appliance, List<PriceDto> prices);
 }

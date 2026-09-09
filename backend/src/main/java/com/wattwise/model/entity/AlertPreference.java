@@ -15,8 +15,9 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * User's alert configuration. One row per user. When {@code applianceId} is null
- * the preference applies to all of the user's appliances (a "global" alert).
+ * Configuración de alertas del usuario. Una fila por usuario. Cuando {@code applianceId}
+ * es null, la preferencia se aplica a todos los electrodomésticos del usuario
+ * (una alerta "global").
  */
 @Entity
 @Table(name = "alert_preferences")
@@ -34,7 +35,7 @@ public class AlertPreference {
     @JoinColumn(name = "appliance_id", nullable = true)
     private Appliance appliance;
 
-    /** Alert fires when the best available price is at least this % below the day's mean. */
+    /** La alerta se dispara cuando el mejor precio disponible está al menos este % por debajo de la media del día. */
     @Column(name = "threshold_pct_below_mean", nullable = false, precision = 6, scale = 2)
     private BigDecimal thresholdPctBelowMean = new BigDecimal("20.00");
 

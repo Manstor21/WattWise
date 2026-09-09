@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * Minimal liveness endpoint. Full health details are exposed by Spring Boot
- * Actuator at {@code /actuator/health}.
+ * Endpoint mínimo de liveness. Los detalles completos de salud los expone Spring Boot
+ * Actuator en {@code /actuator/health}.
  */
 @RestController
 @RequestMapping("/api/health")

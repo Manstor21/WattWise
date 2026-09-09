@@ -1,6 +1,6 @@
-# WattWise Backend — base configuration
-# Profile-specific settings live in application-dev.yml (SQLite) and application-prod.yml (SQL Server).
-# Activate a profile via: SPRING_PROFILES_ACTIVE=dev|prod  (or -Dspring-boot.run.profiles=dev)
+# WattWise Backend — configuración base
+# Los ajustes específicos por perfil están en application-dev.yml (SQLite) y application-prod.yml (SQL Server).
+# Activa un perfil con: SPRING_PROFILES_ACTIVE=dev|prod  (o -Dspring-boot.run.profiles=dev)
 
 spring:
   application:
@@ -31,9 +31,9 @@ management:
         include: health,info,metrics,prometheus
   endpoint:
     health:
-      # Details only for authenticated principals; anonymous callers
-      # see {status: UP}. Keeps DB/disk internals out of unauthenticated
-      # probes while remaining healthcheck-friendly.
+      # Detalles solo para principales autenticados; los llamantes anónimos
+      # ven {status: UP}. Mantiene los detalles internos de BD/disco fuera de los
+      # probes no autenticados, sin dejar de ser compatible con healthcheck.
       show-details: when-authorized
 
 springdoc:
@@ -45,15 +45,15 @@ springdoc:
     path: /v3/api-docs
 
 # ---------------------------------------------------------------------------
-# WattWise domain configuration
+# Configuración de dominio WattWise
 # ---------------------------------------------------------------------------
 wattwise:
   security:
-    # Override with env var JWT_SECRET (>= 32 chars). Default used only for local dev / demo, NEVER production.
+    # Sobrescríbela con la variable de entorno JWT_SECRET (>= 32 caracteres). El valor por defecto solo se usa para dev/demo local, NUNCA en producción.
     jwt-secret: ${JWT_SECRET:ZmFrZS1kZXZlbG9wbWVudC1zZWNyZXQtY2hhbmdlLWluLXByb2R1Y3Rpb24tbG9uZy1zZWNyZXQ=}
     jwt-expiration-ms: ${JWT_EXPIRATION_MS:86400000}
   esios:
-    # Public ESIOS API — basic data does not require a token, but the header is configurable.
+    # API pública de ESIOS — los datos básicos no requieren token, pero la cabecera es configurable.
     base-url: ${ESIOS_BASE_URL:https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real}
     api-token: ${ESIOS_API_TOKEN:}
     connect-timeout-ms: ${ESIOS_CONNECT_TIMEOUT_MS:10000}
@@ -63,23 +63,23 @@ wattwise:
       initial-backoff-ms: 2000
       max-backoff-ms: 30000
   scheduler:
-    # Cron format: sec min hour day month weekday. 0 15 20 * * * = 20:15:00 every day.
+    # Formato cron: seg min hora día mes día de la semana. 0 15 20 * * * = 20:15:00 todos los días.
     price-fetch-cron: ${PRICE_FETCH_CRON:0 15 20 * * *}
     enabled: ${PRICE_FETCH_ENABLED:true}
   traffic-light:
-    # Layer 1: daily percentile boundaries (0.0-1.0)
+    # Capa 1: límites del percentil diario (0,0-1,0)
     percentile-green-max: 0.33
     percentile-red-min: 0.67
-    # Layer 2: deviation from daily mean (decimal, e.g. -0.25 => 25% below mean)
+    # Capa 2: desviación respecto a la media diaria (decimal, p. ej. -0.25 => 25 % por debajo de la media)
     deviation-green-max: -0.25
     deviation-red-min: 0.25
-    # Layer 3: absolute price context thresholds (EUR/kWh)
+    # Capa 3: umbrales de contexto absoluto del precio (EUR/kWh)
     absolute-green-max: 0.10
     absolute-amber-max: 0.20
     absolute-red-min: 0.20
-    # Uniform day detection: coefficient of variation (stddev/mean)
+    # Detección de día uniforme: coeficiente de variación (desv. estándar/media)
     uniform-day-cv-threshold: 0.10
-    # Edge smoothing (island removal)
+    # Suavizado de bordes (eliminación de islas)
     smoothing-enabled: true
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8080,http://localhost:5173,http://localhost:80,http://localhost:3000}

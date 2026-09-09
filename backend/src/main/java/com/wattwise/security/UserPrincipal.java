@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Adapts a {@link User} entity to Spring Security's {@link UserDetails}.
+ * Adapta una entidad {@link User} al {@link UserDetails} de Spring Security.
  */
 public class UserPrincipal implements UserDetails {
 

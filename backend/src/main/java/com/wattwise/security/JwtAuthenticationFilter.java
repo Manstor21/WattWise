@@ -17,8 +17,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * Extracts the {@code Authorization: Bearer <token>} header, validates the JWT
- * and, on success, populates the SecurityContext with the user's authorities.
+ * Extrae la cabecera {@code Authorization: Bearer <token>}, valida el JWT
+ * y, en caso de éxito, rellena el SecurityContext con las autoridades del usuario.
  */
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

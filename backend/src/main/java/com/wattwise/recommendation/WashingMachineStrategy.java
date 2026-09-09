@@ -4,9 +4,9 @@ import com.wattwise.model.enums.ApplianceType;
 import com.wattwise.model.enums.TrafficLight;
 
 /**
- * Strategy for washing machines. Preference (per methodology doc §4):
- * green 70%, amber 25%, red 5% — red slots are penalized (1.6×) but still
- * chosen when they are part of the genuinely cheapest window.
+ * Estrategia para lavadoras. Preferencia (según doc de metodología §4):
+ * verde 70 %, ámbar 25 %, rojo 5 % — los slots rojos se penalizan (1,6×) pero aun así
+ * se eligen cuando forman parte de la ventana genuinamente más barata.
  */
 public class WashingMachineStrategy extends AbstractApplianceStrategy {
 

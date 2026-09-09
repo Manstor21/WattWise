@@ -10,8 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * OpenAPI/Swagger documentation configuration. Adds the "bearerAuth" security
- * scheme so authenticated endpoints can be tried directly from Swagger UI.
+ * Configuración de la documentación OpenAPI/Swagger. Añade el esquema de seguridad
+ * "bearerAuth" para que los endpoints autenticados puedan probarse directamente
+ * desde Swagger UI.
  */
 @Configuration
 public class OpenApiConfig {

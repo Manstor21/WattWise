@@ -14,9 +14,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * CRUD for user-owned appliances. All operations are scoped to the authenticated
- * user; an appliance belonging to another user is treated as not found (no data
- * leakage).
+ * CRUD de electrodomésticos propiedad del usuario. Todas las operaciones están limitadas
+ * al usuario autenticado; un electrodoméstico de otro usuario se trata como inexistente
+ * (sin fugas de datos).
  */
 @Service
 public class ApplianceService {
@@ -68,14 +68,14 @@ public class ApplianceService {
     @Transactional
     public void delete(Long applianceId, Long userId) {
         Appliance appliance = getApplianceForUser(applianceId, userId);
-        // V1 uses ON DELETE NO ACTION for fk_alert_pref_appliance (SQL Server
-        // forbids multiple cascade paths), so drop affected alerts first.
+        // V1 usa ON DELETE NO ACTION para fk_alert_pref_appliance (SQL Server
+        // prohíbe múltiples rutas de cascade), así que primero se eliminan las alertas afectadas.
         alertPreferenceRepository.deleteByApplianceId(applianceId);
         applianceRepository.delete(appliance);
     }
 
     // ------------------------------------------------------------------
-    // DTO views (controllers never see entities)
+    // Vistas DTO (los controllers nunca ven entidades)
     // ------------------------------------------------------------------
 
     @Transactional(readOnly = true)
@@ -111,7 +111,7 @@ public class ApplianceService {
         return dto;
     }
 
-    /** Applies catalog defaults when the user omits consumption values. */
+    /** Aplica los valores por defecto del catálogo cuando el usuario omite los valores de consumo. */
     private void apply(ApplianceDto dto, Appliance appliance) {
         appliance.setName(dto.getName());
         appliance.setType(dto.getType());
@@ -128,9 +128,9 @@ public class ApplianceService {
     }
 
     /**
-     * Embedded catalog of typical consumption per appliance type (mirrors the
-     * V2__seed_catalog.sql values). Kept in Java so the dev profile (SQLite,
-     * no Flyway, ddl-auto=update) still gets sensible defaults.
+     * Catálogo embebido de consumo típico por tipo de electrodoméstico (espejo de los
+     * valores de V2__seed_catalog.sql). Se mantiene en Java para que el perfil dev
+     * (SQLite, sin Flyway, ddl-auto=update) siga recibiendo valores por defecto sensatos.
      */
     public static Integer catalogPowerWatts(ApplianceType type) {
         return switch (type) {

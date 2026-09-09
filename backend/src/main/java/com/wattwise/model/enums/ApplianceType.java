@@ -1,8 +1,8 @@
 package com.wattwise.model.enums;
 
 /**
- * Appliance types. There is a 1:1 relationship between an ApplianceType and a
- * RecommendationStrategy implementation (looked up via StrategyFactory).
+ * Tipos de electrodoméstico. Hay una relación 1:1 entre un ApplianceType y una
+ * implementación de RecommendationStrategy (buscada vía StrategyFactory).
  */
 public enum ApplianceType {
     WASHING_MACHINE,

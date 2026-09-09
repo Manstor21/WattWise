@@ -17,9 +17,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * User-facing alert preferences + triggering. Alert evaluation itself is
- * delegated to {@link AlertManager} (Observer pattern); this service maps user
- * preferences to the observers' context.
+ * Preferencias de alerta orientadas al usuario + disparo. La evaluación de alertas en sí
+ * se delega en {@link AlertManager} (patrón Observer); este service asigna las preferencias
+ * del usuario al contexto de los observers.
  */
 @Service
 public class AlertService {
@@ -65,9 +65,9 @@ public class AlertService {
     }
 
     /**
-     * Evaluate today's prices against the user's alert preferences and return
-     * the alerts that fired. Called by the scheduler after each price fetch and
-     * exposed for on-demand triggering.
+     * Evalúa los precios de hoy frente a las preferencias de alerta del usuario y devuelve
+     * las alertas disparadas. Lo llama el scheduler tras cada descarga de precios y
+     * también se expone para disparo bajo demanda.
      */
     @Transactional
     public List<String> checkForUser(Long userId) {
@@ -84,7 +84,7 @@ public class AlertService {
         return alertManager.checkAndNotify(context);
     }
 
-    /** Lazily create a default preference row so the profile endpoint never 404s. */
+    /** Crea perezosamente una fila de preferencias por defecto para que el endpoint de perfil nunca devuelva 404. */
     private AlertPreference getOrCreate(Long userId) {
         return alertPreferenceRepository.findByUserId(userId).orElseGet(() -> {
             AlertPreference pref = new AlertPreference();

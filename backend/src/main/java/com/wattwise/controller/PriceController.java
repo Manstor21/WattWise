@@ -14,9 +14,9 @@ import java.time.LocalDate;
 import java.util.List;
 
 /**
- * Price queries. Responds with classified (traffic-light) slots, always UTC
- * timestamps. Read access is public (see SecurityConfig rationale); writes of
- * price data are ADMIN-only.
+ * Consultas de precios. Responde con slots clasificados (semáforo), siempre con
+ * timestamps en UTC. El acceso de lectura es público (ver justificación en
+ * SecurityConfig); la escritura de datos de precio es solo ADMIN.
  */
 @RestController
 @RequestMapping("/api/prices")

@@ -1,8 +1,9 @@
 package com.wattwise.exception;
 
 /**
- * Standard error envelope returned by the API on any failure. Consistent shape
- * across all error scenarios so clients can parse errors uniformly.
+ * Envoltorio de error estándar que devuelve la API ante cualquier fallo. Forma
+ * consistente en todos los escenarios de error para que los clientes puedan
+ * parsear los errores de forma uniforme.
  */
 public class ApiError {
 

@@ -17,9 +17,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * A single price time slot (typically 15 minutes in the Spanish PVPC market,
- * 96 records/day). The table is global (not user-scoped): it represents the
- * day-ahead electricity price published by REE / ESIOS.
+ * Un único slot de precio (normalmente 15 minutos en el mercado PVPC español,
+ * 96 registros/día). La tabla es global (no está limitada por usuario): representa
+ * el precio de electricidad day-ahead publicado por REE / ESIOS.
  */
 @Entity
 @Table(
@@ -33,19 +33,19 @@ public class PriceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** Slot start time, UTC. Unique. */
+    /** Hora de inicio del slot, UTC. Única. */
     @Column(nullable = false)
     private LocalDateTime timestamp;
 
-    /** Net price (before taxes/peajes), EUR per kWh. */
+    /** Precio neto (antes de impuestos/peajes), EUR por kWh. */
     @Column(name = "price_eur_per_kwh", nullable = false, precision = 12, scale = 6)
     private BigDecimal priceEurPerKwh;
 
-    /** Taxes and peajes (tolls/surcharges), EUR per kWh. May be null. */
+    /** Impuestos y peajes, EUR por kWh. Puede ser null. */
     @Column(name = "plus_tax_eur_per_kwh", nullable = true, precision = 12, scale = 6)
     private BigDecimal plusTaxEurPerKwh;
 
-    /** Total price (net + tax), EUR per kWh. This is what end users pay. */
+    /** Precio total (neto + impuestos), EUR por kWh. Esto es lo que paga el usuario final. */
     @Column(name = "total_eur_per_kwh", nullable = false, precision = 12, scale = 6)
     private BigDecimal totalEurPerKwh;
 
@@ -53,7 +53,7 @@ public class PriceRecord {
     @Column(nullable = false, length = 10)
     private PriceSource source = PriceSource.ESIOS;
 
-    /** Derived LocalDate (UTC) for range queries. */
+    /** LocalDate derivado (UTC) para consultas por rango. */
     @Column(nullable = false)
     private LocalDate date;
 

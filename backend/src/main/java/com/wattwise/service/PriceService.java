@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * Price querying + ingestion. Owns the conversion from raw ESIOS EUR/MWh points
- * to persisted {@link PriceRecord}s and applies the traffic-light classification
- * before returning DTOs.
+ * Consulta e ingesta de precios. Posee la conversión de los puntos crudos de ESIOS
+ * (EUR/MWh) a {@link PriceRecord} persistidos y aplica la clasificación de semáforo
+ * antes de devolver los DTO.
  */
 @Service
 public class PriceService {
@@ -39,19 +39,19 @@ public class PriceService {
         this.classifier = classifier;
     }
 
-    /** Prices for the current Spanish day, classified. */
+    /** Precios del día español actual, clasificados. */
     @Transactional(readOnly = true)
     public List<PriceDto> getToday() {
         return getForSpainDate(LocalDate.now(PriceUtils.SPAIN_ZONE));
     }
 
-    /** Prices for tomorrow (empty if not yet published). */
+    /** Precios de mañana (vacíos si aún no se han publicado). */
     @Transactional(readOnly = true)
     public List<PriceDto> getTomorrow() {
         return getForSpainDate(LocalDate.now(PriceUtils.SPAIN_ZONE).plusDays(1));
     }
 
-    /** Prices within an inclusive [from, to] date range (Spanish dates). */
+    /** Precios dentro de un rango de fechas inclusivo [from, to] (fechas españolas). */
     @Transactional(readOnly = true)
     public List<PriceDto> getRange(LocalDate from, LocalDate to) {
         if (from == null || to == null) {
@@ -65,7 +65,7 @@ public class PriceService {
         return toDtos(priceRecordRepository.findByTimestampBetweenOrderByTimestampAsc(fromUtc, toUtc));
     }
 
-    /** Classified prices for a specific Spanish local date (grouping by Spanish date). */
+    /** Precios clasificados para una fecha local española concreta (agrupados por fecha española). */
     @Transactional(readOnly = true)
     public List<PriceDto> getForSpainDate(LocalDate spainDate) {
         LocalDateTime fromUtc = PriceUtils.toUtc(spainDate.atStartOfDay());
@@ -74,7 +74,7 @@ public class PriceService {
         return toDtos(records);
     }
 
-    /** Mean price (EUR/kWh) for the current Spanish day; 0 if none. Used by alert observers. */
+    /** Precio medio (EUR/kWh) del día español actual; 0 si no hay ninguno. Lo usan los observers de alertas. */
     @Transactional(readOnly = true)
     public BigDecimal getTodayMeanEurPerKwh() {
         List<PriceDto> today = getToday();
@@ -87,7 +87,7 @@ public class PriceService {
         return sum.divide(BigDecimal.valueOf(today.size()), 6, java.math.RoundingMode.HALF_UP);
     }
 
-    /** Upsert raw ESIOS points (EUR/MWh) into PriceRecords for a Spanish date. */
+    /** Hace upsert de puntos crudos de ESIOS (EUR/MWh) en PriceRecords para una fecha española. */
     @Transactional
     public List<PriceRecord> saveEsiosPoints(LocalDate spainDate, List<EsiosPricePoint> points) {
         AtomicInteger saved = new AtomicInteger();
@@ -101,7 +101,7 @@ public class PriceService {
             BigDecimal totalEurPerKwh = PriceUtils.eurPerMwhToEurPerKwh(point.valueEurPerMwh());
             PriceRecord record = new PriceRecord();
             record.setTimestamp(utc);
-            record.setPriceEurPerKwh(totalEurPerKwh); // approximated; ESIOS value incl. tolls
+            record.setPriceEurPerKwh(totalEurPerKwh); // aproximado; el valor ESIOS incluye peajes
             record.setPlusTaxEurPerKwh(null);
             record.setTotalEurPerKwh(totalEurPerKwh);
             record.setSource(PriceSource.ESIOS);
@@ -117,7 +117,7 @@ public class PriceService {
         if (records.isEmpty()) {
             return List.of();
         }
-        // Group by Spanish date so each day is classified independently.
+        // Se agrupa por fecha española para que cada día se clasifique de forma independiente.
         return records.stream()
                 .collect(java.util.stream.Collectors.groupingBy(r -> PriceUtils.spainDateOf(r.getTimestamp()),
                         java.util.stream.Collectors.toList()))

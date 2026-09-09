@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Personalized scheduling recommendations per appliance (JWT required).
+ * Recomendaciones de programación personalizadas por electrodoméstico (requiere JWT).
  */
 @RestController
 @RequestMapping("/api/recommendations")

@@ -1,18 +1,18 @@
 package com.wattwise.alert;
 
 /**
- * Observer contract: implementations evaluate a {@link PriceAlertContext} and
- * decide whether their alert condition is met. AlertManager broadcasts each
- * context to all registered observers (Observer pattern).
+ * Contrato de un observer: las implementaciones evalúan un {@link PriceAlertContext}
+ * y deciden si se cumple su condición de alerta. AlertManager difunde cada contexto
+ * a todos los observers registrados (patrón Observer).
  */
 public interface AlertObserver {
 
-    /** Stable identifier used in alert messages and logs. */
+    /** Identificador estable usado en los mensajes de alerta y en los logs. */
     String name();
 
-    /** Evaluate the context and return true when the alert should fire. */
+    /** Evalúa el contexto y devuelve true cuando la alerta debe dispararse. */
     boolean evaluate(PriceAlertContext context);
 
-    /** Human-readable description of the condition that fired. */
+    /** Descripción legible de la condición que se ha disparado. */
     String describe(PriceAlertContext context);
 }

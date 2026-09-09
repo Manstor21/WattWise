@@ -1,4 +1,4 @@
-# WattWise — prod profile: SQL Server
+# WattWise — perfil prod: SQL Server
 spring:
   datasource:
     url: ${DB_URL:jdbc:sqlserver://localhost:1433;databaseName=wattwise;encrypt=true;trustServerCertificate=true}
@@ -17,13 +17,13 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/migration
-    # No baseline: the compose SQL Server bootstrap creates an empty database,
-    # so Flyway must apply V1..Vn from scratch. A baseline with its default
-    # version (1) would mark V1 as already applied and skip the schema.
+    # Sin baseline: el bootstrap de SQL Server de compose crea una base de datos vacía,
+    # por lo que Flyway debe aplicar V1..Vn desde cero. Un baseline con su versión
+    # por defecto (1) marcaría V1 como ya aplicada y omitiría el esquema.
     baseline-on-migrate: false
 
-# Fail fast if JWT_SECRET is missing in production: an empty/weak secret
-# would let anyone forge tokens. JwtConfig validates >= 32 chars.
+# Falla rápido si falta JWT_SECRET en producción: un secreto vacío/débil
+# permitiría a cualquiera forjar tokens. JwtConfig valida que tenga >= 32 caracteres.
 wattwise:
   security:
     jwt-secret: ${JWT_SECRET:}

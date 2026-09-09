@@ -17,12 +17,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfigurationSource;
 
 /**
- * Stateless JWT security configuration.
+ * Configuración de seguridad JWT sin estado.
  *
- * <p><b>Decision (documented):</b> {@code /api/prices/**} is left <b>public</b> for
- * the demo profile — PVPC prices are a public dataset and the web dashboard renders the
- * price grid before a user logs in. Production can restrict it by un-commenting the
- * protected rule below. All user-scoped endpoints require a valid JWT.
+ * <p><b>Decisión (documentada):</b> {@code /api/prices/**} se deja <b>público</b> para el
+ * perfil de demostración: los precios PVPC son un dataset público y el panel web renderiza
+ * la parrilla de precios antes de que el usuario inicie sesión. Producción puede restringirlo
+ * quitando el comentario de la regla protegida inferior. Todos los endpoints con ámbito de
+ * usuario requieren un JWT válido.
  */
 @Configuration
 @EnableWebSecurity
@@ -49,7 +50,7 @@ public class SecurityConfig {
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 .requestMatchers("/actuator/**", "/api/health").permitAll()
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                // Public prices (see class Javadoc for rationale).
+                // Precios públicos (ver justificación en el Javadoc de la clase).
                 .requestMatchers(HttpMethod.GET, "/api/prices/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/prices/**").hasRole("ADMIN")
                 .anyRequest().authenticated())

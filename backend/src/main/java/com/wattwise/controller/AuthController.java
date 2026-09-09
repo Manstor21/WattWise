@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Public authentication endpoints. Returns a JWT on success.
+ * Endpoints públicos de autenticación. Devuelven un JWT en caso de éxito.
  */
 @RestController
 @RequestMapping("/api/auth")

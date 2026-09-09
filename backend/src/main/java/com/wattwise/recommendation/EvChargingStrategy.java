@@ -4,10 +4,10 @@ import com.wattwise.model.enums.ApplianceType;
 import com.wattwise.model.enums.TrafficLight;
 
 /**
- * Strategy for EV chargers — the most price-sensitive appliance
- * (green 80% / amber 20% / red 0%). Red slots are almost never chosen because
- * the charging window is highly flexible and the cost impact is the largest of
- * any appliance type.
+ * Estrategia para cargadores de VE, el electrodoméstico más sensible al precio
+ * (verde 80 % / ámbar 20 % / rojo 0 %). Los slots rojos casi nunca se eligen porque
+ * la ventana de carga es muy flexible y el impacto en coste es el mayor de todos
+ * los tipos de electrodoméstico.
  */
 public class EvChargingStrategy extends AbstractApplianceStrategy {
 

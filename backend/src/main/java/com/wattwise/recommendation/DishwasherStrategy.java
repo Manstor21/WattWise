@@ -4,8 +4,8 @@ import com.wattwise.model.enums.ApplianceType;
 import com.wattwise.model.enums.TrafficLight;
 
 /**
- * Strategy for dishwashers. Like the washing machine (green 70% / amber 25% /
- * red 5%): strong preference for green, red only if nothing better exists.
+ * Estrategia para lavavajillas. Igual que la lavadora (verde 70 % / ámbar 25 % /
+ * rojo 5 %): fuerte preferencia por el verde, rojo solo si no existe nada mejor.
  */
 public class DishwasherStrategy extends AbstractApplianceStrategy {
 

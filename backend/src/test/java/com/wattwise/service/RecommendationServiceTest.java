@@ -24,8 +24,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
- * Service-level test: mocks PriceService (the "strategy mocks PriceService"
- * requirement) and exercises the real StrategyFactory + strategies end-to-end.
+ * Test a nivel de servicio: mockea PriceService (el requisito de "la estrategia
+ * mockea PriceService") y ejercita la StrategyFactory real + las estrategias de extremo a extremo.
  */
 @ExtendWith(MockitoExtension.class)
 class RecommendationServiceTest {
@@ -69,7 +69,7 @@ class RecommendationServiceTest {
 
         assertThat(recs).hasSize(1);
         RecommendationDto rec = recs.get(0);
-        // Cheapest 4-slot window: slots 1..4 (0.10+0.10+0.10+0.12).
+        // Ventana de 4 slots más barata: slots 1..4 (0.10+0.10+0.10+0.12).
         assertThat(rec.getRecommendedStart()).isEqualTo(price(1, 0, TrafficLight.GREEN).getTimestamp());
         assertThat(rec.getAppliance().getId()).isEqualTo(1L);
     }

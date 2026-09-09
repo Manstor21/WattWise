@@ -28,9 +28,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Real implementation of {@link EsiosClientService} using RestTemplate.
+ * Implementación real de {@link EsiosClientService} usando RestTemplate.
  *
- * <p>Parses the ESIOS response shape:
+ * <p>Parsea la forma de la respuesta de ESIOS:
  * <pre>
  * {
  *   "data": {
@@ -41,9 +41,9 @@ import java.util.Map;
  * }
  * </pre>
  *
- * <p>When several {@code included} components are present, the component with the
- * most non-null values is selected (the least noisy one). Values are EUR/MWh and
- * are kept raw here; conversion to EUR/kWh happens in {@link PriceService}.
+ * <p>Cuando hay varios componentes {@code included}, se selecciona el que tiene más valores
+ * no nulos (el menos ruidoso). Los valores son EUR/MWh y se mantienen crudos aquí;
+ * la conversión a EUR/kWh ocurre en {@link PriceService}.
  */
 @Service
 public class EsiosClientServiceImpl implements EsiosClientService {
@@ -93,7 +93,7 @@ public class EsiosClientServiceImpl implements EsiosClientService {
         }
     }
 
-    /** Robust parser: selects the most complete included component and merges by datetime. */
+    /** Parser robusto: selecciona el componente included más completo y fusiona por datetime. */
     List<EsiosPricePoint> parse(String json, LocalDate date) {
         try {
             JsonNode root = objectMapper.readTree(json);
@@ -109,8 +109,8 @@ public class EsiosClientServiceImpl implements EsiosClientService {
                     if (!v.hasNonNull("value") || !v.hasNonNull("datetime")) {
                         continue;
                     }
-                    // Filter on the offset datetime's LOCAL date (Spain wall-clock) so
-                    // 00:00-07:00 morning slots are not dropped when normalized to UTC.
+                    // Filtra por la fecha LOCAL del datetime con offset (reloj de España) para
+                    // no descartar los slots de la mañana 00:00-07:00 al normalizarlos a UTC.
                     java.time.OffsetDateTime odt = parseDatetime(v.path("datetime").asText());
                     if (odt != null && odt.toLocalDate().equals(date)) {
                         LocalDateTime utc = odt.atZoneSameInstant(ZoneOffset.UTC).toLocalDateTime();
@@ -127,8 +127,8 @@ public class EsiosClientServiceImpl implements EsiosClientService {
                 throw new ExternalApiException("ESIOS returned no parsable price data for " + date);
             }
 
-            // Prefer the component titled like the aggregate PVPC price; fallback to the
-            // component with the most data points.
+            // Prefiere el componente cuyo título corresponde al precio agregado PVPC; si no,
+            // el componente con más puntos de datos.
             Component best = components.stream()
                     .max(Comparator.comparingLong((Component c) -> partsScore(c.title))
                             .thenComparingLong(c -> c.nonNull))
@@ -149,7 +149,7 @@ public class EsiosClientServiceImpl implements EsiosClientService {
         }
     }
 
-    /** Simple title scoring: prefer titles mentioning the PVPC aggregate. */
+    /** Puntuación simple del título: prefiere títulos que mencionan el agregado PVPC. */
     private static int partsScore(String title) {
         String t = title.toLowerCase();
         int score = 0;

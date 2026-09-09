@@ -16,25 +16,27 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Shared window-search logic for all strategies.
+ * Lógica compartida de búsqueda de ventanas para todas las estrategias.
  *
- * <p>The search enumerates every contiguous window of the required length and ranks
- * them by a <em>weighted</em> cost: the real price of each slot multiplied by a color
- * penalty. The penalty encodes the strategy's green/amber/red preferences from
- * {@code docs/architecture/traffic-light-methodology.md} (e.g. an EV charger strongly
- * avoids red slots while an AC accepts them). The cheapest real-price window becomes
- * the worst-case baseline for the savings estimate.
+ * <p>La búsqueda enumera cada ventana contigua de la longitud requerida y las ordena
+ * por un coste <em>ponderado</em>: el precio real de cada slot multiplicado por una
+ * penalización de color. La penalización codifica las preferencias verde/ámbar/rojo de
+ * la estrategia según {@code docs/architecture/traffic-light-methodology.md} (p. ej. un
+ * cargador de VE evita con fuerza los slots rojos mientras que un AC los acepta). La
+ * ventana de precio real más barata se convierte en la línea base del peor caso para la
+ * estimación del ahorro.
  *
- * <p>The energy model: one cycle consumes {@code avgCycleKwh} spread evenly over the
- * window slots, so the run cost is {@code avgWindowPrice × cycleKwh}.
+ * <p>El modelo energético: un ciclo consume {@code avgCycleKwh} repartido uniformemente
+ * entre los slots de la ventana, por lo que el coste de la ejecución es
+ * {@code avgWindowPrice × cycleKwh}.
  */
 public abstract class AbstractApplianceStrategy implements RecommendationStrategy {
 
     static final int SLOT_MINUTES = 15;
 
     /**
-     * Multiplier applied to a slot's price based on its traffic-light color.
-     * Higher = stronger avoidance. GREEN slots always rank below AMBER below RED.
+     * Multiplicador aplicado al precio de un slot según su color de semáforo.
+     * Mayor = mayor evitación. Los slots GREEN siempre se ordenan antes que AMBER y RED.
      */
     protected abstract double penalty(TrafficLight color);
 
@@ -91,7 +93,7 @@ public abstract class AbstractApplianceStrategy implements RecommendationStrateg
         return Optional.of(dto);
     }
 
-    /** Rank a window: weighted cost (color penalties) + real cost + cost for savings. */
+    /** Ordena una ventana: coste ponderado (penalizaciones de color) + coste real + coste para el ahorro. */
     private Window evaluate(List<PriceDto> window, BigDecimal cycleKwh) {
         BigDecimal weightedSum = BigDecimal.ZERO;
         BigDecimal realSum = BigDecimal.ZERO;
@@ -105,7 +107,7 @@ public abstract class AbstractApplianceStrategy implements RecommendationStrateg
         return new Window(window, weightedSum, realSum, cost);
     }
 
-    /** Dominant color in the window; ties resolve to the most favorable (GREEN). */
+    /** Color dominante en la ventana; los empates se resuelven hacia el más favorable (GREEN). */
     private TrafficLight dominantColor(List<PriceDto> window) {
         int greens = 0;
         int ambers = 0;

@@ -72,7 +72,7 @@ class ApplianceServiceTest {
 
         assertThat(saved.getId()).isEqualTo(10L);
         assertThat(saved.getUser().getId()).isEqualTo(5L);
-        // Catalog defaults from V2 seed:
+        // Valores por defecto del catálogo de la semilla V2:
         assertThat(saved.getPowerWatts()).isEqualTo(2000);
         assertThat(saved.getAvgCycleKwh()).isEqualByComparingTo("1.000");
         assertThat(saved.getEstimatedCycleMinutes()).isEqualTo(120);
@@ -103,7 +103,7 @@ class ApplianceServiceTest {
         Appliance found = applianceService.getApplianceForUser(1L, 5L);
         assertThat(found.getId()).isEqualTo(1L);
 
-        // Same appliance, different owner → treated as not found.
+        // Mismo electrodoméstico, distinto propietario → se trata como no encontrado.
         assertThatThrownBy(() -> applianceService.getApplianceForUser(1L, 99L))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
@@ -120,7 +120,7 @@ class ApplianceServiceTest {
         Appliance result = applianceService.update(1L, 5L, update);
 
         assertThat(result.getName()).isEqualTo("Lavadora Bosch");
-        assertThat(result.getPowerWatts()).isEqualTo(2000); // untouched
+        assertThat(result.getPowerWatts()).isEqualTo(2000); // sin cambios
     }
 
     @Test

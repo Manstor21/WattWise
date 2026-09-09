@@ -11,6 +11,6 @@ public interface AlertPreferenceRepository extends JpaRepository<AlertPreference
 
     boolean existsByUserId(Long userId);
 
-    /** Removes alert preferences pointing at an appliance (used before appliance deletion; see V1 FK NO ACTION). */
+    /** Elimina las preferencias de alerta que apuntan a un electrodoméstico (usado antes del borrado de electrodomésticos; ver FK NO ACTION en V1). */
     void deleteByApplianceId(Long applianceId);
 }
