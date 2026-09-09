@@ -71,7 +71,7 @@ credentials*.json
 *.sqlite3
 logs/
 data/
-# Android data layer is a Java package, not local app data — re-include it
+# La capa de datos de Android es un paquete Java, no datos locales de la app — se re-incluye
 !android/app/src/main/java/com/wattwise/android/data/
 !android/app/src/main/java/com/wattwise/android/data/**
 !android/app/src/test/java/com/wattwise/android/data/
