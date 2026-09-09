@@ -1,10 +1,11 @@
-"""SQLAlchemy read-only model for the price_records table.
+"""Modelo SQLAlchemy de solo lectura para la tabla price_records.
 
-Uses SQLAlchemy 2.x declarative style with Mapped annotations.
-The table is owned by the Spring Boot backend (Flyway V1__init.sql); this
-service reads only. The table name and columns must match the backend schema
-exactly — SQL Server resolves object names according to the database
-collation, so a PRICE_RECORD mapping fails against Flyway's price_records.
+Usa el estilo declarativo de SQLAlchemy 2.x (anotaciones ``Mapped``).
+La tabla pertenece al backend Spring Boot (Flyway V1__init.sql); este
+servicio solo realiza lecturas. El nombre de la tabla y las columnas deben
+coincidir exactamente con el esquema del backend — SQL Server resuelve los
+nombres de los objetos según la collation de la base de datos, por lo que un
+mapeo PRICE_RECORD falla frente a price_records de Flyway.
 """
 
 from datetime import datetime
@@ -19,13 +20,14 @@ class Base(DeclarativeBase):
 
 
 class PriceRecord(Base):
-    """Read-only mapping to the price_records table."""
+    """Mapeo de solo lectura a la tabla price_records."""
 
     __tablename__ = "price_records"
 
     id: Mapped[int] = mapped_column(
-        # INTEGER on SQLite (rowid alias so AUTOINCREMENT works in tests/dev),
-        # BIGINT on SQL Server (production schema owned by the backend).
+        # INTEGER en SQLite (alias de rowid para que AUTOINCREMENT funcione en
+        # pruebas/desarrollo),
+        # BIGINT en SQL Server (esquema de producción gestionado por el backend).
         BigInteger().with_variant(Integer, "sqlite"),
         primary_key=True,
         autoincrement=True,

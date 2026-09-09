@@ -1,4 +1,4 @@
-"""Analytics API endpoints."""
+"""Endpoints de la API de analítica."""
 
 from flask import Blueprint, jsonify, request, current_app
 from sqlalchemy import text
@@ -12,7 +12,7 @@ analytics_bp = Blueprint("analytics", __name__, url_prefix="/api/analytics")
 
 
 def _get_session():
-    """Extract a SQLAlchemy session from the current app context."""
+    """Obtiene una sesión SQLAlchemy del contexto actual de la app."""
     db = current_app.extensions["sqlalchemy"]
     return db.session
 

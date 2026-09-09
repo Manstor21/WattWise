@@ -1,4 +1,4 @@
-"""Weekday averages and rolling statistics for electricity prices."""
+"""Promedios por día de la semana y estadísticas móviles de precios de la electricidad."""
 
 from typing import Any
 
@@ -18,10 +18,11 @@ from app.utils.time_utils import (
 def get_weekday_averages(
     session: Session, days: int = 30
 ) -> dict[str, Any]:
-    """Compute price statistics grouped by weekday over the last N days.
+    """Calcula estadísticas de precios agrupadas por día de la semana en los últimos N días.
 
-    Returns a dict with ``days`` count and ``averages`` list ordered Monday→Sunday.
-    Only weekdays that have at least one data point are included.
+    Devuelve un dict con el recuento de ``days`` y una lista ``averages`` ordenada
+    de lunes a domingo. Solo se incluyen los días de la semana que tienen al menos
+    un dato.
     """
     from datetime import datetime, timezone, timedelta
 
@@ -32,7 +33,7 @@ def get_weekday_averages(
     if not rows:
         return {"days": days, "averages": []}
 
-    # Build a DataFrame
+    # Construir un DataFrame
     records = []
     for r in rows:
         madrid_dt = utc_to_madrid(r.timestamp)
@@ -66,9 +67,10 @@ def get_weekday_averages(
 def get_rolling_stats(
     session: Session, window: int = 7
 ) -> list[dict[str, Any]]:
-    """Return daily mean prices with a rolling average over *window* days.
+    """Devuelve los precios medios diarios con una media móvil sobre *window* días.
 
-    Useful for trend visualisation. Returns list sorted by date ascending.
+    Útil para la visualización de la tendencia. Devuelve una lista ordenada por
+    fecha ascendente.
     """
     from datetime import datetime, timezone, timedelta
 

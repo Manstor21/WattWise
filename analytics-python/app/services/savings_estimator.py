@@ -1,14 +1,14 @@
-"""Savings estimation service.
+"""Servicio de estimación del ahorro.
 
-Provides monthly savings projections based on a *typical Spanish household*
-consumption profile.  The model is intentionally simple and transparent —
-all assumptions are documented in the ``assumptions`` list returned with
-every response.
+Proporciona proyecciones mensuales de ahorro basadas en un perfil de consumo
+de un *hogar español típico*. El modelo es deliberadamente simple y
+transparente: todos los supuestos se documentan en la lista ``assumptions``
+que se incluye en cada respuesta.
 
-**Important:** ``userId`` is accepted as a query parameter for API
-compatibility but is NOT validated against any user database (this
-microservice has none).  A future version could look up per-user
-consumption profiles.
+**Importante:** ``userId`` se acepta como parámetro de consulta para la
+compatibilidad de la API, pero NO se valida contra ninguna base de datos de
+usuarios (este microservicio no tiene ninguna). Una versión futura podría
+consultar perfiles de consumo por usuario.
 """
 
 from typing import Any
@@ -21,20 +21,20 @@ from app.models.price_record import PriceRecord
 from app.utils.time_utils import utc_to_madrid
 
 # ---------------------------------------------------------------------------
-# Assumed consumption profile (typical Spanish household, PVPC contracted)
-# All values are in kWh.
+# Perfil de consumo asumido (hogar español típico, tarifa PVPC)
+# Todos los valores están en kWh.
 # ---------------------------------------------------------------------------
-DAILY_BASE_CONSUMPTION_KWH = 6.0  # fridge, standby, lighting, etc.
-LAUNDRY_KWH = 0.8  # single cycle
-LAUNDRY_FREQ_PER_WEEK = 3  # 3 loads/week
+DAILY_BASE_CONSUMPTION_KWH = 6.0  # nevera, standby, iluminación, etc.
+LAUNDRY_KWH = 0.8  # un solo ciclo
+LAUNDRY_FREQ_PER_WEEK = 3  # 3 lavados/semana
 DISHWASHER_KWH = 1.2
 DISHWASHER_FREQ_PER_WEEK = 4
-EV_CHARGING_KWH = 10.0  # small EV / PHEV overnight charge
+EV_CHARGING_KWH = 10.0  # carga nocturna de un VE pequeño / PHEV
 EV_FREQ_PER_WEEK = 5
 
-# Flexible loads are the ones a user could shift to cheaper hours.
-# The model assumes the user shifts ALL flexible load to the cheapest
-# quartile of hours within each day.
+# Las cargas flexibles son las que un usuario podría desplazar a horas más
+# baratas. El modelo asume que el usuario desplaza TODA su carga flexible al
+# cuartil más barato de horas dentro de cada día.
 FLEXIBLE_LOADS: dict[str, dict[str, float]] = {
     "laundry": {"kwh_per_use": LAUNDRY_KWH, "uses_per_week": LAUNDRY_FREQ_PER_WEEK},
     "dishwasher": {
@@ -67,14 +67,14 @@ def estimate_savings(
     user_id: int | None = None,
     period_days: int = 30,
 ) -> dict[str, Any]:
-    """Estimate monthly savings from load-shifting flexible consumption.
+    """Estima el ahorro mensual por desplazar el consumo flexible a horas más baratas.
 
-    Algorithm:
-    1. Fetch all price records for the last *period_days*.
-    2. Group by Madrid-local date.
-    3. For each day compute the mean price and the 25th-percentile price.
-    4. Savings_per_day = flexible_kwh * (mean_price - p25_price).
-    5. Aggregate across the period.
+    Algoritmo:
+    1. Obtener todos los registros de precios de los últimos *period_days*.
+    2. Agrupar por fecha local de Madrid.
+    3. Para cada día, calcular el precio medio y el precio del percentil 25.
+    4. Ahorro_por_día = flexible_kwh * (precio_medio - precio_p25).
+    5. Agregar a lo largo del periodo.
     """
     from datetime import datetime, timezone, timedelta
 
@@ -97,7 +97,7 @@ def estimate_savings(
             "assumptions": ASSUMPTIONS,
         }
 
-    # Build DataFrame with Madrid-local hour
+    # Construir el DataFrame con la hora local de Madrid
     records = []
     for r in rows:
         madrid_dt = utc_to_madrid(r.timestamp)
@@ -111,12 +111,12 @@ def estimate_savings(
 
     df = pd.DataFrame(records)
 
-    # Hourly stats across the whole period (for best/worst hour)
+    # Estadísticas por hora de todo el periodo (para mejor/peor hora)
     hourly_avg = df.groupby("hour")["price"].mean()
     best_hour = int(hourly_avg.idxmin())
     worst_hour = int(hourly_avg.idxmax())
 
-    # Per-day savings
+    # Ahorro por día
     savings_per_day: list[float] = []
     breakdown_items: list[dict[str, Any]] = []
 
@@ -137,7 +137,7 @@ def estimate_savings(
 
     total_savings = round(sum(savings_per_day), 4)
 
-    # Build per-type breakdown
+    # Construir el desglose por tipo de carga
     type_breakdown: list[dict[str, Any]] = []
     for name, spec in FLEXIBLE_LOADS.items():
         daily_kwh = spec["kwh_per_use"] * spec["uses_per_week"] / 7

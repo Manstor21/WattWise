@@ -1,4 +1,4 @@
-"""Tests for REST API endpoints via Flask test client."""
+"""Tests de los endpoints de la API REST mediante el cliente de pruebas Flask."""
 
 import json
 
@@ -6,7 +6,7 @@ import pytest
 
 
 class TestHealthEndpoints:
-    """Liveness and readiness probes."""
+    """Sondas de liveness y readiness."""
 
     def test_health(self, client):
         resp = client.get("/health")
@@ -50,7 +50,7 @@ class TestWeekdayAveragesAPI:
         resp = client.get("/api/analytics/weekday-averages")
         assert resp.status_code == 200
         data = resp.get_json()
-        assert data["days"] == 30  # default from config
+        assert data["days"] == 30  # valor por defecto de la configuración
 
 
 class TestSavingsEstimateAPI:
@@ -116,8 +116,8 @@ class TestAnomaliesAPI:
     def test_anomaly_detected(self, client, synthetic_prices):
         resp = client.get("/api/analytics/anomalies")
         data = resp.get_json()
-        # Our synthetic data has one spike at raw 0.50 €/kWh; anomalies report
-        # total_eur_per_kwh (price + 21% IVA) = 0.50 * 1.21 = 0.605.
+        # Los datos sintéticos tienen un pico bruto de 0.50 €/kWh; el reporte de anomalías
+        # usa total_eur_per_kwh (precio + 21% IVA) = 0.50 * 1.21 = 0.605.
         assert data["count"] >= 1
         assert any(
             a["priceEurPerKwh"] == pytest.approx(0.605, abs=1e-6)
@@ -127,7 +127,7 @@ class TestAnomaliesAPI:
     def test_custom_threshold(self, client, synthetic_prices):
         resp = client.get("/api/analytics/anomalies?threshold=5.0")
         data = resp.get_json()
-        # With z > 5, the spike might not be caught
+        # Con z > 5, es posible que el pico no se detecte
         assert data["thresholdZ"] == 5.0
 
     def test_empty(self, client):
@@ -152,7 +152,7 @@ class TestMetricsEndpoint:
 
 
 class TestErrorFormat:
-    """Verify JSON error response shape."""
+    """Verifica la forma de las respuestas de error JSON."""
 
     def test_error_shape(self, client):
         resp = client.get("/api/analytics/weekday-averages?days=abc")

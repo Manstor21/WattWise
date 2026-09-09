@@ -1,4 +1,4 @@
-"""Shared test fixtures — in-memory SQLite with synthetic price data."""
+"""Fixtures de test compartidos — SQLite en memoria con datos sintéticos de precios."""
 
 import numpy as np
 import pytest
@@ -13,10 +13,10 @@ from sqlalchemy.orm import sessionmaker
 
 @pytest.fixture()
 def app():
-    """Create a test Flask app backed by in-memory SQLite."""
+    """Crea una app Flask de prueba respaldada por SQLite en memoria."""
     application = create_app("testing")
 
-    # Override the DB engine so routes hit the same in-memory DB
+    # Sobrescribir el engine de la BD para que las rutas usen la misma BD en memoria
     from sqlalchemy.pool import StaticPool
 
     engine = create_engine(
@@ -27,7 +27,7 @@ def app():
     Base.metadata.create_all(bind=engine)
     TestSession = sessionmaker(bind=engine)
 
-    # Monkey-patch the proxy so all routes use our test session
+    # Monkey-patch del proxy para que todas las rutas usen nuestra sesión de test
     from unittest.mock import MagicMock
 
     mock_proxy = MagicMock()
@@ -40,34 +40,34 @@ def app():
 
 @pytest.fixture()
 def client(app):
-    """Flask test client."""
+    """Cliente de pruebas Flask."""
     return app.test_client()
 
 
 @pytest.fixture()
 def db_session(app):
-    """SQLAlchemy session for direct DB manipulation in tests."""
+    """Sesión SQLAlchemy para manipulación directa de la BD en tests."""
     return app.extensions["sqlalchemy"].session
 
 
 @pytest.fixture(autouse=True)
 def _clean_db(db_session):
-    """Roll back and clean between tests."""
+    """Realiza rollback y limpieza entre tests."""
     yield
     db_session.rollback()
-    # Delete all rows to keep in-memory DB clean
+    # Eliminar todas las filas para mantener la BD en memoria limpia
     db_session.query(PriceRecord).delete()
     db_session.commit()
 
 
 @pytest.fixture()
 def synthetic_prices(db_session):
-    """Insert 30 days of deterministic synthetic PVPC-style price data.
+    """Inserta 30 días de datos sintéticos deterministas de estilo PVPC.
 
-    - Mean ~0.12 €/kWh with realistic daily pattern (cheap at night, expensive
-      at peak hours 13-21).
-    - One clear anomaly on day 15 at hour 18 (price spikes to 0.50).
-    - Seed 42 for reproducibility.
+    - Media ~0.12 €/kWh con patrón diario realista (barato de noche, caro en
+      horas pico 13-21).
+    - Una anomalía clara en el día 15 a las 18h (el precio sube a 0.50).
+    - Semilla 42 para reproducibilidad.
     """
     rng = np.random.RandomState(42)
 
@@ -78,7 +78,7 @@ def synthetic_prices(db_session):
         for half_hour in range(48):
             ts = base_date + timedelta(days=day, minutes=30 * half_hour)
 
-            # Simulate PVPC curve: cheap overnight, expensive peak 13-21
+            # Simular la curva PVPC: barato durante la noche, caro en horas pico 13-21
             hour = half_hour // 2
             if 0 <= hour < 7:
                 base = 0.06
@@ -94,11 +94,11 @@ def synthetic_prices(db_session):
             noise = rng.normal(0, 0.005)
             price = round(max(0.0, base + noise), 6)
 
-            # Inject anomaly on day 15, slot 36 (hour 18)
+            # Inyectar anomalía en el día 15, slot 36 (hora 18)
             if day == 15 and half_hour == 36:
                 price = 0.50
 
-            tax = round(price * 0.21, 6)  # 21% IVA-like
+            tax = round(price * 0.21, 6)  # 21% tipo IVA
             total = round(price + tax, 6)
 
             records.append(

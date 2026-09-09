@@ -1,4 +1,4 @@
-"""Health-check and readiness probes."""
+"""Sondas de health-check y de readiness."""
 
 from flask import Blueprint, jsonify, current_app
 from sqlalchemy import text
@@ -8,13 +8,13 @@ health_bp = Blueprint("health", __name__)
 
 @health_bp.route("/health")
 def liveness():
-    """Liveness probe — always returns OK if the process is up."""
+    """Sonda de liveness — devuelve OK siempre que el proceso esté activo."""
     return jsonify({"status": "ok"})
 
 
 @health_bp.route("/ready")
 def readiness():
-    """Readiness probe — verifies database connectivity."""
+    """Sonda de readiness — verifica la conectividad con la base de datos."""
     try:
         db = current_app.extensions["sqlalchemy"]
         db.session.execute(text("SELECT 1"))

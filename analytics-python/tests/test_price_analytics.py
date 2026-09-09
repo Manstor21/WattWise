@@ -1,10 +1,10 @@
-"""Tests for weekday averages and rolling stats."""
+"""Tests de promedios por día de la semana y estadísticas móviles."""
 
 from app.services.price_analytics import get_weekday_averages, get_rolling_stats
 
 
 class TestWeekdayAverages:
-    """Verify weekday average computation on synthetic data."""
+    """Verifica el cálculo de promedios por día de la semana con datos sintéticos."""
 
     def test_returns_7_days(self, db_session, synthetic_prices):
         result = get_weekday_averages(db_session, days=30)
@@ -46,7 +46,7 @@ class TestWeekdayAverages:
 
 
 class TestRollingStats:
-    """Verify rolling statistics computation."""
+    """Verifica el cálculo de estadísticas móviles."""
 
     def test_rolling_returns_list(self, db_session, synthetic_prices):
         result = get_rolling_stats(db_session, window=7)

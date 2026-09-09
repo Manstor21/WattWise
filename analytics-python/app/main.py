@@ -1,4 +1,4 @@
-"""Flask application factory."""
+"""Fábrica de la aplicación Flask."""
 
 import time as _time
 
@@ -26,13 +26,13 @@ REQUEST_LATENCY = Histogram(
 
 
 def create_app(config_name: str | None = None) -> Flask:
-    """Create and configure the Flask application.
+    """Crea y configura la aplicación Flask.
 
-    Parameters
+    Parámetros
     ----------
-    config_name : str, optional
-        One of ``development``, ``testing``, ``production``.
-        Defaults to the ``FLASK_ENV`` env var or ``development``.
+    config_name : str, opcional
+        Uno de ``development``, ``testing``, ``production``.
+        Por defecto toma la variable de entorno ``FLASK_ENV`` o ``development``.
     """
     import os
 
@@ -42,7 +42,7 @@ def create_app(config_name: str | None = None) -> Flask:
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
 
-    # --- Database setup ---
+    # --- Configuración de la base de datos ---
     engine = create_engine(
         app.config["DATABASE_URL"],
         echo=False,
@@ -51,20 +51,20 @@ def create_app(config_name: str | None = None) -> Flask:
     session_factory = sessionmaker(bind=engine)
     db_session = scoped_session(session_factory)
 
-    # Store engine/session on app for use in routes
+    # Guardar el engine/session en la app para usarlos en las rutas
     app.extensions["sqlalchemy"] = type(
         "SQLAlchemyProxy", (), {"session": db_session, "engine": engine}
     )()
 
-    # Create the local SQLite schema for development/testing only. In
-    # production the schema is owned by the Spring backend via Flyway
-    # (V1__init.sql creates price_records); creating PRICE_RECORD here would
-    # race with Flyway and make the backend refuse to migrate ("non-empty
+    # Crear el esquema local de SQLite solo para desarrollo/pruebas. En
+    # producción el esquema lo gestiona el backend de Spring mediante Flyway
+    # (V1__init.sql crea price_records); crear PRICE_RECORD aquí competiría
+    # con Flyway y haría que el backend rechazara la migración ("non-empty
     # schema, no history table").
     if config_name != "production":
         Base.metadata.create_all(bind=engine)
 
-    # --- Prometheus metrics middleware ---
+    # --- Middleware de métricas Prometheus ---
     @app.before_request
     def _start_timer():
         request._prom_start = _time.perf_counter()
@@ -87,12 +87,12 @@ def create_app(config_name: str | None = None) -> Flask:
     def _shutdown_session(exc=None):
         db_session.remove()
 
-    # --- /metrics endpoint ---
+    # --- Endpoint /metrics ---
     @app.route("/metrics")
     def metrics():
         return generate_latest(), 200, {"Content-Type": CONTENT_TYPE_LATEST}
 
-    # --- Register blueprints ---
+    # --- Registrar blueprints ---
     from app.routes.health import health_bp
     from app.routes.analytics import analytics_bp
 

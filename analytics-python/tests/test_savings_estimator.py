@@ -1,10 +1,10 @@
-"""Tests for savings estimation."""
+"""Tests de estimación del ahorro."""
 
 from app.services.savings_estimator import estimate_savings, ASSUMPTIONS
 
 
 class TestSavingsEstimate:
-    """Verify savings estimation on synthetic data."""
+    """Verifica la estimación del ahorro con datos sintéticos."""
 
     def test_returns_expected_keys(self, db_session, synthetic_prices):
         result = estimate_savings(db_session, user_id=1)
@@ -18,12 +18,12 @@ class TestSavingsEstimate:
 
     def test_savings_are_non_negative(self, db_session, synthetic_prices):
         result = estimate_savings(db_session, user_id=1)
-        # Savings should be >= 0 because shifting to cheaper hours always helps
+        # El ahorro debería ser >= 0 porque desplazar a horas más baratas siempre ayuda
         assert result["totalSavingsEur"] >= 0
 
     def test_best_hour_is_cheap(self, db_session, synthetic_prices):
         result = estimate_savings(db_session, user_id=1)
-        # Best hour should be in the overnight range (0-6)
+        # La mejor hora debería estar en el rango nocturno (0-6)
         assert result["bestHour"] is not None
         assert 0 <= result["bestHour"] <= 23
 

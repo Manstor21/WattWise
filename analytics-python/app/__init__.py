@@ -1,1 +1,1 @@
-"""WattWise Analytics Python microservice."""
+"""Microservicio Python de analítica de WattWise."""

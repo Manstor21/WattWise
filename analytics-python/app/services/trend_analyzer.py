@@ -1,4 +1,4 @@
-"""Trend analysis and anomaly detection for electricity prices."""
+"""Análisis de tendencia y detección de anomalías en los precios de la electricidad."""
 
 from typing import Any
 
@@ -12,10 +12,10 @@ from app.utils.time_utils import utc_to_madrid
 
 
 def get_trend(session: Session, period_days: int = 30) -> dict[str, Any]:
-    """Compute a simple linear-regression trend over daily average prices.
+    """Calcula una tendencia de regresión lineal simple sobre los precios medios diarios.
 
-    Returns slope (€/kWh per day), direction, percentage change, and a
-    human-readable short label.
+    Devuelve la pendiente (€/kWh por día), la dirección, el cambio porcentual y
+    una etiqueta corta legible para humanos.
     """
     from datetime import datetime, timezone, timedelta
 
@@ -60,7 +60,7 @@ def get_trend(session: Session, period_days: int = 30) -> dict[str, Any]:
     x = np.arange(len(daily), dtype=float)
     y = daily["price"].values.astype(float)
 
-    # Linear regression: y = slope * x + intercept
+    # Regresión lineal: y = pendiente * x + intersección
     coeffs = np.polyfit(x, y, 1)
     slope = float(coeffs[0])
 
@@ -68,7 +68,7 @@ def get_trend(session: Session, period_days: int = 30) -> dict[str, Any]:
     last_price = float(y[-1])
     pct_change = ((last_price - first_price) / first_price * 100) if first_price != 0 else 0.0
 
-    # Direction thresholds: normalised slope relative to mean price
+    # Umbrales de dirección: pendiente normalizada respecto al precio medio
     mean_price = float(y.mean())
     if mean_price != 0:
         normalised_slope = slope / mean_price
@@ -99,9 +99,9 @@ def get_trend(session: Session, period_days: int = 30) -> dict[str, Any]:
 def get_anomalies(
     session: Session, threshold_z: float = 3.0
 ) -> dict[str, Any]:
-    """Detect price anomalies using z-score over the full available period.
+    """Detecta anomalías de precios usando la puntuación z sobre todo el periodo disponible.
 
-    Returns all data points where |z| > *threshold_z*.
+    Devuelve todos los puntos de datos donde |z| > *threshold_z*.
     """
     stmt = (
         select(PriceRecord)

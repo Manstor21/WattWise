@@ -1,4 +1,4 @@
-"""Time-zone helpers and slot math for Europe/Madrid (CET/CEST)."""
+"""Helpers de zonas horarias y matemática de slots para Europe/Madrid (CET/CEST)."""
 
 from datetime import datetime, time, timezone, timedelta
 from zoneinfo import ZoneInfo
@@ -25,7 +25,7 @@ WEEKDAY_LABELS_EN = {
     6: "Sunday",
 }
 
-# PVPC publishes 48 half-hour slots per day
+# PVPC publica 48 slots de media hora por día
 SLOT_MINUTES_30 = 30
 SLOT_MINUTES_60 = 60
 SLOTS_PER_DAY_30 = 48
@@ -33,50 +33,50 @@ SLOTS_PER_DAY_60 = 24
 
 
 def utc_to_madrid(dt_utc: datetime) -> datetime:
-    """Convert a naive or aware UTC datetime to Europe/Madrid."""
+    """Convierte un datetime UTC naive o aware a Europe/Madrid."""
     if dt_utc.tzinfo is None:
         dt_utc = dt_utc.replace(tzinfo=timezone.utc)
     return dt_utc.astimezone(MADRID_TZ)
 
 
 def madrid_now() -> datetime:
-    """Current time in Europe/Madrid."""
+    """Hora actual en Europe/Madrid."""
     return datetime.now(MADRID_TZ)
 
 
 def weekday_index_madrid(dt_utc: datetime) -> int:
-    """Return 0=Monday..6=Sunday for a UTC timestamp in Madrid zone."""
+    """Devuelve 0=Lunes..6=Domingo para una marca temporal UTC en la zona de Madrid."""
     return utc_to_madrid(dt_utc).weekday()
 
 
 def weekday_label_es(index: int) -> str:
-    """Spanish label for a weekday index."""
+    """Etiqueta en español para un índice de día de la semana."""
     return WEEKDAY_LABELS_ES[index]
 
 
 def weekday_label_en(index: int) -> str:
-    """English label for a weekday index."""
+    """Etiqueta en inglés para un índice de día de la semana."""
     return WEEKDAY_LABELS_EN[index]
 
 
 def slot_from_hour(hour: int, slot_minutes: int = SLOT_MINUTES_30) -> int:
-    """Return the slot index within a day for a given hour (0-23).
+    """Devuelve el índice del slot dentro de un día para una hora dada (0-23).
 
-    For 30-min slots: hour 0 → slot 0, hour 1 → slot 2, etc.
-    For 60-min slots: hour 0 → slot 0, hour 1 → slot 1, etc.
+    Para slots de 30 min: hora 0 → slot 0, hora 1 → slot 2, etc.
+    Para slots de 60 min: hora 0 → slot 0, hora 1 → slot 1, etc.
     """
     return (hour * 60) // slot_minutes
 
 
 def iso_format_utc(dt_utc: datetime) -> str:
-    """Format a datetime as ISO-8601 with UTC 'Z' suffix."""
+    """Formatea un datetime como ISO-8601 con sufijo UTC 'Z'."""
     if dt_utc.tzinfo is None:
         dt_utc = dt_utc.replace(tzinfo=timezone.utc)
     return dt_utc.isoformat()
 
 
 def parse_period_days(period_str: str) -> int:
-    """Parse a period string like '30d' or '7d' into integer days."""
+    """Analiza una cadena de periodo como '30d' o '7d' y la convierte a días enteros."""
     s = period_str.strip().lower()
     if s.endswith("d"):
         return int(s[:-1])
