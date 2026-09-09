@@ -122,7 +122,7 @@ class CsvServiceTest {
                 timestamp,price_eur_per_kwh,plus_tax_eur_per_kwh,total_eur_per_kwh,source,color
                 2025-06-16T08:00:00Z,"0,098200","0,021000","0,119200",ESIOS,GREEN
                 """;
-        // Excel in Spanish locale quotes numbers with a comma decimal separator.
+        // Excel en localidad de español entrecomilla los números con coma como separador decimal.
         var result = CsvService.parse(new StringReader(csv));
         CsvService.CsvRow row = result.rows().get(0);
         assertTrue(row.isValid(), "comma decimals must be accepted: " + row.errors());

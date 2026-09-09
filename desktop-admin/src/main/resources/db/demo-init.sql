@@ -1,18 +1,18 @@
 -- ---------------------------------------------------------------------------
--- WattWise Desktop Admin — SQLite demo schema
--- Mirror of backend/src/main/resources/db/migration/V1__init.sql translated to
--- the SQLite dialect, plus the admin-only demo tables.
+-- WattWise Desktop Admin — esquema de demostración para SQLite
+-- Espejo de backend/src/main/resources/db/migration/V1__init.sql traducido a
+-- la sintaxis de SQLite, más las tablas de demostración exclusivas del administrador.
 --
--- NOTE ON DIFFERENCES VS THE BACKEND:
---   * price_color_override  — admin-only traffic-light colour overrides. NOT part
---     of the backend schema; local convenience.
---   * job_log               — job execution log. The backend has no such table;
---     this demo copy exists only in SQLite. SQL Server requires manual creation
---     (see README).
---   * users.is_active       — activation flag for the demo toggle button. The real
---     backend schema only defines role USER|ADMIN; SQL Server therefore shows
---     users read-only.
--- One statement per line; this file is executed by DatabaseConnection.executeScript.
+-- NOTA SOBRE LAS DIFERENCIAS RESPECTO AL BACKEND:
+--   * price_color_override  — overrides de color de semáforo solo para el admin.
+--     NO forma parte del esquema del backend; se trata de una comodidad local.
+--   * job_log               — log de ejecución de jobs. El backend no tiene esa
+--     tabla; esta copia de demostración solo existe en SQLite. En SQL Server se
+--     requiere creación manual (ver README).
+--   * users.is_active       — indicador de activación para el botón de activar/
+--     desactivar de la demo. El esquema real del backend solo define role
+--     USER|ADMIN; por eso en SQL Server los usuarios se muestran de solo lectura.
+-- Una sentencia por línea; DatabaseConnection.executeScript ejecuta este archivo.
 -- ---------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS price_records (

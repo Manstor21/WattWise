@@ -19,9 +19,10 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Exercises {@link QueryExecutor} against a real SQLite database. In-memory SQLite
- * ({@code jdbc:sqlite::memory:}) lives for as long as the single connection is open, so every
- * test opens its own connection with the full demo schema+seed and closes it afterwards.
+ * Ejercita {@link QueryExecutor} contra una base de datos SQLite real. SQLite en memoria
+ * ({@code jdbc:sqlite::memory:}) vive mientras la única conexión esté abierta, por lo que cada
+ * test abre su propia conexión con el esquema demo completo y los datos de ejemplo, y la cierra
+ * al terminar.
  */
 class QueryExecutorTest {
 

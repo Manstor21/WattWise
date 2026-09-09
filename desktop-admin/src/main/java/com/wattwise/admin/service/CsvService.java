@@ -28,23 +28,26 @@ import java.util.Locale;
 import java.util.Objects;
 
 /**
- * CSV parsing and serialization (RFC 4180) with strict validation for the WattWise price import.
+ * Análisis y serialización CSV (RFC 4180) con validación estricta para la importación de
+ * precios de WattWise.
  *
- * <p>Column layout (kept as the single contract between template, parser and exporter — the
- * schema's {@code id} and derived {@code date} columns are intentionally not part of the file):
+ * <p>Disposición de columnas (se mantiene como el único contrato entre la plantilla, el
+ * analizador y el exportador — las columnas {@code id} y {@code date} derivadas del esquema
+ * no forman parte del archivo intencionadamente):
  *
  * <pre>
  * timestamp, price_eur_per_kwh, plus_tax_eur_per_kwh, total_eur_per_kwh, source, color
  * </pre>
  *
  * <ul>
- *   <li>{@code timestamp} — ISO-8601 with offset (e.g. {@code 2025-06-16T08:00:00Z}); the
- *       UNIQUE upsert key.</li>
- *   <li>{@code source} — {@code ESIOS} or {@code MANUAL}.</li>
- *   <li>{@code color} — optional {@code GREEN|AMBER|RED}; empty means "no override".</li>
+ *   <li>{@code timestamp} — ISO-8601 con offset (p. ej. {@code 2025-06-16T08:00:00Z}); la
+ *       clave de upsert UNIQUE.</li>
+ *   <li>{@code source} — {@code ESIOS} o {@code MANUAL}.</li>
+ *   <li>{@code color} — opcional {@code GREEN|AMBER|RED}; vacío significa "sin override".</li>
  * </ul>
  *
- * <p>Export writes a UTF-8 BOM so Microsoft Excel (Spanish locale) opens the file correctly.
+ * <p>La exportación escribe una BOM UTF-8 para que Microsoft Excel (configuración regional
+ * de español) abra el archivo correctamente.
  */
 public final class CsvService {
 
@@ -53,14 +56,14 @@ public final class CsvService {
             "total_eur_per_kwh", "source", "color"
     };
 
-    /** A single parsed/validated line of the file. */
+    /** Una única línea analizada/validada del archivo. */
     public record CsvRow(long lineNumber, PriceRecord record, List<String> errors, List<String> warnings) {
         public boolean isValid() {
             return errors.isEmpty();
         }
     }
 
-    /** Full result of a parse: per-row results plus file-level errors (bad header, I/O). */
+    /** Resultado completo de un análisis: resultados por fila más errores a nivel de archivo (cabecera incorrecta, E/S). */
     public record CsvParseResult(List<CsvRow> rows, List<String> fileErrors) {
         public List<CsvRow> valid() {
             return rows.stream().filter(CsvRow::isValid).toList();
@@ -83,11 +86,11 @@ public final class CsvService {
     private CsvService() {
     }
 
-    // ---------------------------------------------------------------- parsing
+    // ---------------------------------------------------------------- análisis
 
     /**
-     * Parses and validates a CSV stream. UTF-8 is assumed and a leading BOM is stripped before
-     * the header is compared against {@link #HEADER}.
+     * Analiza y valida un flujo CSV. Se asume UTF-8 y se elimina una BOM inicial antes de
+     * comparar la cabecera con {@link #HEADER}.
      */
     public static CsvParseResult parse(InputStream in) throws IOException {
         try (Reader reader = new InputStreamReader(in, StandardCharsets.UTF_8)) {
@@ -100,8 +103,8 @@ public final class CsvService {
         List<String> fileErrors = new ArrayList<>();
 
         CSVParser parser = FORMAT.parse(newBomStrippingReader(reader));
-        // FORMAT.setHeader() throws on token-count mismatch before we can use try-with-resources,
-        // so it is wrapped below.
+        // FORMAT.setHeader() lanza una excepción si el número de campos no coincide antes de poder
+        // usar try-with-resources, por lo que se envuelve abajo.
         try (CSVParser p = parser) {
             List<String> header = p.getHeaderNames();
             if (!Arrays.equals(header.toArray(String[]::new), HEADER)) {
@@ -205,11 +208,11 @@ public final class CsvService {
         }
     }
 
-    // ---------------------------------------------------------------- serialization
+    // ---------------------------------------------------------------- serialización
 
     /**
-     * Writes the header plus rows as RFC 4180 CSV with a UTF-8 BOM (for Excel in Spanish
-     * locales). Empty optional columns are written as empty fields.
+     * Escribe la cabecera y las filas como CSV RFC 4180 con BOM UTF-8 (para Excel en locales de
+     * español). Las columnas opcionales vacías se escriben como campos vacíos.
      */
     public static void write(OutputStream out, List<PriceRecord> records) throws IOException {
         Objects.requireNonNull(records, "records");
@@ -224,10 +227,10 @@ public final class CsvService {
         }
     }
 
-    /** Serializes to a String (used by tests and previews). */
+    /** Serializa a un String (lo usan los tests y las vistas previas). */
     public static String serialize(List<PriceRecord> records) throws IOException {
         StringWriter buffer = new StringWriter();
-        // write(String-based) without BOM: StringWriter has no charset; BOM would be a char.
+        // write (basado en String) sin BOM: StringWriter no tiene charset; la BOM sería un carácter.
         try (CSVPrinter printer = new CSVPrinter(buffer, FORMAT)) {
             printer.printRecord((Object[]) HEADER);
             for (PriceRecord r : records) {
@@ -249,11 +252,12 @@ public final class CsvService {
         };
     }
 
-    // ---------------------------------------------------------------- BOM handling
+    // ---------------------------------------------------------------- manejo de BOM
 
     /**
-     * Wraps a reader so a leading UTF-8 BOM ({@code \uFEFF}) is dropped before CSV parsing.
-     * Also handles the (unlikely but real) case the caller supplies a plain {@link Reader}.
+     * Envuelve un reader para que se elimine una BOM UTF-8 inicial ({@code \uFEFF}) antes del
+     * análisis CSV. También cubre el caso (improbable pero real) de que la llamada suministre un
+     * {@link Reader} simple.
      */
     private static Reader newBomStrippingReader(Reader reader) throws IOException {
         PushbackReader pushback = new PushbackReader(new BufferedReader(reader), 1);

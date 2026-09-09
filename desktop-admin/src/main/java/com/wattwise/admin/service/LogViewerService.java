@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Reads job execution logs and derives a data summary from {@code price_records}.
+ * Lee los logs de ejecución de jobs y deriva un resumen de datos de {@code price_records}.
  *
- * <p>The backend schema has no {@code job_log} table (see V1__init.sql), so the table exists
- * only on the SQLite demo database. When it is absent the panel falls back to the
- * {@link #loadSummary} values derived directly from {@code price_records}.
+ * <p>El esquema del backend no tiene tabla {@code job_log} (véase V1__init.sql), por lo que la
+ * tabla solo existe en la base de datos de demostración SQLite. Cuando está ausente, el panel
+ * recurre a los valores de {@link #loadSummary} derivados directamente de {@code price_records}.
  */
 public final class LogViewerService {
 
@@ -59,8 +59,9 @@ public final class LogViewerService {
     }
 
     /**
-     * Summary of the price data: record count, most recent timestamp, average total price and
-     * record counts grouped by source. Answers "is the data pipeline alive?" at a glance.
+     * Resumen de los datos de precios: número de registros, timestamp más reciente, precio total
+     * medio y recuentos de registros agrupados por fuente. Responde de un vistazo "¿está viva la
+     * canalización de datos?".
      */
     public static DataSummary loadSummary(Connection connection) throws SQLException {
         long totalRecords = 0;

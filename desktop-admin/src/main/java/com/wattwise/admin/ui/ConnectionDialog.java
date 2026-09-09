@@ -22,19 +22,20 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 /**
- * Startup connection dialog. Two modes:
+ * Diálogo de conexión de inicio. Dos modos:
  * <ul>
- *   <li><b>SQLite (demo local)</b> — file path; a missing file is created and seeded.</li>
- *   <li><b>SQL Server (producción)</b> — JDBC URL + credentials. The password is held in memory
- *       only and is NEVER written to the preferences file.</li>
+ *   <li><b>SQLite (demo local)</b> — ruta de archivo; si el archivo no existe se crea y se
+ *       siembra.</li>
+ *   <li><b>SQL Server (producción)</b> — URL JDBC + credenciales. La contraseña se mantiene en
+ *       memoria y NUNCA se escribe en el archivo de preferencias.</li>
  * </ul>
  * </p>
- * The last-used mode (and non-secret parameters) is persisted in
+ * El último modo usado (y los parámetros no secretos) se persiste en
  * {@code ~/.wattwise-admin.properties}.
  */
 public final class ConnectionDialog extends JDialog {
 
-    /** Preferences file holding the last connection mode but NEVER the password. */
+    /** Archivo de preferencias con el último modo de conexión, pero NUNCA la contraseña. */
     public static final Path PREFS_PATH = Paths.get(System.getProperty("user.home"), ".wattwise-admin.properties");
 
     private static final String KEY_MODE = "db.mode";
@@ -76,8 +77,8 @@ public final class ConnectionDialog extends JDialog {
     }
 
     /**
-     * Shows the modal dialog and returns the connected {@link DatabaseConnection}, or
-     * {@code null} if the user cancelled.
+     * Muestra el diálogo modal y devuelve el {@link DatabaseConnection} conectado, o
+     * {@code null} si el usuario canceló.
      */
     public static DatabaseConnection promptAndConnect(Window owner) {
         ConnectionDialog dialog = new ConnectionDialog(owner);
@@ -205,7 +206,7 @@ public final class ConnectionDialog extends JDialog {
         }
     }
 
-    // ------------------------------------------------------------- actions
+    // ------------------------------------------------------------- acciones
 
     private void testConnection() {
         disableControls();
@@ -297,7 +298,7 @@ public final class ConnectionDialog extends JDialog {
         return DatabaseConnection.connectSqlServer(url, user, password);
     }
 
-    // ------------------------------------------------------------- preferences
+    // ------------------------------------------------------------- preferencias
 
     private void loadPreferences() {
         if (!Files.exists(PREFS_PATH)) {
@@ -312,13 +313,13 @@ public final class ConnectionDialog extends JDialog {
         }
     }
 
-    /** Persists the mode and non-secret parameters. The password is deliberately excluded. */
+    /** Persiste el modo y los parámetros no secretos. La contraseña se excluye deliberadamente. */
     private void savePreferences() {
         prefs.setProperty(KEY_MODE, sqliteRadio.isSelected() ? "sqlite" : "sqlserver");
         prefs.setProperty(KEY_SQLITE_FILE, sqliteFileField.getText().trim());
         prefs.setProperty(KEY_SQLSERVER_URL, sqlUrlField.getText().trim());
         prefs.setProperty(KEY_SQLSERVER_USER, sqlUserField.getText().trim());
-        prefs.remove(KEY_MODE + ".password"); // never persist passwords
+        prefs.remove(KEY_MODE + ".password"); // nunca persistir contraseñas
         try (OutputStream out = Files.newOutputStream(PREFS_PATH)) {
             prefs.store(out, "WattWise Admin connection preferences (password never stored)");
         } catch (IOException e) {

@@ -10,11 +10,12 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
 
 /**
- * Main application window: a {@link JTabbedPane} with the four admin panels and a status bar
- * that hosts an indeterminate progress indicator during background work.
+ * Ventana principal de la aplicación: un {@link JTabbedPane} con los cuatro paneles de
+ * administración y una barra de estado que aloja un indicador de progreso indeterminado
+ * durante el trabajo en segundo plano.
  *
- * <p>All long-running queries go through {@link #runInBackground} so the UI never freezes,
- * and are serialized on the single shared JDBC connection.
+ * <p>Todas las consultas de larga duración pasan por {@link #runInBackground} para que la IU
+ * nunca se congele, y se serializan sobre la única conexión JDBC compartida.
  */
 public final class MainFrame extends JFrame {
 
@@ -109,7 +110,7 @@ public final class MainFrame extends JFrame {
                 new java.awt.image.BufferedImage(size, size, java.awt.image.BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        // three traffic lights on a dark rounded bar
+        // tres semáforos sobre una barra redondeada oscura
         g.setColor(new Color(40, 40, 40));
         g.fillRoundRect(2, 4, size - 4, size - 8, 8, 8);
         g.setColor(TrafficLightIcon.COLOR_GREEN);
@@ -139,16 +140,16 @@ public final class MainFrame extends JFrame {
         }
     }
 
-    // ------------------------------------------------------------- status + async
+    // ------------------------------------------------------------- estado + asíncrono
 
     public void setStatus(String text) {
         statusLabel.setText(text);
     }
 
     /**
-     * Runs {@code work} on a worker thread, shows the indeterminate progress bar, then hands
-     * the result to {@code onDone} on the EDT. Exceptions are shown in a dialog and the status
-     * bar reset.
+     * Ejecuta {@code work} en un hilo worker, muestra la barra de progreso indeterminada y luego
+     * entrega el resultado a {@code onDone} en el EDT. Las excepciones se muestran en un diálogo
+     * y la barra de estado se reinicia.
      */
     public <T> void runInBackground(String busyText, Callable<T> work, Consumer<T> onDone) {
         statusLabel.setText(busyText);

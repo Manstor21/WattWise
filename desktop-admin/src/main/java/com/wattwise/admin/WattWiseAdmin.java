@@ -8,8 +8,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 /**
- * Application entry point. Configures the system look &amp; feel, then shows the connection
- * dialog; once connected the main window is opened.
+ * Punto de entrada de la aplicación. Configura el aspecto (look &amp; feel) del sistema y
+ * muestra el diálogo de conexión; una vez conectado, se abre la ventana principal.
  */
 public final class WattWiseAdmin {
 

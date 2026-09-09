@@ -11,16 +11,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Validates and applies manual price corrections from the inline editor.
+ * Valida y aplica las correcciones manuales de precios desde el editor en línea.
  *
- * <p>Validation rules:
+ * <p>Reglas de validación:
  * <ul>
  *   <li>price {@code >= 0};</li>
  *   <li>{@code plus_tax_eur_per_kwh} {@code >= 0} (nullable);</li>
  *   <li>{@code total_eur_per_kwh} {@code >= 0};</li>
- *   <li>{@code color} must be {@code GREEN|AMBER|RED} or null;</li>
- *   <li>if {@code price + plus_tax} noticeably differs from {@code total} a warning
- *       (informational, non-blocking) is reported.</li>
+ *   <li>{@code color} debe ser {@code GREEN|AMBER|RED} o null;</li>
+ *   <li>si {@code price + plus_tax} difiere notablemente de {@code total}, se reporta una
+ *       advertencia (informativa, no bloqueante).</li>
  * </ul>
  */
 public final class PriceCorrectionService {
@@ -36,7 +36,7 @@ public final class PriceCorrectionService {
     private PriceCorrectionService() {
     }
 
-    /** Pure validation, no database access — safe to call from tests. */
+    /** Validación pura, sin acceso a la base de datos — se puede llamar desde los tests. */
     public static ValidationResult validate(PriceRecord record) {
         List<String> errors = new ArrayList<>();
         List<String> warnings = new ArrayList<>();
@@ -81,8 +81,8 @@ public final class PriceCorrectionService {
     }
 
     /**
-     * Persists the corrections that pass validation. Each record is applied with a single
-     * {@code UPDATE ... WHERE id = ?}. Invalid records are skipped and counted separately.
+     * Persiste las correcciones que pasan la validación. Cada registro se aplica con un único
+     * {@code UPDATE ... WHERE id = ?}. Los registros inválidos se omiten y se cuentan aparte.
      */
     public static CorrectionReport apply(Connection connection, List<PriceRecord> changes)
             throws SQLException {

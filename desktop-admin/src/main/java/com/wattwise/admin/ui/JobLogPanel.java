@@ -15,9 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
- * Job execution logs plus a data pipeline summary. When {@code job_log} is missing (e.g. the
- * production SQL Server schema, which has no such table) the panel shows a summary derived
- * directly from {@code price_records} with an explanatory notice.
+ * Logs de ejecución de jobs más un resumen de la canalización de datos. Cuando {@code job_log}
+ * no existe (p. ej. en el esquema de producción de SQL Server, que no tiene esa tabla), el panel
+ * muestra un resumen derivado directamente de {@code price_records} con un aviso explicativo.
  */
 public final class JobLogPanel extends JPanel {
 
@@ -90,7 +90,7 @@ public final class JobLogPanel extends JPanel {
         return cell;
     }
 
-    /** Refreshes summary + job log in the background. */
+    /** Refresca el resumen y el log de jobs en segundo plano. */
     public void refresh() {
         frame.runInBackground("Cargando logs…", () -> {
             boolean hasLog = LogViewerService.hasJobLog(db.get());
@@ -117,11 +117,11 @@ public final class JobLogPanel extends JPanel {
         });
     }
 
-    /** Background worker payload. */
+    /** Carga de trabajo (payload) del worker en segundo plano. */
     private record Load(List<JobLogEntry> entries, DataSummary summary, boolean hasJobLog) {
     }
 
-    // ------------------------------------------------------------- log table model
+    // ------------------------------------------------------------- modelo de tabla de logs
 
     private static final class LogTableModel extends AbstractTableModel {
         private List<JobLogEntry> rows = List.of();

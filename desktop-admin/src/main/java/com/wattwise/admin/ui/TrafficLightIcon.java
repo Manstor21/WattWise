@@ -10,8 +10,9 @@ import java.awt.RenderingHints;
 import javax.swing.Icon;
 
 /**
- * A tiny drawn traffic-light icon (filled circle with a darker ring). Used for the colour
- * column of the price table and for the legend. No external image assets required.
+ * Un icono pequeño de semáforo dibujado (círculo relleno con un anillo más oscuro). Se usa en
+ * la columna de color de la tabla de precios y en la leyenda. No requiere recursos de imagen
+ * externos.
  */
 public final class TrafficLightIcon implements Icon {
 
@@ -32,7 +33,7 @@ public final class TrafficLightIcon implements Icon {
         this.fill = fill == null ? COLOR_UNKNOWN : fill;
     }
 
-    /** Maps a traffic-light name to its colour; anything else renders grey. */
+    /** Asocia un nombre de semáforo a su color; cualquier otra cosa se renderiza en gris. */
     public static Color resolve(String colorName) {
         if (colorName == null) {
             return COLOR_UNKNOWN;
@@ -45,7 +46,7 @@ public final class TrafficLightIcon implements Icon {
         };
     }
 
-    /** Soft pastel background used to tint table rows by state. */
+    /** Fondo pastel suave usado para teñir las filas de la tabla según su estado. */
     public static Color pastel(String colorName) {
         Color c = resolve(colorName);
         if (c == COLOR_UNKNOWN) {

@@ -7,13 +7,13 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 
 /**
- * Plain-Old-Java-Object mirroring one row of the backend {@code price_records}
- * table (see backend/src/main/resources/db/migration/V1__init.sql) plus the local
- * traffic-light colour override stored in {@code price_color_override}.
+ * Plain-Old-Java-Object que refleja una fila de la tabla {@code price_records} del
+ * backend (véase backend/src/main/resources/db/migration/V1__init.sql) más el override
+ * local de color de semáforo almacenado en {@code price_color_override}.
  *
- * <p>The {@code date} column is derived from {@code timestamp} (both UTC). The
- * {@code color} field is optional; when set it overrides the derived colour used
- * by the traffic-light classification elsewhere in WattWise.
+ * <p>La columna {@code date} se deriva de {@code timestamp} (ambas en UTC). El campo
+ * {@code color} es opcional; cuando se establece, sustituye al color derivado que usa
+ * la clasificación de semáforo en el resto de WattWise.
  */
 public class PriceRecord {
 
@@ -46,7 +46,7 @@ public class PriceRecord {
         this.color = color;
     }
 
-    /** Derived {@code date} column value (UTC), formatted for storage as {@code yyyy-MM-dd}. */
+    /** Valor de la columna {@code date} derivada (UTC), formateado para almacenamiento como {@code yyyy-MM-dd}. */
     public LocalDate getDate() {
         return timestamp == null ? null : timestamp.toLocalDate();
     }

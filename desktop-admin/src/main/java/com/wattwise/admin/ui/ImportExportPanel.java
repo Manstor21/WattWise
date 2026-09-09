@@ -21,9 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CSV import/export. Importing shows a validated preview (valid/invalid rows colour-coded
- * with an error list) before upserting; exporting writes a filtered export with a UTF-8 BOM
- * so Microsoft Excel (Spanish locale) renders it correctly.
+ * Importación/exportación CSV. La importación muestra una vista previa validada (filas
+ * válidas/inválidas con código de color y lista de errores) antes de hacer el upsert; la
+ * exportación escribe una exportación filtrada con BOM UTF-8 para que Microsoft Excel
+ * (configuración regional de español) la renderice correctamente.
  */
 public final class ImportExportPanel extends JPanel {
 
@@ -67,7 +68,7 @@ public final class ImportExportPanel extends JPanel {
         add(new JScrollPane(previewTable), BorderLayout.CENTER);
     }
 
-    // ------------------------------------------------------------- import
+    // ------------------------------------------------------------- importación
 
     private JPanel buildImportPanel() {
         JPanel panel = new JPanel(new BorderLayout(6, 6));
@@ -146,9 +147,9 @@ public final class ImportExportPanel extends JPanel {
     }
 
     /**
-     * Upsert strategy: {@code price_records.timestamp} is UNIQUE, so a row whose timestamp
-     * already exists is an UPDATE, otherwise an INSERT. Colour rows are written to the local
-     * {@code price_color_override} table.
+     * Estrategia de upsert: {@code price_records.timestamp} es UNIQUE, por lo que una fila cuyo
+     * timestamp ya existe es un UPDATE; en caso contrario, un INSERT. Las filas de color se
+     * escriben en la tabla local {@code price_color_override}.
      */
     private ImportStats applyImport(List<CsvRow> rows) throws Exception {
         long inserted = 0;
@@ -169,7 +170,7 @@ public final class ImportExportPanel extends JPanel {
     private record ImportStats(long inserted, long updated, long omitted) {
     }
 
-    // ------------------------------------------------------------- export
+    // ------------------------------------------------------------- exportación
 
     private JPanel buildExportPanel() {
         JPanel panel = new JPanel(new BorderLayout(6, 6));
@@ -248,7 +249,7 @@ public final class ImportExportPanel extends JPanel {
         }
     }
 
-    // ------------------------------------------------------------- preview model
+    // ------------------------------------------------------------- modelo de vista previa
 
     private static final String[] PREVIEW_COLUMNS = {
             "Fila", "Timestamp", "Precio €/kWh", "Total €/kWh", "Fuente", "Color", "Estado", "Detalle"

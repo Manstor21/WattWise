@@ -12,10 +12,11 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * Read-only user management. Passwords are never loaded. Activation toggling is available only
- * when the schema exposes an {@code is_active} column — true on the SQLite demo database, false
- * on the real backend schema (V1__init.sql defines {@code role USER|ADMIN} but no activation
- * flag), where the panel degrades to read-only with an explanatory note.
+ * Gestión de usuarios de solo lectura. Las contraseñas nunca se cargan. La activación/
+ * desactivación solo está disponible cuando el esquema expone una columna {@code is_active} —
+ * true en la base de datos de demostración SQLite, false en el esquema real del backend
+ * (V1__init.sql define {@code role USER|ADMIN} pero sin indicador de activación), donde el
+ * panel se degrada a solo lectura con una nota explicativa.
  */
 public final class UserManagementPanel extends JPanel {
 
@@ -120,7 +121,7 @@ public final class UserManagementPanel extends JPanel {
                 });
     }
 
-    // ------------------------------------------------------------- model
+    // ------------------------------------------------------------- modelo
 
     private static final class UserTableModel extends AbstractTableModel {
         private List<UserRow> rows = List.of();

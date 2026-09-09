@@ -22,9 +22,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Price table with inline correction. Shows every column of {@code price_records} plus the
- * derived/applied traffic-light colour; price, tax, total and colour are editable inline.
- * Rows can be filtered by UTC date range and reordered by any column.
+ * Tabla de precios con corrección en línea. Muestra todas las columnas de {@code price_records}
+ * más el color de semáforo derivado/aplicado; precio, impuestos, total y color son editables en
+ * línea. Las filas pueden filtrarse por rango de fechas UTC y reordenarse por cualquier columna.
  */
 public final class PriceTablePanel extends JPanel {
 
@@ -40,7 +40,7 @@ public final class PriceTablePanel extends JPanel {
     private static final DateTimeFormatter TS_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    // Traffic-light heuristic used when no manual override is stored.
+    // Heurística de semáforo usada cuando no hay un override manual guardado.
     private static final BigDecimal GREEN_UP_TO = new BigDecimal("0.160000");
     private static final BigDecimal AMBER_UP_TO = new BigDecimal("0.230000");
 
@@ -102,7 +102,7 @@ public final class PriceTablePanel extends JPanel {
         table.getColumnModel().getColumn(6).setPreferredWidth(90);
         table.getColumnModel().getColumn(7).setPreferredWidth(90);
 
-        // inline editors for the editable columns
+        // editores en línea para las columnas editables
         table.getColumnModel().getColumn(COL_PRICE).setCellEditor(new DefaultCellEditor(new JTextField()));
         table.getColumnModel().getColumn(COL_TAX).setCellEditor(new DefaultCellEditor(new JTextField()));
         table.getColumnModel().getColumn(COL_TOTAL).setCellEditor(new DefaultCellEditor(new JTextField()));
@@ -156,9 +156,9 @@ public final class PriceTablePanel extends JPanel {
         return label;
     }
 
-    // ------------------------------------------------------------- load / save
+    // ------------------------------------------------------------- carga / guardado
 
-    /** Reloads data in the background using the current date filters. */
+    /** Recarga los datos en segundo plano usando los filtros de fecha actuales. */
     public void refresh() {
         LocalDate from = parseDate(fromField.getText());
         LocalDate to = parseDate(toField.getText());
@@ -269,7 +269,7 @@ public final class PriceTablePanel extends JPanel {
                 && Objects.equals(original.getColor(), color);
     }
 
-    // ------------------------------------------------------------- helpers
+    // ------------------------------------------------------------- utilidades
 
     private String effectiveColor(PriceRecord r) {
         if (r.hasColorOverride()) {
@@ -333,7 +333,7 @@ public final class PriceTablePanel extends JPanel {
                 : "SQL Server (" + db.getUser() + ")";
     }
 
-    // ------------------------------------------------------------- renderer
+    // ------------------------------------------------------------- renderizador
 
     private final class PriceRowRenderer extends DefaultTableCellRenderer {
         @Override
@@ -342,7 +342,7 @@ public final class PriceTablePanel extends JPanel {
             Component c = super.getTableCellRendererComponent(t, value, isSelected, hasFocus, row, column);
             JLabel label = (JLabel) c;
 
-            // Prefer the live model value (reflects inline edits) over the loaded baseline.
+            // Preferir el valor actual del modelo (refleja los edits en línea) sobre la base cargada.
             int modelRow = t.convertRowIndexToModel(row);
             Object modelColor = modelRow >= 0 ? model.getValueAt(modelRow, COL_COLOR) : null;
             String colorName = (modelColor instanceof String s && !s.isBlank())

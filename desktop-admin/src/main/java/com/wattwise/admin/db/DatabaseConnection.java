@@ -22,18 +22,19 @@ import java.time.ZoneOffset;
 import java.util.Random;
 
 /**
- * Manages the single JDBC connection used by the desktop admin tool.
+ * Gestiona la conexión JDBC única usada por la herramienta de administración de escritorio.
  *
- * <p>Two modes are supported:
+ * <p>Se admiten dos modos:
  * <ul>
- *   <li>{@link Mode#SQLITE SQLITE} - local demo database. If the file does not exist yet it is
- *       created and initialised with {@code /db/demo-init.sql} plus deterministic demo data.</li>
- *   <li>{@link Mode#SQLSERVER SQLSERVER} - production SQL Server via a JDBC URL. The password is
- *       held only in memory and never persisted to disk.</li>
+ *   <li>{@link Mode#SQLITE SQLITE} - base de datos local de demostración. Si el archivo aún no
+ *       existe, se crea e inicializa con {@code /db/demo-init.sql} junto con datos de ejemplo
+ *       deterministas.</li>
+ *   <li>{@link Mode#SQLSERVER SQLSERVER} - SQL Server de producción mediante una URL JDBC. La
+ *       contraseña se mantiene solo en memoria y nunca se persiste en disco.</li>
  * </ul>
  *
- * <p>Not thread-safe by design: all UI work is serialised through {@code SwingWorker} so panels
- * use this connection sequentially.
+ * <p>No seguro por diseño en entornos multihilo: todo el trabajo de la IU se serializa a través
+ * de {@code SwingWorker}, por lo que los paneles usan esta conexión de forma secuencial.
  */
 public final class DatabaseConnection implements AutoCloseable {
 
@@ -59,8 +60,8 @@ public final class DatabaseConnection implements AutoCloseable {
     }
 
     /**
-     * Opens (creating if needed) a SQLite demo database. Missing files are initialised with the
-     * demo schema and deterministic seed data.
+     * Abre (creándola si es necesario) una base de datos de demostración SQLite. Los archivos
+     * inexistentes se inicializan con el esquema demo y datos de ejemplo deterministas.
      */
     public static DatabaseConnection connectSqlite(Path dbFile) throws SQLException, IOException {
         Path absolute = dbFile.toAbsolutePath();
@@ -81,7 +82,7 @@ public final class DatabaseConnection implements AutoCloseable {
     }
 
     /**
-     * Opens a production SQL Server connection. The password is kept in memory only.
+     * Abre una conexión de producción a SQL Server. La contraseña se mantiene solo en memoria.
      */
     public static DatabaseConnection connectSqlServer(String jdbcUrl, String user, String password)
             throws SQLException {
@@ -99,7 +100,7 @@ public final class DatabaseConnection implements AutoCloseable {
     }
 
     private void open() throws SQLException {
-        // Both drivers register themselves via ServiceLoader; no Class.forName needed.
+        // Ambos drivers se registran vía ServiceLoader; no se necesita Class.forName.
         connection = user == null || user.isBlank()
             ? DriverManager.getConnection(url)
             : DriverManager.getConnection(url, user, password);
@@ -124,7 +125,7 @@ public final class DatabaseConnection implements AutoCloseable {
         return user;
     }
 
-    /** Returns the live JDBC connection. Never exposed outside the {@code db}/{@code service} layer. */
+    /** Devuelve la conexión JDBC activa. Nunca se expone fuera de la capa {@code db}/{@code service}. */
     public Connection get() {
         return connection;
     }
@@ -133,7 +134,7 @@ public final class DatabaseConnection implements AutoCloseable {
         return mode == Mode.SQLITE;
     }
 
-    /** Detects the SQLite dialect at runtime (handy for throwaway connections in tests). */
+    /** Detecta el dialecto SQLite en tiempo de ejecución (útil para conexiones desechables en tests). */
     public static boolean isSqlite(Connection c) throws SQLException {
         String product = c.getMetaData().getDatabaseProductName();
         return product != null && product.toLowerCase().contains("sqlite");
@@ -149,14 +150,15 @@ public final class DatabaseConnection implements AutoCloseable {
             try {
                 connection.close();
             } catch (SQLException ignored) {
-                // best effort on shutdown
+                // mejor esfuerzo al cerrar
             }
             connection = null;
         }
     }
 
     /**
-     * Ensures the demo tables exist and seeds deterministic demo data on a fresh database.
+     * Garantiza que existan las tablas demo y siembra datos de ejemplo deterministas en una base
+     * de datos nueva.
      */
     private void initialiseDemoSchema() throws SQLException, IOException {
         if (!isSqlite()) {
@@ -175,10 +177,10 @@ public final class DatabaseConnection implements AutoCloseable {
     }
 
     /**
-     * Executes a SQL script whose statements are separated by {@code ;}. Lines starting with
-     * {@code --} and blank lines are skipped. Multi-line statements are supported.
+     * Ejecuta un script SQL cuyas sentencias se separan por {@code ;}. Las líneas que empiezan
+     * por {@code --} y las líneas en blanco se omiten. Se admiten sentencias multilínea.
      *
-     * @param resourcePath classpath resource, e.g. {@code /db/demo-init.sql}
+     * @param resourcePath recurso de classpath, p. ej. {@code /db/demo-init.sql}
      */
     public static void executeScript(Connection c, String resourcePath) throws SQLException, IOException {
         try (InputStream in = DatabaseConnection.class.getResourceAsStream(resourcePath)) {
@@ -226,9 +228,9 @@ public final class DatabaseConnection implements AutoCloseable {
     }
 
     /**
-     * Deterministic seed data for local demos: 3 users, ~2 days of synthetic hourly prices and a
-     * small job log. Values are drawn from a fixed-seed {@link Random} so every demo database is
-     * identical, which keeps tests stable.
+     * Datos de ejemplo deterministas para demos locales: 3 usuarios, ~2 días de precios horarios
+     * sintéticos y un log de jobs pequeño. Los valores se extraen de un {@link Random} con semilla
+     * fija para que toda base de datos demo sea idéntica, lo que mantiene estables los tests.
      */
     public static void seedDemoUsers(Connection c) throws SQLException {
         String sql = "INSERT INTO users (username, email, password, role, is_active) VALUES (?,?,?,?,?)";
@@ -315,7 +317,7 @@ public final class DatabaseConnection implements AutoCloseable {
         return BigDecimal.valueOf(value).setScale(6, RoundingMode.HALF_UP);
     }
 
-    /** Normalises an offset date-time to a fixed-width UTC ISO-8601 string (e.g. {@code 2025-06-16T08:00:00Z}). */
+    /** Normaliza un offset date-time a una cadena ISO-8601 UTC de ancho fijo (p. ej. {@code 2025-06-16T08:00:00Z}). */
     public static String isoUtc(OffsetDateTime timestamp) {
         return timestamp.toInstant().toString();
     }

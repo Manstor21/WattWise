@@ -18,20 +18,21 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Reusable JDBC queries. Every query uses {@link PreparedStatement} parameters (zero SQL
- * injection surface). Price upserts, look-ups and updates are kept here so the service and
- * UI layers stay thin.
+ * Consultas JDBC reutilizables. Todas las consultas usan parámetros {@link PreparedStatement}
+ * (superficie de inyección SQL nula). Los upserts, búsquedas y actualizaciones de precios se
+ * mantienen aquí para que las capas de servicio y de IU permanezcan delgadas.
  *
- * <p>Cross-dialect notes:
+ * <p>Notas entre dialectos:
  * <ul>
- *   <li>{@code price_records} upsert keys on {@code timestamp} (UNIQUE). SQLite uses
- *       {@code INSERT ... ON CONFLICT(timestamp) DO UPDATE}; SQL Server uses {@code MERGE}.</li>
- *   <li>Timestamps and dates travel as fixed-width UTC ISO-8601 strings
- *       ({@code 2025-06-16T08:00:00Z}, {@code 2025-06-16}), which compare correctly in both
- *       SQLite (TEXT) and SQL Server (DATETIME2/DATE implicit conversion).</li>
- *   <li>The optional traffic-light colour override is read from {@code price_color_override}
- *       via a LEFT JOIN; writes fall back to UPDATE-then-INSERT so no dialect-specific SQL is
- *       needed.</li>
+ *   <li>El upsert de {@code price_records} se basa en la clave {@code timestamp} (UNIQUE).
+ *       SQLite usa {@code INSERT ... ON CONFLICT(timestamp) DO UPDATE}; SQL Server usa
+ *       {@code MERGE}.</li>
+ *   <li>Los timestamps y las fechas viajan como cadenas ISO-8601 UTC de ancho fijo
+ *       ({@code 2025-06-16T08:00:00Z}, {@code 2025-06-16}), que se comparan correctamente tanto
+ *       en SQLite (TEXT) como en SQL Server (conversión implícita DATETIME2/DATE).</li>
+ *   <li>El override de color de semáforo opcional se lee de {@code price_color_override} mediante
+ *       un LEFT JOIN; las escrituras recurren a UPDATE-then-INSERT, por lo que no se necesita SQL
+ *       específico de cada dialecto.</li>
  * </ul>
  */
 public final class QueryExecutor {
@@ -50,10 +51,11 @@ public final class QueryExecutor {
     private QueryExecutor() {
     }
 
-    // ---------------------------------------------------------------- queries
+    // ---------------------------------------------------------------- consultas
 
     /**
-     * Loads price records, optionally restricted to a UTC date range (both sides inclusive).
+     * Carga registros de precios, opcionalmente limitados a un rango de fechas UTC (ambos
+     * extremos inclusive).
      */
     public static List<PriceRecord> findPrices(Connection c, LocalDate from, LocalDate to)
             throws SQLException {
@@ -111,8 +113,8 @@ public final class QueryExecutor {
     // ---------------------------------------------------------------- DML
 
     /**
-     * Upserts a price record keyed on the UNIQUE {@code timestamp}. Returns the persisted id.
-     * Colour overrides are written through {@link #upsertColorOverride}.
+     * Hace upsert de un registro de precio con clave en el {@code timestamp} UNIQUE. Devuelve el
+     * id persistido. Los overrides de color se escriben mediante {@link #upsertColorOverride}.
      */
     public static long upsertPrice(Connection c, PriceRecord record) throws SQLException {
         OffsetDateTime ts = Objects.requireNonNull(record.getTimestamp(), "timestamp");
@@ -135,7 +137,7 @@ public final class QueryExecutor {
         return id;
     }
 
-    /** Corrects the price columns of an existing record; used by the inline price editor. */
+    /** Corrige las columnas de precio de un registro existente; lo usa el editor en línea de precios. */
     public static int updatePrice(Connection c, PriceRecord record) throws SQLException {
         String sql = "UPDATE price_records SET price_eur_per_kwh = ?, plus_tax_eur_per_kwh = ?, "
                 + "total_eur_per_kwh = ?, source = ? WHERE id = ?";
@@ -159,9 +161,9 @@ public final class QueryExecutor {
     }
 
     /**
-     * Persists the optional traffic-light colour. An empty colour clears the override so the
-     * backend traffic-light classifier applies again. Uses UPDATE-then-INSERT so no
-     * dialect-specific upsert syntax is required.
+     * Persiste el color opcional de semáforo. Un color vacío limpia el override para que vuelva a
+     * aplicar el clasificador de semáforo del backend. Usa UPDATE-then-INSERT para no requerir
+     * sintaxis de upsert específica de cada dialecto.
      */
     public static void upsertColorOverride(Connection c, long priceRecordId, String color)
             throws SQLException {
@@ -195,13 +197,13 @@ public final class QueryExecutor {
                 }
             }
         } catch (SQLException e) {
-            // Colour overrides are a local convenience; a missing/permission-restricted table
-            // must not block the core price correction.
+            // Los overrides de color son una comodidad local; una tabla ausente/limitada por
+            // permisos no debe bloquear la corrección de precios.
             System.err.println("Advertencia: no se pudo guardar el color del precio " + priceRecordId + ": " + e.getMessage());
         }
     }
 
-    // ---------------------------------------------------------------- users
+    // ---------------------------------------------------------------- usuarios
 
     public record UserRow(long id, String username, String email, String role,
                           String createdAt, Boolean isActive) {
@@ -233,8 +235,9 @@ public final class QueryExecutor {
     }
 
     /**
-     * Enables/disables a demo user ({@code is_active}) when the column exists. The real backend
-     * schema (V1__init.sql) has no activation flag; on SQL Server this is a no-op and reports 0.
+     * Activa/desactiva un usuario demo ({@code is_active}) cuando la columna existe. El esquema
+     * real del backend (V1__init.sql) no tiene indicador de activación; en SQL Server es un no-op
+     * que devuelve 0.
      */
     public static int setUserActive(Connection c, long userId, boolean active) throws SQLException {
         if (!supportsUserActiveToggle(c)) {
@@ -249,7 +252,7 @@ public final class QueryExecutor {
         }
     }
 
-    // ---------------------------------------------------------------- metadata
+    // ---------------------------------------------------------------- metadatos
 
     public static boolean hasTable(Connection c, String table) throws SQLException {
         try (ResultSet rs = c.getMetaData().getTables(null, null, "%", null)) {
@@ -280,7 +283,7 @@ public final class QueryExecutor {
         }
     }
 
-    // ---------------------------------------------------------------- helpers
+    // ---------------------------------------------------------------- utilidades
 
     private static long findIdByTimestamp(Connection c, OffsetDateTime timestamp) throws SQLException {
         try (PreparedStatement ps = c.prepareStatement("SELECT id FROM price_records WHERE timestamp = ?")) {
@@ -381,7 +384,7 @@ public final class QueryExecutor {
         return DatabaseConnection.isoUtc(timestamp);
     }
 
-    // ---------------------------------------------------------------- dialect SQL
+    // ---------------------------------------------------------------- SQL por dialecto
 
     private static final String SQLITE_UPSERT = """
             INSERT INTO price_records (timestamp, price_eur_per_kwh, plus_tax_eur_per_kwh,
