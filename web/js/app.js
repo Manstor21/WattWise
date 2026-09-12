@@ -21,7 +21,7 @@ window.WattWise = window.WattWise || {};
   var $ = window.jQuery;
 
   /* ------------------------------------------------------------
-     Configuración incial: token en sessionStorage (vida = pestaña).
+     Configuración inicial: token en sessionStorage (vida = pestaña).
      sessionStorage reduce la superficie de robo de token por XSS
      frente a sessionStorage; la API sigue siendo la autoridad (401
      global limpia la sesión). Sync entre WW.token (api.js) y storage.
