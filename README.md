@@ -138,6 +138,13 @@ gunicorn --bind 0.0.0.0:5000 "app.main:create_app()"
 # Web dashboard — sirve web/ con cualquier servidor de estáticos
 ```
 
+#### Backtesting con histórico PVPC
+
+`GET /api/backtest/report?months=12` (autenticado con JWT) compara el coste de
+ejecutar los electrodomésticos al precio medio del día frente a usar las ventanas
+óptimas del motor de recomendaciones. Simula sobre 12 meses de precios PVPC del
+dataset de ejemplo [`pvpc-history-sample.csv`](backend/src/main/resources/backtest/pvpc-history-sample.csv).
+
 ---
 
 ## Solución de problemas
@@ -170,6 +177,7 @@ gunicorn --bind 0.0.0.0:5000 "app.main:create_app()"
 ### Completado
 
 - **Backend** — API REST Spring Boot con autenticación JWT, ingesta de precios de ESIOS, motor de semáforo, motor de recomendaciones (patrón Strategy), sistema de alertas (patrón Observer), migraciones Flyway (V1/V2), persistencia dual (SQLite dev / SQL Server prod), springdoc-openapi
+- **Backtesting con 12 meses de datos históricos PVPC** — `GET /api/backtest/report?months=12` (JWT) simula el motor de semáforo y de recomendaciones sobre el dataset de ejemplo incluido en el repo (`backend/src/main/resources/backtest/pvpc-history-sample.csv`, 12 meses de precios PVPC simulados con slots de 15 min en UTC). Con `ESIOS_API_TOKEN` real y la ingesta diaria en ejecución durante 12 meses, el mismo pipeline funciona sobre datos reales.
 - **Web Dashboard** — gráfico horario de semáforo, login/registro, CRUD de electrodomésticos, tarjetas de recomendación
 - **Android App** — caché offline Room, sincronización periódica WorkManager, notificaciones locales, JWT en EncryptedSharedPreferences
 - **Microservicio de Analítica** — servicio Flask con `/health`, `/ready` y endpoints de analítica (medias por día de la semana, estimaciones de ahorro, tendencias, anomalías)
@@ -182,7 +190,6 @@ gunicorn --bind 0.0.0.0:5000 "app.main:create_app()"
 
 - Capturas de pantalla para el README (dashboard, Grafana, app Android)
 - Notificaciones push FCM (documentadas como extensión en ADR-005)
-- Backtesting con 12 meses de datos históricos PVPC
 
 ---
 
