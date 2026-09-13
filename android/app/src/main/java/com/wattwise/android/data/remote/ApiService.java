@@ -6,6 +6,7 @@ import com.wattwise.android.data.remote.dto.AuthResponse;
 import com.wattwise.android.data.remote.dto.LoginRequest;
 import com.wattwise.android.data.remote.dto.PriceDto;
 import com.wattwise.android.data.remote.dto.RecommendationDto;
+import com.wattwise.android.data.remote.dto.RegisterPushTokenRequest;
 import com.wattwise.android.data.remote.dto.RegisterRequest;
 
 import java.util.List;
@@ -88,4 +89,9 @@ public interface ApiService {
 
     @GET("api/alerts/check")
     Call<List<String>> checkAlerts();
+
+    // ---- Push FCM (JWT) ----
+
+    @POST("api/push-tokens")
+    Call<Void> registerPushToken(@Body RegisterPushTokenRequest body);
 }

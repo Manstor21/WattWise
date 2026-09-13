@@ -82,6 +82,15 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
         working-directory: android
+      - name: Write Firebase config (google-services.json) from secret
+        env:
+          GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -z "$GOOGLE_SERVICES_JSON" ]; then
+            echo "::error::Secret GOOGLE_SERVICES_JSON no configurado: el build de Android necesita google-services.json. Configúralo en Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
       - name: Run unit tests
         run: ./gradlew testDebugUnitTest --console=plain
         working-directory: android

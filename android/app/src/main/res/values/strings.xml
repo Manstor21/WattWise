@@ -99,6 +99,10 @@
     <string name="notification_low_price">Precio bajo detectado</string>
     <string name="notification_low_price_body">El precio baja a %1$s €/kWh a las %2$s</string>
 
+    <!-- Push FCM (títulos/cuerpos de reserva si la carga del servidor los omite) -->
+    <string name="notification_push_default_title">Nuevo aviso</string>
+    <string name="notification_push_default_body">Tienes una actualización de WattWise</string>
+
     <!-- Tipos de aparato -->
     <string name="type_washing_machine">Lavadora</string>
     <string name="type_dishwasher">Lavavajillas</string>

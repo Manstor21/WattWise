@@ -52,6 +52,13 @@ public class GlobalExceptionHandler {
         return build(HttpStatus.FORBIDDEN, "Access denied", request);
     }
 
+    @ExceptionHandler(PushNotConfiguredException.class)
+    public ResponseEntity<ApiError> handlePushNotConfigured(PushNotConfiguredException ex, HttpServletRequest request) {
+        // El push FCM es una ampliación opcional: sin service account el arranque no
+        // falla, pero el envío expone un 503 en lugar de un 500 genérico.
+        return build(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage(), request);
+    }
+
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<ApiError> handleMissingParam(MissingServletRequestParameterException ex, HttpServletRequest request) {
         return build(HttpStatus.BAD_REQUEST,

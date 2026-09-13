@@ -34,6 +34,8 @@ android/.cxx/
 *.keystore
 *.jks
 *.keystore.*.jks
+# Config de Firebase del proyecto (secret por proyecto, se inyecta en CI; NUNCA en repo)
+android/app/google-services.json
 
 # El wrapper jar SÍ se versiona (builds reproducibles) a pesar de la regla *.jar
 !android/gradle/wrapper/gradle-wrapper.jar

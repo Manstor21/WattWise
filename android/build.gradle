@@ -2,6 +2,9 @@
 // AGP 8.3.2 requiere Gradle 8.4+; fijamos Gradle 8.5 (ver gradle/wrapper/gradle-wrapper.properties).
 plugins {
     id 'com.android.application' version '8.3.2' apply false
+    // Plugin de Google Services: genera las clases/resources de Firebase a partir de
+    // google-services.json (necesario para el receptor de push FCM). Ver android/app/build.gradle.
+    id 'com.google.gms.google-services' version '4.4.2' apply false
 }
 
 tasks.register('clean', Delete) {

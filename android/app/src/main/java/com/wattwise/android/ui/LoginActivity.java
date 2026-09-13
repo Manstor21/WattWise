@@ -17,6 +17,7 @@ import com.wattwise.android.data.remote.SessionManager;
 import com.wattwise.android.data.remote.dto.AuthResponse;
 import com.wattwise.android.data.remote.dto.LoginRequest;
 import com.wattwise.android.data.remote.dto.RegisterRequest;
+import com.wattwise.android.fcm.FcmTokenRegistrar;
 import com.wattwise.android.sync.SyncWorker;
 
 import retrofit2.Call;
@@ -158,6 +159,8 @@ public class LoginActivity extends AppCompatActivity {
 
         // Dispara un sync para que recomendaciones/aparatos estén listos cuando se abra Main.
         SyncWorker.enqueue(this);
+        // Registra el token FCM del dispositivo (si se recibió sin sesión, queda pendiente).
+        FcmTokenRegistrar.registerPending(this);
         goToMain();
     }
 

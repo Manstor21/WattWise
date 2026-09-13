@@ -135,6 +135,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Firebase Admin SDK (envío de notificaciones push; inicialización condicional en FirebaseAdminConfig) -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>9.9.0</version>
+        </dependency>
+
         <!-- Pruebas -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

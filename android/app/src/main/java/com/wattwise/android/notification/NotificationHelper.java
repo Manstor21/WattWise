@@ -13,16 +13,18 @@ import com.wattwise.android.R;
 import com.wattwise.android.ui.MainActivity;
 
 /**
- * Construye y publica notificaciones locales. FCM está deliberadamente NO
- * implementado; todo lo que se entrega aquí se produce en el dispositivo
- * (WorkManager + Room) y pasa por un único canal de la app, que la API 26+
- * exige antes de poder mostrar cualquier notificación.
+ * Construye y publica notificaciones por el canal único de la app (la API 26+
+ * exige crear el canal antes de poder mostrar cualquier notificación). Cubre
+ * tanto las generadas en el dispositivo (WorkManager + Room) como las remotas:
+ * el servidor envía push por FCM y {@code WattwiseFcmService} delega aquí la
+ * publicación.
  */
 public final class NotificationHelper {
 
     public static final String CHANNEL_ID = "price_alerts";
     private static final int NOTIF_OPTIMAL_WINDOW = 1001;
     private static final int NOTIF_LOW_PRICE = 1002;
+    private static final int NOTIF_PUSH = 2001;
 
     private NotificationHelper() {
     }
@@ -93,5 +95,23 @@ public final class NotificationHelper {
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setContentIntent(contentIntent(context))
                 .setCategory(NotificationCompat.CATEGORY_RECOMMENDATION);
+    }
+
+    /**
+     * Notificación remota recibida vía FCM ({@code WattwiseFcmService}).
+     * El servidor siempre envía título y cuerpo.
+     */
+    public static void notifyPush(Context context, String title, String body) {
+        NotificationCompat.Builder builder = base(context)
+                .setSmallIcon(R.drawable.ic_stat_bolt)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
+                .setAutoCancel(true);
+
+        NotificationManager nm = context.getSystemService(NotificationManager.class);
+        if (nm != null) {
+            nm.notify(NOTIF_PUSH, builder.build());
+        }
     }
 }

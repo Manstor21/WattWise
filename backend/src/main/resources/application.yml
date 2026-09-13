@@ -83,3 +83,9 @@ wattwise:
     smoothing-enabled: true
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:8080,http://localhost:5173,http://localhost:80,http://localhost:3000}
+  firebase:
+    # Credenciales del Admin SDK de Firebase para el envío de notificaciones push (FCM).
+    # Vacíos = módulo push deshabilitado (el arranque nunca falla por Firebase).
+    # En prod, FIREBASE_SERVICE_ACCOUNT_PATH debe apuntar al JSON del service account (secret).
+    service-account-json-path: ${FIREBASE_SERVICE_ACCOUNT_PATH:}
+    project-id: ${FIREBASE_PROJECT_ID:}

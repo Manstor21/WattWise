@@ -180,6 +180,7 @@ dataset de ejemplo [`pvpc-history-sample.csv`](backend/src/main/resources/backte
 - **Backtesting con 12 meses de datos históricos PVPC** — `GET /api/backtest/report?months=12` (JWT) simula el motor de semáforo y de recomendaciones sobre el dataset de ejemplo incluido en el repo (`backend/src/main/resources/backtest/pvpc-history-sample.csv`, 12 meses de precios PVPC simulados con slots de 15 min en UTC). Con `ESIOS_API_TOKEN` real y la ingesta diaria en ejecución durante 12 meses, el mismo pipeline funciona sobre datos reales.
 - **Web Dashboard** — gráfico horario de semáforo, login/registro, CRUD de electrodomésticos, tarjetas de recomendación
 - **Android App** — caché offline Room, sincronización periódica WorkManager, notificaciones locales, JWT en EncryptedSharedPreferences
+- **Notificaciones push FCM** — registro de tokens de dispositivo por usuario (`push_tokens`), envío admin a un token/usuario/broadcast (`POST /api/push/send`), receptor Android `WattwiseFcmService`; las notificaciones locales offline-first de ADR-005 siguen siendo la vía principal (ADR-006)
 - **Microservicio de Analítica** — servicio Flask con `/health`, `/ready` y endpoints de analítica (medias por día de la semana, estimaciones de ahorro, tendencias, anomalías)
 - **Desktop Admin** — herramienta Java Swing para import/export CSV, corrección de precios, acceso JDBC directo
 - **Docker Compose** — 6 servicios configurados (nginx, backend, sql-server, analytics, prometheus, grafana) con overrides dev/prod
@@ -189,7 +190,6 @@ dataset de ejemplo [`pvpc-history-sample.csv`](backend/src/main/resources/backte
 ### En progreso
 
 - Capturas de pantalla para el README (dashboard, Grafana, app Android)
-- Notificaciones push FCM (documentadas como extensión en ADR-005)
 
 ---
 
@@ -201,7 +201,8 @@ Todas las decisiones técnicas relevantes están documentadas en [`docs/adr/`](d
 - **ADR-002: Persistencia dual SQL Server + SQLite** — El servidor usa SQL Server; dev/demo/escritorio usan SQLite; Android tiene su propia caché Room
 - **ADR-003: Estrategia de resiliencia de la API ESIOS** — Reintentos con backoff exponencial, gestión de datos obsoletos, alertas de publicación tardía
 - **ADR-004: Monorepo frente a polyrepo** — Cambios atómicos entre módulos, un único archivo Docker Compose, un clon para tenerlo todo
-- **ADR-005: Notificaciones locales frente a FCM** — Notificaciones offline-first vía WorkManager; sin proyecto Firebase ni tokens de dispositivo que salgan del dispositivo
+- **ADR-005: Notificaciones locales frente a FCM** — Notificaciones offline-first vía WorkManager como vía principal; sin dependencia de red salvo la sincronización periódica
+- **ADR-006: Notificaciones push por FCM iniciadas por servidor** — Extiende ADR-005: Firebase Admin SDK opcional en el backend (503 si no hay service account), tabla `push_tokens`, envío admin por token/usuario/broadcast, receptor `WattwiseFcmService` en Android
 
 Análisis completo de trade-offs: [`docs/architecture/architecture.md`](docs/architecture/architecture.md#key-architectural-decisions--trade-offs)
 

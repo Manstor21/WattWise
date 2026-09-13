@@ -19,6 +19,7 @@ public final class Prefs {
     private static final String KEY_ALERT_APPLIANCE_ID = "alert_appliance_id";
     private static final String KEY_LAST_NOTIFIED_WINDOW = "last_notified_window_start";
     private static final String KEY_NOTIFICATION_PERMISSION_REQUESTED = "notif_perm_requested";
+    private static final String KEY_PENDING_FCM_TOKEN = "pending_fcm_token";
 
     private final SharedPreferences prefs;
 
@@ -90,5 +91,20 @@ public final class Prefs {
 
     public void setNotificationPermissionRequested(boolean done) {
         ed().putBoolean(KEY_NOTIFICATION_PERMISSION_REQUESTED, done).apply();
+    }
+
+    // ---- token FCM pendiente ----
+
+    /** Token FCM guardado cuando se recibió antes de que existiera una sesión activa. */
+    public String pendingFcmToken() {
+        return prefs.getString(KEY_PENDING_FCM_TOKEN, null);
+    }
+
+    public void setPendingFcmToken(String token) {
+        ed().putString(KEY_PENDING_FCM_TOKEN, token).apply();
+    }
+
+    public void clearPendingFcmToken() {
+        ed().remove(KEY_PENDING_FCM_TOKEN).apply();
     }
 }
