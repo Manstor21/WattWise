@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 from app.config import config_by_name
 from app.models.price_record import Base
+from app.auth import init_auth
 
 
 REQUEST_COUNT = Counter(
@@ -41,6 +42,9 @@ def create_app(config_name: str | None = None) -> Flask:
 
     app = Flask(__name__)
     app.config.from_object(config_by_name[config_name])
+
+    # Inicializar autenticación
+    init_auth(app)
 
     # --- Configuración de la base de datos ---
     engine = create_engine(

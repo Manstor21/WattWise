@@ -7,6 +7,7 @@ from app.services.price_analytics import get_weekday_averages
 from app.services.savings_estimator import estimate_savings
 from app.services.trend_analyzer import get_trend, get_anomalies
 from app.utils.time_utils import parse_period_days
+from app.auth import require_auth
 
 analytics_bp = Blueprint("analytics", __name__, url_prefix="/api/analytics")
 
@@ -18,6 +19,7 @@ def _get_session():
 
 
 @analytics_bp.route("/weekday-averages")
+@require_auth
 def weekday_averages():
     days_param = request.args.get("days", current_app.config.get("DAYS_DEFAULT", 30))
     try:
@@ -47,6 +49,7 @@ def weekday_averages():
 
 
 @analytics_bp.route("/savings-estimate")
+@require_auth
 def savings_estimate():
     user_id_param = request.args.get("userId")
     user_id = None
@@ -65,6 +68,7 @@ def savings_estimate():
 
 
 @analytics_bp.route("/trend")
+@require_auth
 def trend():
     period_param = request.args.get("period", "30d")
     try:
@@ -87,6 +91,7 @@ def trend():
 
 
 @analytics_bp.route("/anomalies")
+@require_auth
 def anomalies():
     threshold_param = request.args.get("threshold", "3.0")
     try:
