@@ -1,3 +1,11 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--quiet"
+
+[tool.pip-audit]
+requirements = "requirements.lock"
+desc = "on"
+skip = []
+
+[tool.uv]
+dev-dependencies = []

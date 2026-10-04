@@ -68,10 +68,13 @@ def synthetic_prices(db_session):
       horas pico 13-21).
     - Una anomalía clara en el día 15 a las 18h (el precio sube a 0.50).
     - Semilla 42 para reproducibilidad.
+    - La ventana de datos termina AYER, así que siempre cae dentro de
+      now() - 30 days usado por los servicios.
     """
     rng = np.random.RandomState(42)
 
-    base_date = datetime(2026, 8, 1, 0, 0, 0, tzinfo=timezone.utc)
+    # Ventana relativa: 30 días terminando ayer (para que caigan dentro de now() - 30 days)
+    base_date = datetime.now(timezone.utc).replace(hour=0, minute=0, second=0, microsecond=0) - timedelta(days=35)
 
     records: list[PriceRecord] = []
     for day in range(30):
